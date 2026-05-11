@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Menu principal -->
+    <menuitem id="menu_beton_caisse_root"
+              name="Caisse Béton"
+              web_icon="beton_caisse,static/description/icon.png"
+              sequence="25"
+              groups="beton_caisse.group_beton_caisse_caissier"/>
+
+    <!-- Caisses -->
+    <menuitem id="menu_beton_cashbox"
+              name="Caisses"
+              parent="menu_beton_caisse_root"
+              action="action_beton_cashbox"
+              sequence="1"/>
+
+    <!-- Encaissements -->
+    <menuitem id="menu_beton_caisse_entry"
+              name="Encaissements"
+              parent="menu_beton_caisse_root"
+              action="action_beton_caisse_entry"
+              sequence="2"/>
+
+    <!-- Décaissements (parent, sans action directe) -->
+    <menuitem id="menu_beton_caisse_expense"
+              name="Décaissements"
+              parent="menu_beton_caisse_root"
+              sequence="3"/>
+
+    <!-- Décaissements > Achats -->
+    <menuitem id="menu_beton_caisse_expense_purchase"
+              name="Achats"
+              parent="menu_beton_caisse_expense"
+              action="action_beton_caisse_expense_purchase"
+              sequence="1"/>
+
+    <!-- Décaissements > Notes de frais -->
+    <menuitem id="menu_beton_caisse_expense_note_frais"
+              name="Notes de frais"
+              parent="menu_beton_caisse_expense"
+              action="action_beton_caisse_expense_note_frais"
+              sequence="2"/>
+
+    <!-- Transferts -->
+    <menuitem id="menu_beton_caisse_transfer"
+              name="Transferts"
+              parent="menu_beton_caisse_root"
+              action="action_beton_caisse_transfer"
+              sequence="4"/>
+
+    <!-- Recharges -->
+    <menuitem id="menu_beton_cashbox_recharge"
+              name="Recharges"
+              parent="menu_beton_caisse_root"
+              action="action_beton_cashbox_recharge"
+              sequence="5"/>
+
+    <!-- Versements -->
+    <menuitem id="menu_beton_versement"
+              name="Versements"
+              parent="menu_beton_caisse_root"
+              action="action_beton_versement"
+              sequence="6"/>
+
+    <!-- Dépenses Globales -->
+    <menuitem id="menu_beton_caisse_globale"
+              name="Dépenses Globales"
+              parent="menu_beton_caisse_root"
+              action="action_beton_caisse_globale"
+              sequence="6"/>
+</odoo>

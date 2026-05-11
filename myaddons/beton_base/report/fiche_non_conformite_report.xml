@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_fiche_non_conformite" model="ir.actions.report">
+        <field name="name">Fiche Non-Conformité</field>
+        <field name="model">beton.non.conformite</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_fiche_non_conformite</field>
+        <field name="report_file">beton_base.report_fiche_non_conformite</field>
+        <field name="binding_model_id" ref="model_beton_non_conformite"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_fiche_non_conformite">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">FICHE DE NON-CONFORMITÉ</h2>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>N° NC :</strong> <span t-field="o.name"/><br/>
+                                <strong>Date :</strong> <span t-field="o.date"/><br/>
+                                <strong>Origine :</strong>
+                                <span t-if="o.origine == 'production'">Production</span>
+                                <span t-if="o.origine == 'livraison'">Livraison</span>
+                                <span t-if="o.origine == 'laboratoire'">Laboratoire</span>
+                                <span t-if="o.origine == 'client'">Réclamation client</span>
+                                <br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Gravité :</strong>
+                                <span t-if="o.gravite == 'mineure'" style="color: #17a2b8; font-weight: bold;">Mineure</span>
+                                <span t-if="o.gravite == 'majeure'" style="color: #ffc107; font-weight: bold;">Majeure</span>
+                                <span t-if="o.gravite == 'critique'" style="color: #dc3545; font-weight: bold;">Critique</span>
+                                <br/>
+                                <strong>Responsable :</strong> <span t-field="o.responsable_id.name"/><br/>
+                                <strong>Traitement :</strong>
+                                <span t-if="o.traitement == 'oui'" style="color: green; font-weight: bold;">Traité</span>
+                                <span t-if="o.traitement == 'non'" style="color: red; font-weight: bold;">Non traité</span>
+                                <br/>
+                                <t t-if="o.date_traitement">
+                                    <strong>Date de traitement :</strong> <span t-field="o.date_traitement"/><br/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <t t-if="o.essai_id">
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <strong>Essai associé :</strong> <span t-field="o.essai_id.name"/>
+                                </div>
+                            </div>
+                        </t>
+
+                        <h4 class="mt-4">Description</h4>
+                        <div class="border p-3">
+                            <span t-field="o.description"/>
+                        </div>
+
+                        <t t-if="o.action_corrective">
+                            <h4 class="mt-4">Action Corrective</h4>
+                            <div class="border p-3">
+                                <span t-field="o.action_corrective"/>
+                            </div>
+                        </t>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <strong>Signature Responsable</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Qualité</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Directeur</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

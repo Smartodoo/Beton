@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- =========================== -->
+    <!-- MÉTHODES DE PAIEMENT ENTRANTES -->
+    <!-- =========================== -->
+
+    <!-- Virement (Entrant) -->
+    <record id="account_payment_method_virement_in" model="account.payment.method">
+        <field name="name">Virement (Entrant)</field>
+        <field name="code">virement_in</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+    <!-- Versement (Entrant) -->
+    <record id="account_payment_method_versement_in" model="account.payment.method">
+        <field name="name">Versement (Entrant)</field>
+        <field name="code">versement_in</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+    <!-- Chèque (Entrant) -->
+    <record id="account_payment_method_cheque_in" model="account.payment.method">
+        <field name="name">Chèque (Entrant)</field>
+        <field name="code">cheque_in</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+    <!-- Espèce (Entrant) -->
+    <record id="account_payment_method_espece_in" model="account.payment.method">
+        <field name="name">Espèce (Entrant)</field>
+        <field name="code">espece_in</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+    <!-- À Terme (Entrant) -->
+    <record id="account_payment_method_aterme_in" model="account.payment.method">
+        <field name="name">À Terme (Entrant)</field>
+        <field name="code">aterme_in</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+    <!-- =========================== -->
+    <!-- MÉTHODES DE PAIEMENT SORTANTES -->
+    <!-- =========================== -->
+
+    <!-- Virement (Sortant) -->
+    <record id="account_payment_method_virement_out" model="account.payment.method">
+        <field name="name">Virement (Sortant)</field>
+        <field name="code">virement_out</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <!-- Versement (Sortant) -->
+    <record id="account_payment_method_versement_out" model="account.payment.method">
+        <field name="name">Versement (Sortant)</field>
+        <field name="code">versement_out</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <!-- Chèque (Sortant) -->
+    <record id="account_payment_method_cheque_out" model="account.payment.method">
+        <field name="name">Chèque (Sortant)</field>
+        <field name="code">cheque_out</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <!-- Espèce (Sortant) -->
+    <record id="account_payment_method_espece_out" model="account.payment.method">
+        <field name="name">Espèce (Sortant)</field>
+        <field name="code">espece_out</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <!-- À Terme (Sortant) -->
+    <record id="account_payment_method_aterme_out" model="account.payment.method">
+        <field name="name">À Terme (Sortant)</field>
+        <field name="code">aterme_out</field>
+        <field name="payment_type">outbound</field>
+    </record>
+</odoo>

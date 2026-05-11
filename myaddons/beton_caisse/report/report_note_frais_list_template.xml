@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_beton_note_frais_list_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="company" t-value="docs[0].company_id if docs else env.company"/>
+                <div class="page" style="font-family: Arial, sans-serif;">
+
+                    <!-- Titre -->
+                    <div style="text-align: center; margin: 25px 0;">
+                        <div style="display: inline-block; background-color: #6f42c1; padding: 12px 50px; border-radius: 3px;">
+                            <span style="font-size: 18px; font-weight: bold; color: #ffffff;">
+                                RAPPORT DES DECAISSEMENTS - NOTES DE FRAIS
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Infos -->
+                    <div style="margin-bottom: 20px;">
+                        <table style="width: 100%; border: none;">
+                            <tr>
+                                <td style="width: 50%; border: none; padding: 5px;">
+                                    <strong>Periode :</strong>
+                                    du <span t-esc="data.get('date_from')"/>
+                                    au <span t-esc="data.get('date_to')"/>
+                                </td>
+                                <td style="width: 50%; border: none; padding: 5px;">
+                                    <strong>Date d'impression :</strong>
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Societe :</strong>
+                                    <span t-esc="company.name"/>
+                                </td>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Genere par :</strong>
+                                    <span t-esc="user.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Caisse :</strong>
+                                    <span t-esc="data.get('filter_cashbox')"/>
+                                </td>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Employé :</strong>
+                                    <span t-esc="data.get('filter_employee')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Note de frais :</strong>
+                                    <span t-esc="data.get('filter_sheet')"/>
+                                </td>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>État :</strong>
+                                    <span t-esc="data.get('filter_state')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Nombre de paiements :</strong>
+                                    <span t-esc="len(docs)"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Calcul des totaux -->
+                    <t t-set="total_amount" t-value="0"/>
+                    <t t-set="total_paid" t-value="0"/>
+                    <t t-set="total_residual" t-value="0"/>
+                    <t t-foreach="docs" t-as="doc">
+                        <t t-set="total_amount" t-value="total_amount + doc.amount"/>
+                        <t t-set="total_paid" t-value="total_paid + doc.amount_paid"/>
+                        <t t-set="total_residual" t-value="total_residual + doc.amount_residual"/>
+                    </t>
+
+                    <!-- Resume financier -->
+                    <h4 style="background-color: #6f42c1; color: white; padding: 8px; margin-bottom: 0;">RESUME FINANCIER</h4>
+                    <table class="table table-bordered" style="margin-bottom: 25px;">
+                        <thead style="background-color: #ecf0f1;">
+                            <tr>
+                                <th style="width: 33%; text-align: center;">Total Note de frais</th>
+                                <th style="width: 33%; text-align: center;">Total Versé (Caisse)</th>
+                                <th style="width: 34%; text-align: center;">Reste à payer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; font-size: 16px; font-weight: bold;">
+                                    <span t-esc="'%.2f' % total_amount"/>
+                                    <span t-esc="docs[0].company_currency_id.symbol if docs else 'DA'"/>
+                                </td>
+                                <td style="text-align: center; font-size: 16px; font-weight: bold; color: #27ae60;">
+                                    <span t-esc="'%.2f' % total_paid"/>
+                                    <span t-esc="docs[0].company_currency_id.symbol if docs else 'DA'"/>
+                                </td>
+                                <td style="text-align: center; font-size: 16px; font-weight: bold; color: #e74c3c;">
+                                    <span t-esc="'%.2f' % total_residual"/>
+                                    <span t-esc="docs[0].company_currency_id.symbol if docs else 'DA'"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Tableau detail -->
+                    <h4 style="background-color: #6f42c1; color: white; padding: 8px; margin-bottom: 0;">DETAIL DES DECAISSEMENTS</h4>
+                    <table class="table table-bordered table-sm" style="font-size: 9px;">
+                        <thead style="background-color: #ecf0f1;">
+                            <tr>
+                                <th style="width: 9%;">Reference</th>
+                                <th style="width: 8%;">Date</th>
+                                <th style="width: 13%;">Note de frais</th>
+                                <th style="width: 13%;">Employé</th>
+                                <th style="width: 9%;">Caisse</th>
+                                <th style="width: 7%;">Mode</th>
+                                <th style="width: 10%;">Ref. banque</th>
+                                <th style="width: 9%;">État</th>
+                                <th style="width: 7%; text-align: right;">Montant</th>
+                                <th style="width: 7%; text-align: right;">Versé</th>
+                                <th style="width: 8%; text-align: right;">Reste</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr t-att-style="'background-color: %s;' % ('#e8f5e9' if doc.state == 'approuve' else '#fff3cd')">
+                                    <td><span t-field="doc.name"/></td>
+                                    <td><span t-field="doc.date" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                                    <td><span t-field="doc.expense_sheet_id.name"/></td>
+                                    <td>
+                                        <span t-esc="doc.expense_sheet_id.employee_id.name or ''"/>
+                                    </td>
+                                    <td><span t-field="doc.cashbox_id.name"/></td>
+                                    <td>
+                                        <t t-esc="dict(doc._fields['payment_method'].selection).get(doc.payment_method, '')"/>
+                                    </td>
+                                    <td>
+                                        <span t-if="doc.bank_id" t-esc="doc.bank_id.name"/>
+                                        <t t-if="doc.bank_id and doc.bank_reference"> / </t>
+                                        <span t-if="doc.bank_reference" t-esc="doc.bank_reference"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="dict(doc._fields['state'].selection).get(doc.state, '')"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <span t-field="doc.amount" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <span t-field="doc.amount_paid" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <span t-field="doc.amount_residual" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot style="background-color: #6f42c1; color: white; font-weight: bold;">
+                            <tr>
+                                <td colspan="8" style="text-align: right; padding: 8px;">TOTAL GENERAL :</td>
+                                <td style="text-align: right; padding: 8px;">
+                                    <span t-esc="'%.2f' % total_amount"/>
+                                    <span t-esc="docs[0].company_currency_id.symbol if docs else 'DA'"/>
+                                </td>
+                                <td style="text-align: right; padding: 8px;">
+                                    <span t-esc="'%.2f' % total_paid"/>
+                                    <span t-esc="docs[0].company_currency_id.symbol if docs else 'DA'"/>
+                                </td>
+                                <td style="text-align: right; padding: 8px;">
+                                    <span t-esc="'%.2f' % total_residual"/>
+                                    <span t-esc="docs[0].company_currency_id.symbol if docs else 'DA'"/>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Action Report -->
+    <record id="action_report_beton_note_frais_list" model="ir.actions.report">
+        <field name="name">Décaissements Notes de frais</field>
+        <field name="model">beton.caisse.expense</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_beton_note_frais_list_template</field>
+        <field name="report_file">beton_caisse.report_beton_note_frais_list_template</field>
+        <field name="print_report_name">'Notes_Frais_%s' % (time.strftime('%Y%m%d_%H%M%S'))</field>
+    </record>
+</odoo>

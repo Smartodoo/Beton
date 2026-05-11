@@ -1,0 +1,26 @@
+<odoo>
+  <template id="external_layout_hide_fiscal_sinistre_final"
+            inherit_id="web.external_layout_standard">
+
+    <!-- On cible la liste des informations de la société -->
+    <xpath expr="//ul[@name='company_address_list']" position="replace">
+
+      <ul class="list-unstyled" name="company_address_list">
+        <!-- ✅ Si le module est 'sinistre', on remplace par nom + adresse uniquement -->
+        <t t-if="doc_model == 'sinistre'">
+          <li>
+            <span t-field="company.partner_id"
+                  t-options='{"widget": "contact", "fields": ["name", "address"], "no_marker": true}'/>
+          </li>
+        </t>
+
+        <!-- ✅ Sinon, on garde les informations de la société par défaut -->
+        <t t-else="">
+          <t t-raw="company.company_details"/>
+        </t>
+      </ul>
+
+    </xpath>
+
+  </template>
+</odoo>

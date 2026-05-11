@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="module_category_beton_caisse" model="ir.module.category">
+        <field name="name">Caisse Béton</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- Caissier : lecture, écriture, création -->
+    <record id="group_beton_caisse_caissier" model="res.groups">
+        <field name="name">Caissier</field>
+        <field name="category_id" ref="module_category_beton_caisse"/>
+    </record>
+
+    <!-- Comptable : hérite caissier + suppression + transferts -->
+    <record id="group_beton_caisse_comptable" model="res.groups">
+        <field name="name">Comptable</field>
+        <field name="category_id" ref="module_category_beton_caisse"/>
+        <field name="implied_ids" eval="[(4, ref('group_beton_caisse_caissier'))]"/>
+    </record>
+
+    <!-- Lecture seule : bloqué par code Python -->
+    <record id="group_beton_caisse_lecture_seule" model="res.groups">
+        <field name="name">Lecture seule</field>
+        <field name="category_id" ref="module_category_beton_caisse"/>
+    </record>
+</odoo>

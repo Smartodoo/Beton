@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Rapport Encaissement -->
+    <record id="action_report_beton_entry" model="ir.actions.report">
+        <field name="name">Reçu Encaissement</field>
+        <field name="model">beton.caisse.entry</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_beton_entry_template</field>
+        <field name="report_file">beton_caisse.report_beton_entry_template</field>
+        <field name="binding_model_id" ref="model_beton_caisse_entry"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Rapport Décaissement -->
+    <record id="action_report_beton_expense" model="ir.actions.report">
+        <field name="name">Reçu Décaissement</field>
+        <field name="model">beton.caisse.expense</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_beton_expense_template</field>
+        <field name="report_file">beton_caisse.report_beton_expense_template</field>
+        <field name="binding_model_id" ref="model_beton_caisse_expense"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Rapport Transfert -->
+    <record id="action_report_beton_transfer" model="ir.actions.report">
+        <field name="name">Reçu Transfert</field>
+        <field name="model">beton.caisse.transfer</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_beton_transfer_template</field>
+        <field name="report_file">beton_caisse.report_beton_transfer_template</field>
+        <field name="binding_model_id" ref="model_beton_caisse_transfer"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Rapport Recharge -->
+    <record id="action_report_beton_recharge" model="ir.actions.report">
+        <field name="name">Reçu Recharge</field>
+        <field name="model">beton.cashbox.recharge</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_beton_recharge_template</field>
+        <field name="report_file">beton_caisse.report_beton_recharge_template</field>
+        <field name="binding_model_id" ref="model_beton_cashbox_recharge"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Rapport Versement -->
+    <record id="action_report_beton_versement" model="ir.actions.report">
+        <field name="name">Reçu Versement</field>
+        <field name="model">beton.versement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_beton_versement_template</field>
+        <field name="report_file">beton_caisse.report_beton_versement_template</field>
+        <field name="binding_model_id" ref="model_beton_versement"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Rapport Dépenses Globales -->
+    <record id="action_report_beton_globale" model="ir.actions.report">
+        <field name="name">Dépenses Globales</field>
+        <field name="model">beton.caisse.globale</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_beton_globale_template</field>
+        <field name="report_file">beton_caisse.report_beton_globale_template</field>
+        <field name="binding_model_id" ref="model_beton_caisse_globale"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- ========================================================== -->
+    <!-- Rapports "Analyse globale" : récap d'un seul page pour       -->
+    <!-- plusieurs enregistrements sélectionnés.                       -->
+    <!-- ========================================================== -->
+    <record id="action_report_analyse_globale_entry" model="ir.actions.report">
+        <field name="name">Analyse globale</field>
+        <field name="model">beton.caisse.entry</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_analyse_globale_entry</field>
+        <field name="report_file">beton_caisse.report_analyse_globale_entry</field>
+        <field name="binding_model_id" ref="model_beton_caisse_entry"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_analyse_globale_expense" model="ir.actions.report">
+        <field name="name">Analyse globale</field>
+        <field name="model">beton.caisse.expense</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_analyse_globale_expense</field>
+        <field name="report_file">beton_caisse.report_analyse_globale_expense</field>
+        <field name="binding_model_id" ref="model_beton_caisse_expense"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_analyse_globale_transfer" model="ir.actions.report">
+        <field name="name">Analyse globale</field>
+        <field name="model">beton.caisse.transfer</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_analyse_globale_transfer</field>
+        <field name="report_file">beton_caisse.report_analyse_globale_transfer</field>
+        <field name="binding_model_id" ref="model_beton_caisse_transfer"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_analyse_globale_recharge" model="ir.actions.report">
+        <field name="name">Analyse globale</field>
+        <field name="model">beton.cashbox.recharge</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_analyse_globale_recharge</field>
+        <field name="report_file">beton_caisse.report_analyse_globale_recharge</field>
+        <field name="binding_model_id" ref="model_beton_cashbox_recharge"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_analyse_globale_versement" model="ir.actions.report">
+        <field name="name">Analyse globale</field>
+        <field name="model">beton.versement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_analyse_globale_versement</field>
+        <field name="report_file">beton_caisse.report_analyse_globale_versement</field>
+        <field name="binding_model_id" ref="model_beton_versement"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

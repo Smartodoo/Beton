@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire fleet.vehicle -->
+    <record id="view_fleet_vehicle_form_inherit_beton" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.beton</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Ajouter les champs béton dans le groupe "Vehicle" (avant category_id) -->
+            <xpath expr="//field[@name='category_id']" position="before">
+                <field name="capacite_m3"/>
+                <field name="consommation_moyenne"/>
+                <field name="cout_km"/>
+                <field name="etat_camion"/>
+            </xpath>
+            <!-- Onglet Pièces jointes sur le véhicule -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Pièces jointes" name="documents_vehicle">
+                    <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Héritage vue tree fleet.vehicle -->
+    <record id="view_fleet_vehicle_tree_inherit_beton" model="ir.ui.view">
+        <field name="name">fleet.vehicle.tree.inherit.beton</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="capacite_m3"/>
+                <field name="consommation_moyenne" optional="hide"/>
+                <field name="etat_camion" widget="badge"
+                       decoration-success="etat_camion == 'disponible'"
+                       decoration-info="etat_camion == 'en_mission'"
+                       decoration-danger="etat_camion == 'en_panne'"
+                       decoration-warning="etat_camion == 'en_maintenance'"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Héritage vue formulaire fleet.vehicle.log.contract -->
+    <record id="view_fleet_vehicle_log_contract_form_inherit_beton" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form.inherit.beton</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vehicle_id']" position="after">
+                <field name="vehicle_license_plate"/>
+            </xpath>
+            <!-- Section Informations du véhicule juste après la section Vehicle (avant Cost) -->
+            <xpath expr="//field[@name='amount']/../.." position="before">
+                <group string="Informations du véhicule" col="2" invisible="not vehicle_id">
+                    <group string="Identification">
+                        <field name="vehicle_brand_id"/>
+                        <field name="vehicle_model_id"/>
+                        <field name="vehicle_license_plate"/>
+                        <field name="vehicle_vin_sn"/>
+                        <field name="vehicle_model_year"/>
+                        <field name="vehicle_color"/>
+                    </group>
+                    <group string="Caractéristiques techniques">
+                        <field name="vehicle_fuel_type"/>
+                        <field name="vehicle_transmission"/>
+                        <field name="vehicle_horsepower"/>
+                        <field name="vehicle_power"/>
+                        <field name="vehicle_capacite_m3"/>
+                        <field name="vehicle_consommation_moyenne"/>
+                        <field name="vehicle_cout_km"/>
+                        <field name="vehicle_etat_camion" widget="badge"
+                               decoration-success="vehicle_etat_camion == 'disponible'"
+                               decoration-info="vehicle_etat_camion == 'en_mission'"
+                               decoration-danger="vehicle_etat_camion == 'en_panne'"
+                               decoration-warning="vehicle_etat_camion == 'en_maintenance'"/>
+                    </group>
+                </group>
+            </xpath>
+            <!-- Pièces jointes en bas du formulaire -->
+            <xpath expr="//sheet" position="inside">
+                <separator string="Pièces jointes"/>
+                <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

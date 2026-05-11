@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage du rapport standard de facture client pour ajouter
+         Période, N° Bon de Commande, Client, et récap HT/TVA/TTC. -->
+    <template id="report_invoice_document_inherit_beton"
+              inherit_id="account.report_invoice_document">
+
+        <!-- Bloc d'infos supplémentaires : Période, N° Bon de Commande, Client -->
+        <xpath expr="//div[@id='informations']" position="after">
+            <div class="mt-2 mb-3 p-2" name="beton_infos_invoice"
+                 style="background:#f7fafc; border:1px solid #d0dde9;
+                        border-left:4px solid #1F4E79; border-radius:3px;
+                        overflow-wrap:break-word; word-wrap:break-word;">
+                <div class="row" style="margin:0;">
+                    <div class="col-4" style="padding:4px 8px; overflow-wrap:break-word; word-wrap:break-word; word-break:break-all;">
+                        <span style="color:#5a6c7d; font-size:10px;
+                                     text-transform:uppercase; letter-spacing:0.5px;
+                                     font-weight:600; display:block;">Période</span>
+                        <span style="font-weight:700;"
+                              t-esc="o.invoice_date.strftime('%m/%Y') if o.invoice_date else '—'"/>
+                    </div>
+                    <div class="col-4" style="padding:4px 8px; overflow-wrap:break-word; word-wrap:break-word; word-break:break-all;">
+                        <span style="color:#5a6c7d; font-size:10px;
+                                     text-transform:uppercase; letter-spacing:0.5px;
+                                     font-weight:600; display:block;">N° Bon de Commande</span>
+                        <t t-set="sale_orders" t-value="o.invoice_line_ids.sale_line_ids.order_id"/>
+                        <span style="font-weight:700; overflow-wrap:break-word; word-wrap:break-word; word-break:break-all;"
+                              t-esc="', '.join(sale_orders.mapped('name')) or '—'"/>
+                    </div>
+                    <div class="col-4" style="padding:4px 8px; overflow-wrap:break-word; word-wrap:break-word; word-break:break-all;">
+                        <span style="color:#5a6c7d; font-size:10px;
+                                     text-transform:uppercase; letter-spacing:0.5px;
+                                     font-weight:600; display:block;">Client</span>
+                        <span style="font-weight:700; overflow-wrap:break-word; word-wrap:break-word; word-break:break-all;"
+                              t-esc="o.partner_id.name or '—'"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Récap HT / TVA / TTC dans le bloc totaux -->
+        <xpath expr="//div[@id='total']" position="inside">
+            <div class="row mt-3" name="beton_montants_invoice">
+                <div class="col-4">
+                    <div class="p-2 text-center"
+                         style="background:#f7fafc; border:1px solid #d0dde9; border-radius:3px;">
+                        <span style="color:#5a6c7d; font-size:10px;
+                                     text-transform:uppercase; letter-spacing:0.5px;
+                                     font-weight:600;">Montant HT</span><br/>
+                        <strong style="font-size:14px; color:#1F4E79;"
+                                t-esc="'%.2f' % o.amount_untaxed"/>
+                        <span t-field="o.currency_id.symbol"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-2 text-center"
+                         style="background:#f7fafc; border:1px solid #d0dde9; border-radius:3px;">
+                        <span style="color:#5a6c7d; font-size:10px;
+                                     text-transform:uppercase; letter-spacing:0.5px;
+                                     font-weight:600;">Montant TVA</span><br/>
+                        <strong style="font-size:14px; color:#1F4E79;"
+                                t-esc="'%.2f' % o.amount_tax"/>
+                        <span t-field="o.currency_id.symbol"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-2 text-center"
+                         style="background:#1F4E79; color:#fff; border-radius:3px;">
+                        <span style="color:#cfe2f3; font-size:10px;
+                                     text-transform:uppercase; letter-spacing:0.5px;
+                                     font-weight:600;">Montant TTC</span><br/>
+                        <strong style="font-size:14px;"
+                                t-esc="'%.2f' % o.amount_total"/>
+                        <span t-field="o.currency_id.symbol"/>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 15px; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px; background: #f8f9fa;">
+                <strong>Arrêté le montant à la somme de :</strong>
+                <br/>
+                <span style="font-style: italic;">
+                    <t t-esc="o.currency_id.amount_to_text(o.amount_total) if o.currency_id else '%.2f' % o.amount_total"/>
+                </span>
+            </div>
+        </xpath>
+    </template>
+</odoo>

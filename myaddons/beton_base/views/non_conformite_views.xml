@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_beton_nc_form" model="ir.ui.view">
+        <field name="name">beton.non.conformite.form</field>
+        <field name="model">beton.non.conformite</field>
+        <field name="arch" type="xml">
+            <form string="Non-Conformité">
+                <sheet>
+                    <widget name="web_ribbon" title="Traité" bg_color="text-bg-success"
+                            invisible="traitement != 'oui'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="essai_id"/>
+                            <field name="origine"/>
+                            <field name="gravite"/>
+                        </group>
+                        <group>
+                            <field name="responsable_id"/>
+                            <field name="traitement"/>
+                            <field name="date_traitement"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <field name="action_corrective"/>
+                    </group>
+                    <separator string="Pièces jointes"/>
+                    <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_nc_tree" model="ir.ui.view">
+        <field name="name">beton.non.conformite.tree</field>
+        <field name="model">beton.non.conformite</field>
+        <field name="arch" type="xml">
+            <tree string="Non-Conformités"
+                  decoration-danger="gravite == 'critique'"
+                  decoration-warning="gravite == 'majeure'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="origine"/>
+                <field name="gravite" widget="badge"
+                       decoration-danger="gravite == 'critique'"
+                       decoration-warning="gravite == 'majeure'"
+                       decoration-info="gravite == 'mineure'"/>
+                <field name="responsable_id"/>
+                <field name="traitement" widget="badge"
+                       decoration-success="traitement == 'oui'"
+                       decoration-danger="traitement == 'non'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_beton_nc" model="ir.actions.act_window">
+        <field name="name">Non-Conformités</field>
+        <field name="res_model">beton.non.conformite</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune non-conformité enregistrée
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- BOM: Beton C25/30 Standard -->
+        <record id="bom_c25_30" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_beton_c25_30"/>
+            <field name="product_qty">1</field>
+            <field name="type">normal</field>
+            <field name="is_beton_bom" eval="True"/>
+            <field name="classe_resistance">c25_30</field>
+            <field name="consistance">s3</field>
+            <field name="exposition">xc1</field>
+            <field name="dmax">25.0</field>
+        </record>
+
+        <!-- BOM: Beton C30/37 Standard -->
+        <record id="bom_c30_37" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_beton_c30_37"/>
+            <field name="product_qty">1</field>
+            <field name="type">normal</field>
+            <field name="is_beton_bom" eval="True"/>
+            <field name="classe_resistance">c30_37</field>
+            <field name="consistance">s3</field>
+            <field name="exposition">xc2</field>
+            <field name="dmax">25.0</field>
+        </record>
+
+    </data>
+</odoo>

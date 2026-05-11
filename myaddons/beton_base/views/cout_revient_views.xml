@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_beton_cout_form" model="ir.ui.view">
+        <field name="name">beton.cout.revient.form</field>
+        <field name="model">beton.cout.revient</field>
+        <field name="arch" type="xml">
+            <form string="Coût de Revient">
+                <sheet>
+                    <group>
+                        <group string="Identification">
+                            <field name="formule_beton_id"/>
+                            <field name="periode"/>
+                        </group>
+                        <group string="Résultat">
+                            <field name="cout_total_m3"/>
+                            <field name="prix_vente_m3"/>
+                            <field name="marge_brute"/>
+                        </group>
+                    </group>
+                    <separator string="Coûts matières premières"/>
+                    <field name="matiere_ligne_ids" readonly="1">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="quantite"/>
+                            <field name="cout_unitaire"/>
+                            <field name="sous_total"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <group>
+                            <field name="cout_matieres"/>
+                        </group>
+                    </group>
+                    <group string="Autres coûts">
+                        <group>
+                            <field name="cout_transport"/>
+                            <field name="cout_maintenance"/>
+                        </group>
+                        <group>
+                            <field name="cout_energie"/>
+                            <field name="cout_main_oeuvre"/>
+                        </group>
+                    </group>
+                    <separator string="Pièces jointes"/>
+                    <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_cout_tree" model="ir.ui.view">
+        <field name="name">beton.cout.revient.tree</field>
+        <field name="model">beton.cout.revient</field>
+        <field name="arch" type="xml">
+            <tree string="Coûts de Revient">
+                <field name="formule_beton_id"/>
+                <field name="periode"/>
+                <field name="cout_matieres"/>
+                <field name="cout_transport"/>
+                <field name="cout_maintenance"/>
+                <field name="cout_energie"/>
+                <field name="cout_main_oeuvre"/>
+                <field name="cout_total_m3" decoration-bf="1"/>
+                <field name="prix_vente_m3"/>
+                <field name="marge_brute"
+                       decoration-success="marge_brute > 0"
+                       decoration-danger="marge_brute &lt;= 0"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue recherche coût de revient -->
+    <record id="view_beton_cout_search" model="ir.ui.view">
+        <field name="name">beton.cout.revient.search</field>
+        <field name="model">beton.cout.revient</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="formule_beton_id"/>
+                <field name="periode"/>
+                <separator/>
+                <filter name="filter_marge_positive" string="Marge positive"
+                        domain="[('marge_brute', '&gt;', 0)]"/>
+                <filter name="filter_marge_negative" string="Marge négative"
+                        domain="[('marge_brute', '&lt;=', 0)]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="groupby_formule" string="Formule béton"
+                            context="{'group_by': 'formule_beton_id'}"/>
+                    <filter name="groupby_periode" string="Période"
+                            context="{'group_by': 'periode'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Wizard Filtrer par Période -->
+    <record id="view_cout_revient_period_filter_wizard_form" model="ir.ui.view">
+        <field name="name">cout.revient.period.filter.wizard.form</field>
+        <field name="model">cout.revient.period.filter.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Filtrer par Période">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                    </group>
+                    <group>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Appliquer" name="action_apply_filter" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action gear icon: Filtrer par période -->
+    <record id="action_cout_revient_period_filter" model="ir.actions.act_window">
+        <field name="name">Filtrer par période</field>
+        <field name="res_model">cout.revient.period.filter.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_beton_cout_revient"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <record id="action_beton_cout" model="ir.actions.act_window">
+        <field name="name">Coûts de Revient</field>
+        <field name="res_model">beton.cout.revient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrer votre premier coût de revient
+            </p>
+        </field>
+    </record>
+</odoo>

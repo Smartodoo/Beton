@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- Catégorie du module -->
+        <record id="module_category_beton" model="ir.module.category">
+            <field name="name">Gestion Centrale à Béton</field>
+            <field name="description">Gestion complète d'une centrale à béton</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- Groupe Opérateur -->
+        <record id="group_beton_operateur" model="res.groups">
+            <field name="name">Opérateur</field>
+            <field name="category_id" ref="module_category_beton"/>
+            <field name="comment">Saisie des ordres de fabrication et livraisons.</field>
+        </record>
+
+        <!-- Groupe Laborantin -->
+        <record id="group_beton_laborantin" model="res.groups">
+            <field name="name">Laborantin</field>
+            <field name="category_id" ref="module_category_beton"/>
+            <field name="comment">Saisie des essais béton et fiches qualité.</field>
+        </record>
+
+        <!-- Groupe Commercial -->
+        <record id="group_beton_commercial" model="res.groups">
+            <field name="name">Commercial</field>
+            <field name="category_id" ref="module_category_beton"/>
+            <field name="comment">Gestion des clients, chantiers et factures.</field>
+        </record>
+
+        <!-- Groupe Responsable (implique les 3 précédents) -->
+        <record id="group_beton_responsable" model="res.groups">
+            <field name="name">Responsable</field>
+            <field name="category_id" ref="module_category_beton"/>
+            <field name="implied_ids" eval="[(4, ref('group_beton_operateur')),
+                                              (4, ref('group_beton_laborantin')),
+                                              (4, ref('group_beton_commercial'))]"/>
+            <field name="comment">Accès complet à tous les modules opérationnels.</field>
+        </record>
+
+        <!-- Groupe Directeur (implique responsable) -->
+        <record id="group_beton_directeur" model="res.groups">
+            <field name="name">Directeur</field>
+            <field name="category_id" ref="module_category_beton"/>
+            <field name="implied_ids" eval="[(4, ref('group_beton_responsable'))]"/>
+            <field name="comment">Accès complet + coûts de revient et tableaux de bord.</field>
+        </record>
+    </data>
+</odoo>

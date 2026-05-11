@@ -1,0 +1,31 @@
+/*
+=======================================================================
+				List Inside Form Sticky Start
+=======================================================================
+*/
+@if $is_sticky_list_inside_form == True{
+	.o_form_view{
+		.o_list_table{
+			thead{
+				position: sticky !important;top: 0;z-index: 1;
+				tr:nth-child(1){
+					th{
+						background-color: #ffffff;	
+					}
+				}
+			}
+			tfoot{
+				position: sticky; bottom: 0;
+			}
+		}
+		.table-responsive{
+			max-height: 300px;overflow-y: auto;height: 220px;overflow-x: initial;display: inline-block;
+		}
+	} 
+}
+
+/*
+=======================================================================
+				List Inside Form Sticky End
+=======================================================================
+*

@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_sinistre_print_year_wizard" model="ir.ui.view">
+        <field name="name">sinistre.print.year.wizard.form</field>
+        <field name="model">sinistre.print.year.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Impression des Sinistres par Année">
+                <group>
+                    <field name="year"/>
+                </group>
+                <footer>
+                    <button name="print_report_year" type="object" string="Imprimer" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sinistre_print_year_wizard" model="ir.actions.act_window">
+        <field name="name">Impression par Année</field>
+        <field name="res_model">sinistre.print.year.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

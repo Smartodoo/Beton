@@ -1,0 +1,31 @@
+<odoo>
+    <menuitem id="custom_project_root_menu" name="Projets S-T"
+              web_icon="custom_project,static/description/closure.png"/>
+    <menuitem id="custom_project_main_menu" name="Projets" parent="custom_project_root_menu" sequence="1"/>
+
+    <record id="action_custom_project" model="ir.actions.act_window">
+        <field name="name">Projets</field>
+        <field name="res_model">custom.project</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="custom_project_menuitem" name="Gérer les Projets" parent="custom_project_main_menu"
+              action="action_custom_project"/>
+    <record id="action_open_subcontractors" model="ir.actions.act_window">
+        <field name="name">Sous-traitants</field>
+        <field name="res_model">res.partner</field>
+        <field name="domain">[('contact_type', '=', 'SUBCONTRACTOR')]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+<!--    <record id="action_open_stock_articles" model="ir.actions.act_window">-->
+<!--        <field name="name">Articles de Stock</field>-->
+<!--        <field name="res_model">stock.articles</field>-->
+<!--         <field name="context">{'default_project_id': context.get('default_project_id')}-->
+<!--        </field>-->
+<!--        <field name="domain">[('project_id', '=', context.get('default_project_id'))]-->
+<!--        </field>-->
+<!--        <field name="view_mode">tree</field>-->
+<!--    </record>-->
+    <menuitem id="sous_traitons" name="Sous-traitants" parent="custom_project_root_menu" sequence="2"
+              action="action_open_subcontractors"/>
+</odoo>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_beton_bon_sortie_form" model="ir.ui.view">
+        <field name="name">beton.bon.sortie.form</field>
+        <field name="model">beton.bon.sortie</field>
+        <field name="arch" type="xml">
+            <form string="Bon de Sortie">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirmer"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_done" type="object" string="Terminer"
+                            class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" type="object" string="Annuler"
+                            class="btn-secondary" invisible="state in ('done', 'cancel')"/>
+                    <button name="action_reset_draft" type="object" string="Remettre en brouillon"
+                            class="btn-secondary" invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations générales">
+                            <field name="date" readonly="state == 'done'"/>
+                            <field name="partner_id" readonly="state == 'done'"/>
+                            <field name="sale_order_id" readonly="1"/>
+                            <field name="chantier" readonly="state == 'done'"/>
+                        </group>
+                        <group string="Produit / Service">
+                            <field name="product_id" readonly="state == 'done'"/>
+                            <field name="quantity" readonly="state == 'done'"/>
+                            <field name="product_uom_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Description ou observations..."
+                               readonly="state == 'done'"/>
+                    </group>
+                    <separator string="Pièces jointes"/>
+                    <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_beton_bon_sortie_tree" model="ir.ui.view">
+        <field name="name">beton.bon.sortie.tree</field>
+        <field name="model">beton.bon.sortie</field>
+        <field name="arch" type="xml">
+            <tree string="Bons de Sortie">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="chantier"/>
+                <field name="sale_order_id"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'confirmed'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_beton_bon_sortie_search" model="ir.ui.view">
+        <field name="name">beton.bon.sortie.search</field>
+        <field name="model">beton.bon.sortie</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="chantier"/>
+                <field name="sale_order_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_confirmed" string="Confirmé" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="filter_done" string="Terminé" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="groupby_client" string="Client" context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_product" string="Produit" context="{'group_by': 'product_id'}"/>
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'date'}"/>
+                    <filter name="groupby_state" string="Statut" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_beton_bon_sortie" model="ir.actions.act_window">
+        <field name="name">Bons de Sortie</field>
+        <field name="res_model">beton.bon.sortie</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun bon de sortie. Les bons sont créés automatiquement lors de la confirmation des ventes contenant des produits de type service.
+            </p>
+        </field>
+    </record>
+
+    <!-- Smart Button sur sale.order -->
+    <record id="view_sale_order_form_inherit_bon_sortie" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.bon.sortie</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_bon_sortie" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        invisible="bon_sortie_count == 0">
+                    <field name="bon_sortie_count" widget="statinfo" string="Bon(s) de Sortie"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,87 @@
+@if $backend_all_icon_style == 'backend_regular_icon'{
+
+  @font-face {
+    font-family: 'icomoon';
+    src:  url('/sh_entmate_theme/static/src/oi_fonts_regular/fonts/icomoon.eot?1cet59');
+    src:  url('/sh_entmate_theme/static/src/oi_fonts_regular/fonts/icomoon.eot?1cet59#iefix') format('embedded-opentype'),
+      url('/sh_entmate_theme/static/src/oi_fonts_regular/fonts/icomoon.woff2?1cet59') format('woff2'),
+      url('/sh_entmate_theme/static/src/oi_fonts_regular/fonts/icomoon.ttf?1cet59') format('truetype'),
+      url('/sh_entmate_theme/static/src/oi_fonts_regular/fonts/icomoon.woff?1cet59') format('woff'),
+      url('/sh_entmate_theme/static/src/oi_fonts_regular/fonts/icomoon.svg?1cet59#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+  
+  [class^="icon-"], [class*=" icon-"],
+  [class^="oi-"], [class*=" oi-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-oi-gif-picker:before {
+    content: "\e82e";
+  }
+  .icon-oi-smile-add:before {
+    content: "\e84e";
+  }
+  .icon-oi-arrow-left:before {
+    content: "\e842";
+  }
+  .icon-oi-arrow-right:before {
+    content: "\e843";
+  }
+  .icon-oi-chevron-left:before {
+    content: "\e83a";
+  }
+  .icon-oi-chevron-right:before {
+    content: "\e83b";
+  }
+  .icon-oi-launch:before {
+    content: "\e812";
+  }
+  .icon-oi-view-cohort:before {
+    content: "\e816";
+  }
+  .icon-oi-voip:before {
+    content: "\e803";
+  }
+  .icon-oi-studio:before {
+    content: "\e813";
+  }
+  .icon-oi-search:before {
+    content: "\e808";
+  }
+  .icon-oi-group:before {
+    content: "\e80a";
+  }
+  .icon-oi-panel-right:before {
+    content: "\e810";
+  }
+  .icon-oi-view-list:before {
+    content: "\e817";
+  }
+  .icon-oi-view-kanban:before {
+    content: "\e814";
+  }
+  .icon-oi-settings-adjust:before {
+    content: "\e80c";
+  }
+  .icon-oi-close:before {
+    content: "\e852";
+  }
+  .icon-oi-view-pivot:before {
+    content: "\e800";
+  }
+
+}

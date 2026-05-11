@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire res.partner - Finance Béton -->
+    <record id="view_partner_form_inherit_beton_caisse" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.beton.caisse</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Champs invisibles + ribbon "Crédit dépassé" + bandeau d'alerte -->
+            <xpath expr="//sheet" position="inside">
+                <field name="beton_credit_over_limit" invisible="1"/>
+                <field name="beton_credit_overflow" invisible="1"/>
+                <field name="plafond_credit" invisible="1"/>
+                <widget name="web_ribbon"
+                        title="Crédit dépassé"
+                        bg_color="text-bg-danger"
+                        invisible="not beton_credit_over_limit"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-danger mb-0" role="alert"
+                     invisible="not beton_credit_over_limit"
+                     style="border-radius: 0; font-weight: 600;">
+                    <i class="fa fa-exclamation-triangle me-2"
+                       title="Alerte crédit"
+                       role="img"
+                       aria-label="Alerte crédit"/>
+                    <strong>Plafond crédit dépassé !</strong>
+                    Le crédit de ce
+                    <span invisible="type_partenaire_beton != 'client'">client</span>
+                    <span invisible="type_partenaire_beton != 'fournisseur'">fournisseur</span>
+                    dépasse le plafond autorisé de
+                    <field name="beton_credit_overflow" widget="monetary"
+                           class="oe_inline" readonly="1"/>.
+                </div>
+            </xpath>
+            <!-- Smart buttons -->
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <!-- CRÉDIT CLIENT -->
+                <button name="action_view_beton_entries" type="object"
+                        class="oe_stat_button" icon="fa-credit-card"
+                        invisible="type_partenaire_beton != 'client'">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value text-danger">
+                            <field name="beton_credit_client" widget="monetary"
+                                   options="{'no_symbol': True}"/>
+                        </span>
+                        <span class="o_stat_text">Crédit</span>
+                    </div>
+                </button>
+                <!-- CRÉDIT FOURNISSEUR -->
+                <button name="action_view_beton_expenses" type="object"
+                        class="oe_stat_button" icon="fa-credit-card"
+                        invisible="type_partenaire_beton != 'fournisseur'">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value text-danger">
+                            <field name="beton_credit_fournisseur" widget="monetary"
+                                   options="{'no_symbol': True}"/>
+                        </span>
+                        <span class="o_stat_text">Crédit</span>
+                    </div>
+                </button>
+                <!-- VERSEMENTS -->
+                <button name="action_view_beton_versements" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="not type_partenaire_beton">
+                    <field name="beton_versement_count" widget="statinfo"
+                           string="Versements"/>
+                </button>
+            </xpath>
+
+            <!-- Champs crédit sous les tags -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="beton_credit_client" string="Crédit Client"
+                       invisible="type_partenaire_beton != 'client'"
+                       widget="monetary" readonly="1"/>
+                <field name="beton_credit_fournisseur" string="Crédit Fournisseur"
+                       invisible="type_partenaire_beton != 'fournisseur'"
+                       widget="monetary" readonly="1"/>
+            </xpath>
+
+            <!-- Onglet Finance -->
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Finance" name="finance_beton"
+                      invisible="not type_partenaire_beton">
+                    <field name="type_partenaire_beton" invisible="1"/>
+                    <div class="mb-3">
+                        <button name="action_create_beton_versement" type="object"
+                                string="Enregistrer un versement"
+                                class="btn-primary"
+                                icon="fa-money"
+                                groups="beton_caisse.group_beton_caisse_caissier"/>
+                    </div>
+                    <!-- Section Client -->
+                    <group string="Encaissements Client"
+                           invisible="type_partenaire_beton != 'client'">
+                        <group>
+                            <field name="beton_ca_total" widget="monetary"/>
+                            <field name="beton_verse_client" widget="monetary"/>
+                        </group>
+                        <group>
+                            <label for="beton_credit_client" string="Crédit (Reste à payer)"/>
+                            <div>
+                                <field name="beton_credit_client" widget="monetary"
+                                       class="oe_inline"
+                                       style="font-size: 18px; font-weight: bold; color: #dc3545;"/>
+                            </div>
+                        </group>
+                    </group>
+                    <!-- Section Fournisseur -->
+                    <group string="Décaissements Fournisseur"
+                           invisible="type_partenaire_beton != 'fournisseur'">
+                        <group>
+                            <field name="beton_achat_total" widget="monetary"/>
+                            <field name="beton_verse_fournisseur" widget="monetary"/>
+                        </group>
+                        <group>
+                            <label for="beton_credit_fournisseur" string="Crédit (Reste à payer)"/>
+                            <div>
+                                <field name="beton_credit_fournisseur" widget="monetary"
+                                       class="oe_inline"
+                                       style="font-size: 18px; font-weight: bold; color: #dc3545;"/>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

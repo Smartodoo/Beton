@@ -1,0 +1,66 @@
+$o-enterprise-color: #017e84;
+$primaryColor:#714B67;
+$extra_color: #017e84;
+$secondaryColor:#E6E6E6;
+$list_td_th:0.75rem !important;
+$header_bg_type:bg_color;
+$header_bg_color:#fff;
+$header_font_color:#1f2937;
+$kanban_box_style: style_1;
+$body_background_type:bg_color;
+$body_background_color:#FFFFFF;
+$body_font_family:Ubuntu;
+
+$button_style:style_2;
+$o-mail-attachment-image-size: 100px !default;
+
+
+$separator_style:style_6;
+$separator_color:#858585;
+
+$o-community-color:#017e84;
+$o-tooltip-background-color:#017e84;
+$o-brand-secondary:#e6e6e6;
+$o-brand-odoo: $o-community-color;
+$o-brand-primary: $o-community-color;
+
+
+$body_google_font_family:False;
+$is_used_google_font:False;
+
+$predefined_list_view_boolean:False;
+$predefined_list_view_style:style_1;
+$list_view_border:without_border;
+$list_view_is_hover_row:True;
+$list_view_hover_bg_color:#f5f5f5;
+$list_view_even_row_color:#FFFFFF;
+$list_view_odd_row_color:#FFFFFF;
+
+$login_page_style: style_3;
+$login_page_background_type: bg_color;
+$login_page_background_color:#B3FFB8;
+$login_page_box_color:#FFFFFF;
+
+$theme_style: style_1;
+
+$is_sticky_form:False;
+$is_sticky_list:False;
+$is_sticky_list_inside_form:False;
+$is_sticky_pivot:False;
+$checkbox_style:default;
+$radio_style:default;
+$sidebar_color: #D9D7E7;
+$sidebar_font_color: #374151;
+$sidebar_img : style_1;
+$horizontal_tab_style: style_7;
+$form_element_style:style_1;
+$breadcrumb_style:style_7;
+$progress_style:style_1;
+$progress_height:4px;
+$progress_color:#ad86a3;
+$scrollbar_style:style_1;
+$app_icon_style:style_1;
+
+$dual_tone_icon_color_1: #b8b8b8;
+$dual_tone_icon_color_2: #4e4e4e;
+$backend_all_icon_style: backend_fontawesome_icon;

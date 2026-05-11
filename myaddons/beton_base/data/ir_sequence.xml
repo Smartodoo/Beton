@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_beton_client" model="ir.sequence">
+            <field name="name">Code Client Béton</field>
+            <field name="code">beton.client</field>
+            <field name="prefix">CLT/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_beton_fournisseur" model="ir.sequence">
+            <field name="name">Code Fournisseur Béton</field>
+            <field name="code">beton.fournisseur</field>
+            <field name="prefix">FRS/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_beton_chantier" model="ir.sequence">
+            <field name="name">Chantier Béton</field>
+            <field name="code">beton.chantier</field>
+            <field name="prefix">CHT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_beton_fabrication" model="ir.sequence">
+            <field name="name">Ordre de Fabrication Béton</field>
+            <field name="code">beton.fabrication</field>
+            <field name="prefix">FAB/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_beton_livraison" model="ir.sequence">
+            <field name="name">Bon de Livraison Béton</field>
+            <field name="code">beton.livraison</field>
+            <field name="prefix">BL/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_beton_essai" model="ir.sequence">
+            <field name="name">Essai Béton</field>
+            <field name="code">beton.essai</field>
+            <field name="prefix">ESS/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_beton_equipement" model="ir.sequence">
+            <field name="name">Code Équipement</field>
+            <field name="code">beton.equipement</field>
+            <field name="prefix">EQP/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_beton_intervention" model="ir.sequence">
+            <field name="name">Intervention Maintenance</field>
+            <field name="code">beton.intervention</field>
+            <field name="prefix">INT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_beton_nc" model="ir.sequence">
+            <field name="name">Non-Conformité</field>
+            <field name="code">beton.non.conformite</field>
+            <field name="prefix">NC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_beton_bon_sortie" model="ir.sequence">
+            <field name="name">Bon de Sortie Service</field>
+            <field name="code">beton.bon.sortie</field>
+            <field name="prefix">BS/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

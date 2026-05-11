@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="beton_base.Dashboard">
+        <div class="o_action beton_dashboard">
+            <div class="dashboard-scroll-wrapper">
+            <div class="container-fluid py-3">
+
+                <!-- ==================== HEADER ==================== -->
+                <div class="dashboard-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h2>Tableau de Bord - Centrale a Beton</h2>
+                        <span class="subtitle" t-if="state.data.mois_label">
+                            <i class="fa fa-calendar-o me-1"/> <t t-esc="state.data.mois_label"/>
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 dashboard-period-picker">
+                        <label class="mb-0 fw-semibold text-white">
+                            <i class="fa fa-calendar me-1"/> Date :
+                        </label>
+                        <input type="date" class="form-control form-control-sm dashboard-date-input"
+                               style="width:auto;"
+                               t-att-value="state.selectedDate"
+                               t-on-change="onDateChange"
+                               t-att-disabled="state.loading"/>
+                        <button t-if="state.selectedDate"
+                                class="btn btn-sm btn-outline-light"
+                                title="Effacer la date"
+                                t-on-click="clearDate"
+                                t-att-disabled="state.loading">
+                            <i class="fa fa-times"/>
+                        </button>
+                        <button class="btn btn-light" t-on-click="refresh" t-att-disabled="state.loading">
+                            <i t-attf-class="fa {{ state.loading ? 'fa-spinner fa-spin' : 'fa-refresh' }}"/>
+                            Actualiser
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div t-if="state.loading" class="text-center py-5">
+                    <i class="fa fa-spinner fa-spin fa-3x text-primary"/>
+                    <p class="mt-3 text-muted">Chargement des donnees...</p>
+                </div>
+
+                <div t-else="">
+
+                    <!-- ==================== PRODUCTION ==================== -->
+                    <div class="section-title text-primary">
+                        <span class="section-icon bg-production"><i class="fa fa-industry"/></span>
+                        Production
+                    </div>
+                    <div class="row mb-4">
+                        <!-- Production du jour -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openFabricationsJour">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-blue">
+                                        <i class="fa fa-cube"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Production du jour</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.production_jour, 1)"/>
+                                            <small>m3</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Taux de production GLOBAL (pondéré : Σ produit / Σ objectif) -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.taux_production_global &gt;= 90 and state.data.taux_production_global &lt;= 110 ? 'icon-green' : state.data.taux_production_global &gt; 110 ? 'icon-purple' : state.data.taux_production_global &gt;= 50 ? 'icon-blue' : 'icon-orange' }}">
+                                        <i class="fa fa-bullseye"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Taux global (vs objectif)</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.taux_production_global, 1)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <div class="text-muted small mt-1">
+                                            Σ produit / Σ objectif (pondéré)
+                                        </div>
+                                        <div class="progress mt-2" style="height: 6px;">
+                                            <div class="progress-bar"
+                                                 t-attf-class="progress-bar {{ state.data.taux_production_global &gt;= 90 and state.data.taux_production_global &lt;= 110 ? 'bg-success' : state.data.taux_production_global &gt; 110 ? 'bg-purple' : state.data.taux_production_global &gt;= 50 ? 'bg-info' : 'bg-warning' }}"
+                                                 t-attf-style="width: {{ Math.min(state.data.taux_production_global || 0, 100) }}%;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Taux moyen par ordre (moyenne arithmétique des taux des MO) -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.taux_production_moyen &gt;= 90 and state.data.taux_production_moyen &lt;= 110 ? 'icon-green' : state.data.taux_production_moyen &gt; 110 ? 'icon-purple' : state.data.taux_production_moyen &gt;= 50 ? 'icon-blue' : 'icon-orange' }}">
+                                        <i class="fa fa-line-chart"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Taux moyen par ordre</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.taux_production_moyen, 1)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <div class="text-muted small mt-1">
+                                            Moyenne arithmétique sur les ordres
+                                        </div>
+                                        <div class="progress mt-2" style="height: 6px;">
+                                            <div class="progress-bar"
+                                                 t-attf-class="progress-bar {{ state.data.taux_production_moyen &gt;= 90 and state.data.taux_production_moyen &lt;= 110 ? 'bg-success' : state.data.taux_production_moyen &gt; 110 ? 'bg-purple' : state.data.taux_production_moyen &gt;= 50 ? 'bg-info' : 'bg-warning' }}"
+                                                 t-attf-style="width: {{ Math.min(state.data.taux_production_moyen || 0, 100) }}%;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Taux d'utilisation des centrales (capacité matérielle) -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.taux_production_jour &gt;= 90 and state.data.taux_production_jour &lt;= 110 ? 'icon-green' : state.data.taux_production_jour &gt; 110 ? 'icon-purple' : state.data.taux_production_jour &gt;= 50 ? 'icon-blue' : 'icon-orange' }}">
+                                        <i class="fa fa-tachometer"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Utilisation centrales (jour)</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.taux_production_jour, 1)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <div class="text-muted small mt-1">
+                                            <t t-esc="formatNumber(state.data.production_jour, 1)"/> /
+                                            <t t-esc="formatNumber(state.data.capacite_jour, 0)"/> m³
+                                        </div>
+                                        <div class="progress mt-2" style="height: 6px;">
+                                            <div class="progress-bar"
+                                                 t-attf-class="progress-bar {{ state.data.taux_production_jour &gt;= 90 and state.data.taux_production_jour &lt;= 110 ? 'bg-success' : state.data.taux_production_jour &gt; 110 ? 'bg-purple' : state.data.taux_production_jour &gt;= 50 ? 'bg-info' : 'bg-warning' }}"
+                                                 t-attf-style="width: {{ Math.min(state.data.taux_production_jour || 0, 100) }}%;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Production du mois -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openFabrications">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-indigo">
+                                        <i class="fa fa-calendar"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Production du mois</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.production_mois, 1)"/>
+                                            <small>m3</small>
+                                        </div>
+                                        <t t-call="beton_base.TrendBadge">
+                                            <t t-set="trend" t-value="state.data.production_mois_trend"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Taux de pertes -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.taux_pertes > 5 ? 'icon-red' : state.data.taux_pertes > 2 ? 'icon-orange' : 'icon-green' }}">
+                                        <i class="fa fa-exclamation-triangle"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Taux de pertes</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.taux_pertes, 2)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <div class="kpi-progress">
+                                            <div t-attf-class="kpi-progress-bar {{ state.data.taux_pertes > 5 ? 'bg-danger' : state.data.taux_pertes > 2 ? 'bg-warning' : 'bg-success' }}"
+                                                 t-attf-style="width: {{ Math.min(state.data.taux_pertes * 10, 100) }}%"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disponibilite centrales -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.disponibilite_centrales >= 80 ? 'icon-green' : state.data.disponibilite_centrales >= 50 ? 'icon-orange' : 'icon-red' }}">
+                                        <i class="fa fa-cogs"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Disponibilite centrales</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.disponibilite_centrales, 0)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <div class="kpi-progress">
+                                            <div t-attf-class="kpi-progress-bar {{ state.data.disponibilite_centrales >= 80 ? 'bg-success' : state.data.disponibilite_centrales >= 50 ? 'bg-warning' : 'bg-danger' }}"
+                                                 t-attf-style="width: {{ state.data.disponibilite_centrales }}%"/>
+                                        </div>
+                                        <small class="text-muted" t-if="state.data.centrales_stats">
+                                            <t t-esc="state.data.centrales_stats.operationnelles"/>/<t t-esc="state.data.centrales_stats.total"/> operationnelles
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== LOGISTIQUE ==================== -->
+                    <div class="section-title text-success">
+                        <span class="section-icon bg-logistique"><i class="fa fa-truck"/></span>
+                        Logistique
+                    </div>
+                    <div class="row mb-4">
+                        <!-- Livraisons du jour -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openLivraisonsJour">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-green">
+                                        <i class="fa fa-truck"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Livraisons du jour</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="state.data.livraisons_jour"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Volume livre mois -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openLivraisons">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-teal">
+                                        <i class="fa fa-bar-chart"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Volume livre (mois)</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.volume_livre_mois, 1)"/>
+                                            <small>m3</small>
+                                        </div>
+                                        <t t-call="beton_base.TrendBadge">
+                                            <t t-set="trend" t-value="state.data.volume_livre_trend"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chantiers actifs -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openChantiersActifs">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-blue">
+                                        <i class="fa fa-building"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Chantiers actifs</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="state.data.chantiers_actifs"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clients actifs -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-indigo">
+                                        <i class="fa fa-users"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Clients actifs</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="state.data.clients_actifs"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== QUALITE &amp; MAINTENANCE ==================== -->
+                    <div class="section-title" style="color: #e65100;">
+                        <span class="section-icon bg-qualite"><i class="fa fa-flask"/></span>
+                        Qualite &amp; Maintenance
+                    </div>
+                    <div class="row mb-4">
+                        <!-- Taux NC -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openEssais">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.taux_nc > 10 ? 'icon-red' : state.data.taux_nc > 5 ? 'icon-orange' : 'icon-green' }}">
+                                        <i class="fa fa-pie-chart"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Taux non-conformite</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.taux_nc, 1)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <small class="text-muted">
+                                            sur <t t-esc="state.data.total_essais"/> essais
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NC non traitees -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openNCNonTraitees">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.nc_non_traitees > 0 ? 'icon-red' : 'icon-green' }}">
+                                        <i class="fa fa-warning"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">NC non traitees</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.nc_non_traitees > 0 ? 'badge-danger' : 'badge-success' }}">
+                                                <t t-esc="state.data.nc_non_traitees"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Equipements en panne -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openEquipementsPanne">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.equipements_panne > 0 ? 'icon-red' : 'icon-green' }}">
+                                        <i class="fa fa-wrench"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Equipements en panne</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.equipements_panne > 0 ? 'badge-danger' : 'badge-success' }}">
+                                                <t t-esc="state.data.equipements_panne"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interventions en cours -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openInterventionsEnCours">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-amber">
+                                        <i class="fa fa-gear"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Interventions en cours</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.interventions_en_cours > 0 ? 'badge-warning' : 'badge-success' }}">
+                                                <t t-esc="state.data.interventions_en_cours"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== FINANCE ==================== -->
+                    <div class="section-title" style="color: #6a1b9a;">
+                        <span class="section-icon bg-finance"><i class="fa fa-line-chart"/></span>
+                        Finance
+                    </div>
+                    <div class="row mb-4">
+                        <!-- CA du mois -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-purple">
+                                        <i class="fa fa-money"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Chiffre d'affaires du mois</div>
+                                        <div class="kpi-value" style="font-size:1.3rem">
+                                            <t t-esc="formatCurrency(state.data.ca_mois)"/>
+                                        </div>
+                                        <t t-call="beton_base.TrendBadge">
+                                            <t t-set="trend" t-value="state.data.ca_mois_trend"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Marge par chantier -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.marge_chantier >= 15 ? 'icon-green' : state.data.marge_chantier >= 5 ? 'icon-orange' : 'icon-red' }}">
+                                        <i class="fa fa-percent"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Marge moyenne / chantier</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.marge_chantier, 1)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <div class="kpi-progress">
+                                            <div t-attf-class="kpi-progress-bar {{ state.data.marge_chantier >= 15 ? 'bg-success' : state.data.marge_chantier >= 5 ? 'bg-warning' : 'bg-danger' }}"
+                                                 t-attf-style="width: {{ Math.min(state.data.marge_chantier * 2, 100) }}%"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Factures impayees -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.factures_impayees > 0 ? 'icon-red' : 'icon-green' }}">
+                                        <i class="fa fa-file-text-o"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Factures impayees</div>
+                                        <div class="kpi-value" style="font-size:1.3rem">
+                                            <t t-esc="formatCurrency(state.data.factures_impayees)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Couts de revient -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openCoutsRevient">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-teal">
+                                        <i class="fa fa-calculator"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Couts de Revient</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.consommation_m3, 2)"/>
+                                            <small>kg/m3</small>
+                                        </div>
+                                        <small class="text-muted">Consommation matieres</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== GRAPHIQUES ==================== -->
+                    <div class="section-title" style="color: #00695c;">
+                        <span class="section-icon" style="background: linear-gradient(135deg, #00695c, #26a69a);"><i class="fa fa-area-chart"/></span>
+                        Graphiques &amp; Analyse
+                    </div>
+                    <div class="row mb-4">
+                        <!-- Graphique Production journaliere -->
+                        <div class="col-lg-8 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-bar-chart text-primary"/> Production journaliere (m3)
+                                </div>
+                                <div class="chart-body" style="height: 280px;">
+                                    <canvas t-ref="chartProduction"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Graphique Repartition par produit -->
+                        <div class="col-lg-4 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-pie-chart text-info"/> Repartition par produit
+                                </div>
+                                <div class="chart-body" style="height: 280px;">
+                                    <canvas t-ref="chartProduits"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <!-- Graphique CA mensuel -->
+                        <div class="col-lg-6 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-line-chart text-purple" style="color: #6a1b9a;"/> Chiffre d'affaires (6 derniers mois)
+                                </div>
+                                <div class="chart-body" style="height: 260px;">
+                                    <canvas t-ref="chartCA"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Graphique Livraisons semaine -->
+                        <div class="col-lg-6 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-truck text-success"/> Livraisons (7 derniers jours)
+                                </div>
+                                <div class="chart-body" style="height: 260px;">
+                                    <canvas t-ref="chartLivraisons"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== TABLEAUX DETAILLES ==================== -->
+                    <div class="row mb-4">
+                        <!-- Top Chantiers -->
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-trophy text-warning"/> Top Chantiers du mois
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.top_chantiers and state.data.top_chantiers.length">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Chantier</th>
+                                            <th class="text-end">Volume</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.top_chantiers" t-as="chantier" t-key="chantier_index">
+                                            <tr>
+                                                <td><span class="badge bg-primary rounded-pill"><t t-esc="chantier_index + 1"/></span></td>
+                                                <td><t t-esc="chantier.name"/></td>
+                                                <td class="text-end fw-bold">
+                                                    <t t-esc="formatNumber(chantier.volume, 1)"/> m3
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune donnee ce mois
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Clients -->
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-users text-primary"/> Top Clients du mois
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.top_clients and state.data.top_clients.length">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Client</th>
+                                            <th class="text-end">Volume</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.top_clients" t-as="client" t-key="client_index">
+                                            <tr>
+                                                <td><span class="badge bg-info rounded-pill"><t t-esc="client_index + 1"/></span></td>
+                                                <td><t t-esc="client.name"/></td>
+                                                <td class="text-end fw-bold">
+                                                    <t t-esc="formatNumber(client.volume, 1)"/> m3
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune donnee ce mois
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fabrications recentes -->
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-clock-o text-success"/> Fabrications recentes
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.fabrications_recentes and state.data.fabrications_recentes.length">
+                                    <thead>
+                                        <tr>
+                                            <th>Ref</th>
+                                            <th>Qte</th>
+                                            <th>Etat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.fabrications_recentes" t-as="fab" t-key="fab.id">
+                                            <tr class="cursor-pointer" t-on-click="() => this.openFabrication(fab.id)">
+                                                <td>
+                                                    <div class="fw-bold"><t t-esc="fab.name"/></div>
+                                                    <small class="text-muted"><t t-esc="fab.date"/></small>
+                                                </td>
+                                                <td class="fw-bold"><t t-esc="formatNumber(fab.qty, 1)"/> m3</td>
+                                                <td>
+                                                    <span t-attf-class="state-badge state-{{ fab.state }}">
+                                                        <t t-esc="fab.state_label"/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune fabrication
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- ==================== TREND BADGE SUB-TEMPLATE ==================== -->
+    <t t-name="beton_base.TrendBadge">
+        <span t-if="trend !== undefined and trend !== null and trend !== 0"
+              t-attf-class="trend-badge {{ trend > 0 ? 'trend-up' : 'trend-down' }}">
+            <i t-attf-class="fa {{ trend > 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"/>
+            <t t-esc="Math.abs(trend)"/>%
+        </span>
+        <span t-elif="trend === 0" class="trend-badge trend-neutral">
+            <i class="fa fa-minus"/> 0%
+        </span>
+    </t>
+</templates>

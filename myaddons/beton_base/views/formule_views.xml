@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Ancien modèle beton.formule remplacé par mrp.bom standard -->
+
+    <record id="view_beton_formule_form" model="ir.ui.view">
+        <field name="name">beton.formule.form</field>
+        <field name="model">beton.formule</field>
+        <field name="arch" type="xml">
+            <form string="Formule Béton (ancien)">
+                <sheet>
+                    <div class="alert alert-warning">
+                        <strong>Ce modèle est obsolète.</strong> Utilisez les Nomenclatures (mrp.bom) via le menu Production &gt; Formules Béton.
+                    </div>
+                    <group>
+                        <field name="code_formule" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="classe_resistance" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_formule_tree" model="ir.ui.view">
+        <field name="name">beton.formule.tree</field>
+        <field name="model">beton.formule</field>
+        <field name="arch" type="xml">
+            <tree string="Formules Béton (ancien)">
+                <field name="code_formule"/>
+                <field name="name"/>
+                <field name="classe_resistance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_beton_formule" model="ir.actions.act_window">
+        <field name="name">Formules Béton (ancien)</field>
+        <field name="res_model">beton.formule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

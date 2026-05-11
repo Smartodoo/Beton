@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template du rapport PDF -->
+    <template id="report_projects_associated_convention">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.internal_layout">
+                    <div class="container" style="font-family: Arial, sans-serif; padding: 20px;">
+                        <!-- En-tête -->
+                        <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px;">
+                            <h1 style="color: #2c3e50; margin: 0;">CONVENTION / CAHIER DE CHARGES</h1>
+                        </div>
+
+
+                        <!-- Informations du projet -->
+                        <div style="margin-bottom: 30px;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 20%;"><strong>Projet:</strong></td>
+                                    <td style="width: 30%;"><span t-field="doc.project_id.name"/></td>
+                                    <td style="width: 20%;"><strong>Client:</strong></td>
+                                    <td style="width: 30%;"><span t-field="doc.client_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sous-traitant:</strong></td>
+                                    <td colspan="3">
+                                        <t t-if="doc.original_subcontractor_id">
+                                            <span t-field="doc.original_subcontractor_id.name"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Lots:</strong></td>
+                                    <td colspan="3">
+                                        <t t-if="doc.lots_id">
+                                            <!-- CORRECTION : Utilisez une méthode plus simple pour afficher les lots -->
+                                            <t t-set="lot_names" t-value="', '.join(lot.name for lot in doc.lots_id)"/>
+                                            <span t-esc="lot_names"/>
+                                        </t>
+                                        <t t-else="">Tous les lots</t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Table des tâches -->
+                        <div style="margin-bottom: 30px;">
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                                <thead>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">N° ligne</th>
+                                        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Tâche</th>
+                                        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Description</th>
+                                        <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Quantité</th>
+                                        <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Unité</th>
+                                        <th style="border: 1px solid #ddd; padding: 10px; text-align: right;">Prix unitaire</th>
+                                        <th style="border: 1px solid #ddd; padding: 10px; text-align: right;">Total HT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                    <td><strong>Lots:</strong></td>
+                                    <td colspan="3">
+                                        <t t-if="doc.lots_id">
+                                            <!-- CORRECTION : Utilisez une méthode plus simple pour afficher les lots -->
+                                            <t t-set="lot_names" t-value="', '.join(lot.name for lot in doc.lots_id)"/>
+                                            <span t-esc="lot_names"/>
+                                    <tr t-foreach="doc.task_line_ids" t-as="line">
+                                        <td style="border: 1px solid #ddd; padding: 8px;">
+                                            <span t-field="line.no"/>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;">
+                                            <span t-field="line.task_id.name"/>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;">
+                                            <span t-field="line.description"/>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">
+                                            <span t-field="line.quantity"/>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">
+                                            <span t-field="line.unit.name"/>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+                                            <span t-field="line.unit_price"/>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+                                            <span t-field="line.total_price"/>
+                                        </td>
+                                    </tr>
+                                     </t>
+                                        <t t-else="">Tous les lots</t>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Totaux -->
+                        <div style="text-align: right; margin-top: 30px;">
+                            <table style="width: 300px; margin-left: auto; border-collapse: collapse;">
+                                <tr>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left;"><strong>Total HT:</strong></td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;">
+                                        <span t-field="doc.total_price"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left;"><strong>Taxes:</strong></td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;">
+                                        <span t-field="doc.tax_totale"/>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 10px; text-align: left;"><strong>Total TTC:</strong></td>
+                                    <td style="padding: 10px; text-align: right;">
+                                        <span t-field="doc.total"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Pied de page -->
+                        <div style="margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 50%; text-align: center;">
+                                        <p><strong>Le Client</strong></p>
+                                        <p style="margin-top: 60px;">_________________________</p>
+                                    </td>
+                                    <td style="width: 50%; text-align: center;">
+                                        <p><strong>Le Sous-traitant</strong></p>
+                                        <p style="margin-top: 60px;">_________________________</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Action de rapport -->
+    <record id="action_report_projects_associated_convention" model="ir.actions.report">
+        <field name="name">Convention PDF</field>
+        <field name="model">projects.associated</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_reports.report_projects_associated_convention</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

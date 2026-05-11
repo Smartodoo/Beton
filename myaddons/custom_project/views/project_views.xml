@@ -1,0 +1,266 @@
+<odoo>
+
+    <!-- Views of model custom.bons -->
+    <record id="view_custom_bons_form" model="ir.ui.view">
+        <field name="name">custom.bons.form</field>
+        <field name="model">custom.bons</field>
+        <field name="arch" type="xml">
+            <form string="Bon de commande">
+                <sheet>
+
+                    <group class="col-6">
+                        <field name="project_id"/>
+                        <field name="name"/>
+                        <field name="vendor_id"/>
+                        <field name="date"/>
+                    </group>
+                    <notebook>
+                        <page string="Articles">
+                            <field name="article_ids">
+                                <tree editable="bottom">
+                                    <field name="product"/>
+                                    <field name="unit"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="total_price" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <field name="description" widget="text" options="{'no_create': True}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_custom_bons_tree" model="ir.ui.view">
+        <field name="name">custom.bons.tree</field>
+        <field name="model">custom.bons</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="total_price" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+
+        </field>
+    </record>
+    <record id="view_custom_bons_search" model="ir.ui.view">
+        <field name="name">custom.bons.search</field>
+        <field name="model">custom.bons</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="date"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_open_bons" model="ir.actions.act_window">
+        <field name="name">Bons de commande</field>
+        <field name="res_model">custom.bons</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="context">{'default_project_id': context.get('default_project_id')}</field>
+        <field name="domain">[('project_id', '=', context.get('default_project_id'))]</field>
+    </record>
+
+    <!-- Views of model custom.stock -->
+    <record id="view_custom_stock_form" model="ir.ui.view">
+        <field name="name">custom.stock.form</field>
+        <field name="model">custom.stock</field>
+        <field name="arch" type="xml">
+            <form string="Stock d'articles">
+                <sheet>
+                    <group class="col-6">
+                        <field name="product_id"/>
+                        <field name="quantity"/>
+                        <field name="partner_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_custom_stock_tree" model="ir.ui.view">
+        <field name="name">custom.stock.tree</field>
+        <field name="model">custom.stock</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="product_id"/>
+                <field name="unit"/>
+                <field name="quantity"/>
+            </tree>
+
+        </field>
+    </record>
+    <record id="view_custom_stock_search" model="ir.ui.view">
+        <field name="name">custom.stock.search</field>
+        <field name="model">custom.stock</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_open_stock" model="ir.actions.act_window">
+        <field name="name">Articles de Stock</field>
+        <field name="res_model">custom.stock</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="context">{'default_project_id': context.get('default_project_id')}</field>
+        <field name="domain">[('project_id', '=', context.get('default_project_id'))]</field>
+    </record>
+
+    <!-- Views of model custom.project -->
+    <record id="view_custom_project_form" model="ir.ui.view">
+        <field name="name">custom.project.form</field>
+        <field name="model">custom.project</field>
+        <field name="arch" type="xml">
+            <form string="Projet">
+
+
+                <header>
+                    <!--                    <button name="open_related_purchases" type="object" string="purchase"/>-->
+                    <button name="action_confirm" type="object" string="Confirmer" invisible="state !=  'draft'"/>
+                    <button name="action_done" type="object" string="Terminer" invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" type="object" string="Annuler" invisible="state != 'confirmed'"/>
+                    <button name="action_draft" type="object" string="Remettre en brouillon"
+                            invisible="state in [ 'draft','confirmed']"/>
+                    <field name="state" widget="statusbar"/>
+                    <button name="import_excel_file" string="Importer" type="object" class="btn-primary"/>
+
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button name="action_get_vendor_record"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-truck">
+                            <field name="vendor_count" widget="statinfo"/>
+                        </button>
+                        <button name="%(custom_project.action_open_view_situation_final)d"
+                                string="Situation finale"  icon="fa-check-circle"
+                                type="action"
+                                class="oe_stat_button"
+                                context="{'default_project_id': active_id}"
+                        />
+                        <button name="%(action_open_bons)d" type="action" string="Bons"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                context="{'default_project_id': active_id}"
+                        />
+                        <button name="%(action_open_stock)d" type="action" string="Stock"
+                                class="oe_stat_button" icon="fa-cubes"
+                                context="{'default_project_id': active_id}"
+                        />
+                        <button
+                                class="oe_stat_button"
+                                icon="fa-bar-chart"
+                                type="object"
+                                name="action_view_consumptions">
+                            <div class="o_stat_info">
+                                <field name="consumption_count" widget="statinfo"
+                                       string="Consommations"/>
+                            </div>
+                        </button>
+                        <button name="action_view_observations" type="object" string="Observations"
+                                class="oe_stat_button" icon="fa-comments">
+                            <field name="observation_count" widget="statinfo" string="Observations"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Confirmé" bg_color="text-bg-success"
+                            invisible="state != 'confirmed'"/>
+                    <widget name="web_ribbon" title="Terminé" bg_color="text-bg-success" invisible="state != 'done'"/>
+                    <widget name="web_ribbon" title="Annulé" bg_color="text-bg-danger"
+                            invisible="state != 'cancelled'"/>
+                    <group class="col-6">
+                        <field name="name" class="col-6" readonly="state in ['confirmed','done','cancelled']"/>
+                    </group>
+                    <group class="col-6">
+                        <field name="client_id" class="col-6" readonly="state in ['confirmed','done','cancelled']"/>
+                        <field name="tax_ids" widget="many2many_tags"/>
+                        <field name="import_file"/>
+                        <!--                        <field name="stock_articles_ids" invisible="1"/>-->
+                    </group>
+                    <notebook>
+                        <page string="Marché">
+
+                            <field name="table_html" widget="html" colspan="2"/>
+
+                        </page>
+                        <page string="Description">
+                            <field name="description" widget="text" options="{'no_create': True}"/>
+                        </page>
+                    </notebook>
+
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">Total :</span>
+                        <div style="display: inline-block; margin-left: 5px;">
+                            <field name="total_price" readonly="1"
+                                   class="text-end"
+                                   nolabel="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">TVA :</span>
+                        <div style="display: inline-block; margin-left: 5px;">
+                            <field name="tax_totale" readonly="1"
+                                   class="text-end"
+                                   nolabel="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">Totale :</span>
+                        <div style="display: inline-block; margin-left: 5px;">
+                            <field name="total" readonly="1"
+                                   class="text-end"
+                                   nolabel="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </div>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_custom_project_tree" model="ir.ui.view">
+        <field name="name">custom.project.tree</field>
+        <field name="model">custom.project</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="state"/>
+                <field name="total_price" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" invisible="1"/>
+
+            </tree>
+
+        </field>
+    </record>
+    <record id="view_custom_project_search" model="ir.ui.view">
+        <field name="name">custom.project.search</field>
+        <field name="model">custom.project</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="client_id"/>
+                <filter name="filtre_draft" string="Brouillon" domain="[('state','=','draft')]"/>
+                <filter name="filter_confirmed" string="Confirmé" domain="[('state','=','confirmed')]"/>
+                <filter name="filter_done" string="Terminé" domain="[('state','=','done')]"/>
+                <filter name="filter_cancelled" string="Annulé" domain="[('state','=','cancelled')]"/>
+                <filter name="goup_by_status" string="statut" context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,66 @@
+<odoo>
+    <template id="programme_pdf">
+        <t t-call="web.external_layout">
+            <main>
+                <div class="page" style="text_center">
+                    <h2 class="text-center">
+                        Programme des clients
+                    </h2>
+                    <br/>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Nom de client</th>
+                                <th>Adresse</th>
+                                <th>Téléphone</th>
+                                <th>Béton</th>
+                                <th>Quatity</th>
+                                <th>Date</th>
+                                <th>Prix unitaire</th>
+                                <th>Giraphe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="docs" t-as="programme">
+                                <td>
+                                    <t t-esc="programme.nom.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="programme.adresse"/>
+                                </td>
+                                <td>
+                                    <t t-esc="programme.phone"/>
+                                </td>
+                                <td>
+                                    <t t-esc="programme.beton"/>
+                                </td>
+                                <td>
+                                    <t t-esc="programme.qty"/>
+                                </td>
+                                <td>
+                                    <t t-esc="programme.date"/>
+                                </td>
+                                <td>
+                                    <t t-esc="programme.price_unit"/>
+                                </td>
+
+                                <td>
+                                    <t t-if="programme.giraphe == '1'">AVEC GIRAPHE</t>
+                                    <t t-if="programme.giraphe == '2'">SANS GIRAPHE</t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </t>
+    </template>
+    <record id="action_report_programme" model="ir.actions.report">
+        <field name="name">Programme</field>
+        <field name="model">programme</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">vente_personalisation_Gros.programme_pdf</field>
+        <field name="report_file">vente_personalisation_Gros.programme_pdf</field>
+        <field name="binding_model_id" ref="vente_personalisation_Gros.model_programme"/>
+    </record>
+</odoo>

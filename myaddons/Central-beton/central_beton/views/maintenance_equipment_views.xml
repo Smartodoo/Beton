@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Maintenance Equipment Form -->
+    <record id="view_maintenance_equipment_form_inherit" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.inherit.central.beton</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='description']" position="before">
+                <page string="Central Beton" name="central_beton">
+                    <group>
+                        <group>
+                            <field name="code_equipement"/>
+                            <field name="centrale_id"/>
+                            <field name="type_equipement"/>
+                            <field name="etat_equipement" widget="badge"
+                                   decoration-success="etat_equipement == 'operationnel'"
+                                   decoration-warning="etat_equipement == 'degrade'"
+                                   decoration-danger="etat_equipement in ('arret', 'reforme')"/>
+                        </group>
+                        <group>
+                            <field name="heures_fonctionnement"/>
+                            <field name="puissance_kw"/>
+                            <field name="date_mise_service"/>
+                            <field name="date_derniere_revision"/>
+                            <field name="prochaine_revision"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes_techniques"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Beton Equipment -->
+    <record id="action_equipment_beton" model="ir.actions.act_window">
+        <field name="name">Equipements Centrale</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('centrale_id', '!=', False)]</field>
+    </record>
+
+</odoo>

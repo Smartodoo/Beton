@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_beton_entry_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif;">
+                        <div class="text-center" style="margin-bottom: 20px;">
+                            <h2>Reçu d'Encaissement</h2>
+                            <h4 style="color: #667eea;"><t t-esc="doc.name"/></h4>
+                        </div>
+                        <table class="table table-bordered" style="margin-bottom: 20px;">
+                            <tr>
+                                <td style="width: 30%; font-weight: bold; background: #f8f9fa;">Date</td>
+                                <td><t t-esc="doc.date" t-options="{'widget': 'datetime'}"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8f9fa;">Caisse</td>
+                                <td><t t-esc="doc.cashbox_id.name"/></td>
+                            </tr>
+                            <tr t-if="doc.client_id">
+                                <td style="font-weight: bold; background: #f8f9fa;">Client</td>
+                                <td><t t-esc="doc.client_id.name"/></td>
+                            </tr>
+                            <tr t-if="doc.sale_order_id">
+                                <td style="font-weight: bold; background: #f8f9fa;">Bon de commande</td>
+                                <td><t t-esc="doc.sale_order_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8f9fa;">Description</td>
+                                <td><t t-esc="doc.description"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8f9fa;">Mode de paiement</td>
+                                <td>
+                                    <t t-esc="{'cash': 'Espèces', 'cheque': 'Chèque', 'virement': 'Virement bancaire', 'carte': 'Carte bancaire'}.get(doc.payment_method, '')"/>
+                                </td>
+                            </tr>
+                            <tr t-if="doc.payment_method != 'cash' and doc.bank_id">
+                                <td style="font-weight: bold; background: #f8f9fa;">Banque</td>
+                                <td><t t-esc="doc.bank_id.name"/></td>
+                            </tr>
+                            <tr t-if="doc.bank_reference">
+                                <td style="font-weight: bold; background: #f8f9fa;">Référence</td>
+                                <td><t t-esc="doc.bank_reference"/></td>
+                            </tr>
+                            <tr t-if="doc.cheque_number">
+                                <td style="font-weight: bold; background: #f8f9fa;">N° de chèque</td>
+                                <td><t t-esc="doc.cheque_number"/></td>
+                            </tr>
+                            <tr t-if="doc.cheque_date">
+                                <td style="font-weight: bold; background: #f8f9fa;">Date du chèque</td>
+                                <td><t t-esc="doc.cheque_date" t-options="{'widget': 'date'}"/></td>
+                            </tr>
+                            <tr t-if="doc.cheque_domiciliation">
+                                <td style="font-weight: bold; background: #f8f9fa;">Domiciliation bancaire</td>
+                                <td><t t-esc="doc.cheque_domiciliation"/></td>
+                            </tr>
+                            <tr t-if="doc.payment_method != 'cash' and doc.bank_date and not doc.cheque_date">
+                                <td style="font-weight: bold; background: #f8f9fa;">Date chèque / virement</td>
+                                <td><t t-esc="doc.bank_date" t-options="{'widget': 'date'}"/></td>
+                            </tr>
+                            <tr t-if="doc.payment_method != 'cash' and doc.bank_holder">
+                                <td style="font-weight: bold; background: #f8f9fa;">Titulaire</td>
+                                <td><t t-esc="doc.bank_holder"/></td>
+                            </tr>
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th>Montant Total</th>
+                                    <th>Versement</th>
+                                    <th>Cumul Versé</th>
+                                    <th>Reste à Payer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center">
+                                    <td><t t-esc="doc.amount" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                    <td><t t-esc="doc.amount_paid" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                    <td><t t-esc="doc.amount_verse" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                    <td style="font-weight: bold;"><t t-esc="doc.amount_residual" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="margin-top: 15px; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px; background: #f8f9fa;">
+                            <strong>Arrêté le montant à la somme de :</strong>
+                            <br/>
+                            <span style="font-style: italic;">
+                                <t t-esc="doc.company_currency_id.amount_to_text(doc.amount) if doc.company_currency_id else '%.2f' % doc.amount"/>
+                            </span>
+                        </div>
+                        <div style="margin-top: 40px;">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <p>Caissier : <t t-esc="doc.user_id.name"/></p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <p>Signature :</p>
+                                    <br/><br/>
+                                    <p>_______________________</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

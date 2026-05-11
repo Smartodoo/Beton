@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Product Template Form -->
+    <record id="view_product_template_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.central.beton</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="Beton" name="beton"
+                      invisible="not is_matiere_beton">
+                    <group>
+                        <group>
+                            <field name="type_matiere_beton"/>
+                            <field name="emplacement_beton"/>
+                        </group>
+                        <group>
+                            <field name="capacite_stockage"/>
+                            <field name="seuil_alerte"/>
+                            <field name="fournisseur_principal_id"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="is_matiere_beton"/>
+                    <label for="is_matiere_beton"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Beton Raw Materials -->
+    <record id="action_product_beton" model="ir.actions.act_window">
+        <field name="name">Matieres Premieres</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_matiere_beton', '=', True)]</field>
+        <field name="context">{'default_is_matiere_beton': True, 'default_type': 'product'}</field>
+    </record>
+
+</odoo>

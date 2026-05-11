@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form -->
+    <record id="view_beton_cashbox_recharge_form" model="ir.ui.view">
+        <field name="name">beton.cashbox.recharge.form</field>
+        <field name="model">beton.cashbox.recharge</field>
+        <field name="arch" type="xml">
+            <form string="Recharge">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_preview_report" type="object"
+                                class="oe_stat_button" icon="fa-eye">
+                            <span class="o_stat_text">Aperçu</span>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cashbox_id"
+                                   options="{'no_create':True,'no_create_edit':True}"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="amount" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="Note optionnelle"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree -->
+    <record id="view_beton_cashbox_recharge_tree" model="ir.ui.view">
+        <field name="name">beton.cashbox.recharge.tree</field>
+        <field name="model">beton.cashbox.recharge</field>
+        <field name="arch" type="xml">
+            <tree string="Recharges">
+                <field name="date"/>
+                <field name="cashbox_id"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="amount" widget="monetary" sum="Total"/>
+                <field name="user_id"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_beton_cashbox_recharge_search" model="ir.ui.view">
+        <field name="name">beton.cashbox.recharge.search</field>
+        <field name="model">beton.cashbox.recharge</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="cashbox_id"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Caisse" name="cashbox" context="{'group_by':'cashbox_id'}"/>
+                    <filter string="Utilisateur" name="user" context="{'group_by':'user_id'}"/>
+                    <filter string="Société" name="company" context="{'group_by':'company_id'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_beton_cashbox_recharge" model="ir.actions.act_window">
+        <field name="name">Recharges</field>
+        <field name="res_model">beton.cashbox.recharge</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

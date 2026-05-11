@@ -1,0 +1,37 @@
+
+.o_form_view{
+    .o_horizontal_separator {
+        font-weight: normal;margin: 5px 0px 10px 0px;color: #858585 !important;position:relative;box-shadow: none;
+        &:not(:empty){
+            box-shadow: none !important;
+        }
+        @if $separator_style == 'style_1'{
+            border-bottom: 2px dashed $separator_color;width:80%;
+        }
+        @if $separator_style == 'style_2'{
+            position:relative;padding-left:15px;
+            &::after{
+                position: absolute;content: "";left: 0;top: 0;bottom: 0;border-left: 6px solid $separator_color;   
+            }
+        }
+        @if $separator_style == 'style_3'{
+            &::after{
+                content: "";position: absolute;bottom: -3px;left: -3px;right: -3px;height: 3px;width: 97%;border-bottom: double;border-color:$separator_color;
+            }
+        }
+        @if $separator_style == 'style_4'{
+            &::after{
+                content: "";position: absolute;bottom: -3px;left: -3px;right: -3px;height: 3px;width: 97%;border-bottom: 2px solid $separator_color;
+            }
+        }
+        @if $separator_style == 'style_5'{
+            position:relative;display: grid;width: 80%;
+            &::after{
+                -webkit-flex-grow: 1;flex-grow: 1;height: 5px;background-image: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0) 6px, #000 7px, rgba(0, 0, 0, 0) 6px), -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0) 6px, #000 7px, rgba(0, 0, 0, 0) 6px);background-image: linear-gradient(45deg, rgba(0, 0, 0, 0) 6px, #000 7px, rgba(0, 0, 0, 0) 6px), linear-gradient(-45deg, rgba(0, 0, 0, 0) 6px, #000 7px, rgba(0, 0, 0, 0) 6px);background-size: 9px 10px;background-position: top left;background-repeat: repeat-x; content: "";
+            }
+        }
+        @if $separator_style == 'style_6'{
+            border-bottom: 2px dashed $separator_color;width:80%;
+        }
+    }
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <!-- Journal Banque : Chèque / Virement / Carte bancaire -->
+    <record id="payment_method_beton_cheque_in" model="account.payment.method">
+        <field name="name">Chèque</field>
+        <field name="code">beton_cheque</field>
+        <field name="payment_type">inbound</field>
+    </record>
+    <record id="payment_method_beton_cheque_out" model="account.payment.method">
+        <field name="name">Chèque</field>
+        <field name="code">beton_cheque</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <record id="payment_method_beton_virement_in" model="account.payment.method">
+        <field name="name">Virement bancaire</field>
+        <field name="code">beton_virement</field>
+        <field name="payment_type">inbound</field>
+    </record>
+    <record id="payment_method_beton_virement_out" model="account.payment.method">
+        <field name="name">Virement bancaire</field>
+        <field name="code">beton_virement</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <record id="payment_method_beton_carte_in" model="account.payment.method">
+        <field name="name">Carte bancaire</field>
+        <field name="code">beton_carte</field>
+        <field name="payment_type">inbound</field>
+    </record>
+    <record id="payment_method_beton_carte_out" model="account.payment.method">
+        <field name="name">Carte bancaire</field>
+        <field name="code">beton_carte</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <!-- Journal Espèces : Espèces -->
+    <record id="payment_method_beton_especes_in" model="account.payment.method">
+        <field name="name">Espèces</field>
+        <field name="code">beton_especes</field>
+        <field name="payment_type">inbound</field>
+    </record>
+    <record id="payment_method_beton_especes_out" model="account.payment.method">
+        <field name="name">Espèces</field>
+        <field name="code">beton_especes</field>
+        <field name="payment_type">outbound</field>
+    </record>
+</odoo>

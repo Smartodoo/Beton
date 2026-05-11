@@ -1,0 +1,10 @@
+<odoo>
+    <!-- Séquence automatique pour les Versements Entrants -->
+    <record id="seq_versement_in" model="ir.sequence">
+        <field name="name">Référence Versement Entrant</field>
+        <field name="code">versement.in</field>
+        <field name="prefix">V-IN%(y)s%(month)s-</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

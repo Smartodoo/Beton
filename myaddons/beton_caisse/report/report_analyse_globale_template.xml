@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- ========== Styles communs ========== -->
+    <template id="analyse_globale_style">
+        <style>
+            .ag-page { font-family: Arial, sans-serif; font-size: 11px; color: #222; }
+            .ag-title-bar { background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+                            color: #fff; padding: 12px 16px; margin-bottom: 14px;
+                            border-radius: 4px; display: flex; justify-content: space-between;
+                            align-items: center; }
+            .ag-title-bar h2 { margin: 0; font-size: 18px; font-weight: 600; }
+            .ag-title-bar .ag-subtitle { font-size: 11px; opacity: 0.85; }
+
+            /* KPI cards */
+            .ag-kpis { display: flex; gap: 10px; margin-bottom: 16px; }
+            .ag-kpi { flex: 1; padding: 12px 14px; border-radius: 4px; color: #fff;
+                      box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+            .ag-kpi-label { font-size: 10px; text-transform: uppercase; opacity: 0.85;
+                            margin-bottom: 4px; letter-spacing: 0.5px; }
+            .ag-kpi-value { font-size: 16px; font-weight: 700; }
+            .ag-kpi.blue   { background: #1565c0; }
+            .ag-kpi.green  { background: #2e7d32; }
+            .ag-kpi.orange { background: #ef6c00; }
+            .ag-kpi.purple { background: #6a1b9a; }
+            .ag-kpi.red    { background: #c62828; }
+            .ag-kpi.teal   { background: #00695c; }
+
+            /* Tables */
+            table.ag-table { width: 100%; border-collapse: collapse; margin-bottom: 14px;
+                             font-size: 10.5px; }
+            table.ag-table th { background: #283593; color: #fff; padding: 7px 8px;
+                                text-align: left; font-size: 10.5px; font-weight: 600;
+                                border-bottom: 2px solid #1a237e; }
+            table.ag-table td { padding: 6px 8px; border-bottom: 1px solid #e0e0e0; }
+            table.ag-table tr:nth-child(even) td { background: #fafafa; }
+            table.ag-table tfoot td { background: #c5cae9; font-weight: 700;
+                                      padding: 8px; border-top: 2px solid #1a237e;
+                                      border-bottom: none; color: #1a237e; }
+
+            /* Sections */
+            .ag-section-title { font-size: 13px; font-weight: 700; color: #1a237e;
+                                margin: 16px 0 8px; padding: 6px 10px;
+                                background: #e8eaf6; border-left: 4px solid #1a237e; }
+            .ag-grid-2 { display: flex; gap: 14px; }
+            .ag-grid-2 > div { flex: 1; }
+
+            /* Helpers */
+            .text-end { text-align: right; }
+            .text-center { text-align: center; }
+            .ag-badge { display: inline-block; padding: 2px 8px; border-radius: 10px;
+                        font-size: 9.5px; font-weight: 600; }
+            .ag-badge-green { background: #c8e6c9; color: #1b5e20; }
+            .ag-badge-orange { background: #ffe0b2; color: #e65100; }
+            .ag-badge-grey { background: #e0e0e0; color: #424242; }
+        </style>
+    </template>
+
+    <!-- Header réutilisable -->
+    <template id="analyse_globale_header">
+        <t t-set="company" t-value="docs[:1].company_id or env.company"/>
+        <div class="ag-title-bar">
+            <h2><t t-esc="title"/></h2>
+            <div class="ag-subtitle">
+                <i class="fa fa-calendar"/>
+                <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+            </div>
+        </div>
+    </template>
+
+    <!-- ========== Encaissements ========== -->
+    <template id="report_analyse_globale_entry_doc">
+        <t t-call="web.external_layout">
+            <div class="page ag-page">
+                <t t-call="beton_caisse.analyse_globale_style"/>
+                <t t-set="title" t-value="'Analyse globale - Encaissements'"/>
+                <t t-call="beton_caisse.analyse_globale_header"/>
+
+                <t t-set="dates" t-value="[d.date for d in docs if d.date]"/>
+                <t t-set="approuves" t-value="docs.filtered(lambda x: x.state == 'approuve')"/>
+                <t t-set="total_paid" t-value="sum(docs.mapped('amount_paid'))"/>
+                <t t-set="curr" t-value="docs[:1].company_currency_id"/>
+                <t t-set="pm_labels" t-value="{'cash': 'Espèces', 'cheque': 'Chèque', 'virement': 'Virement bancaire', 'carte': 'Carte bancaire'}"/>
+                <t t-set="state_labels" t-value="{'draft': 'Brouillon', 'approuve': 'Approuvé'}"/>
+
+                <!-- KPI cards -->
+                <div class="ag-kpis">
+                    <div class="ag-kpi blue">
+                        <div class="ag-kpi-label">Encaissements</div>
+                        <div class="ag-kpi-value"><t t-esc="len(docs)"/></div>
+                    </div>
+                    <div class="ag-kpi green">
+                        <div class="ag-kpi-label">Total encaissé</div>
+                        <div class="ag-kpi-value">
+                            <span t-esc="total_paid"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                    <div class="ag-kpi orange">
+                        <div class="ag-kpi-label">Période</div>
+                        <div class="ag-kpi-value" style="font-size:13px;">
+                            <span t-if="dates">
+                                <t t-esc="min(dates).strftime('%d/%m/%Y')"/> -
+                                <t t-esc="max(dates).strftime('%d/%m/%Y')"/>
+                            </span>
+                            <span t-else="">-</span>
+                        </div>
+                    </div>
+                    <div class="ag-kpi purple">
+                        <div class="ag-kpi-label">Approuvés</div>
+                        <div class="ag-kpi-value">
+                            <t t-esc="len(approuves)"/> / <t t-esc="len(docs)"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Détail -->
+                <div class="ag-section-title">Détail des encaissements</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Référence</th>
+                            <th>Client</th>
+                            <th>Caisse</th>
+                            <th>Mode</th>
+                            <th>État</th>
+                            <th class="text-end">Montant payé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="d">
+                            <td><span t-esc="d.date and d.date.strftime('%d/%m/%Y') or ''"/></td>
+                            <td><span t-field="d.name"/></td>
+                            <td><span t-field="d.client_id.name"/></td>
+                            <td><span t-field="d.cashbox_id.name"/></td>
+                            <td><span t-esc="pm_labels.get(d.payment_method, '-')"/></td>
+                            <td>
+                                <span t-attf-class="ag-badge {{ 'ag-badge-green' if d.state == 'approuve' else 'ag-badge-orange' }}"
+                                      t-esc="state_labels.get(d.state, '-')"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="d.amount_paid"
+                                      t-options='{"widget": "monetary", "display_currency": d.company_currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="text-end">Total :</td>
+                            <td class="text-end">
+                                <span t-esc="total_paid"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div style="margin: 10px 0 14px; padding: 8px 12px; border: 1px solid #c5cae9; border-radius: 4px; background: #e8eaf6;">
+                    <strong>Arrêté le montant à la somme de :</strong>
+                    <span style="font-style: italic;">
+                        <t t-esc="curr.amount_to_text(total_paid) if curr else '%.2f' % total_paid"/>
+                    </span>
+                </div>
+
+                <!-- Récapitulatifs côte à côte -->
+                <div class="ag-grid-2">
+                    <div>
+                        <div class="ag-section-title">Par caisse</div>
+                        <table class="ag-table">
+                            <thead>
+                                <tr>
+                                    <th>Caisse</th>
+                                    <th class="text-center">Nb</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="cashboxes" t-value="docs.mapped('cashbox_id')"/>
+                                <tr t-foreach="cashboxes" t-as="cb">
+                                    <t t-set="lines" t-value="docs.filtered(lambda x: x.cashbox_id == cb)"/>
+                                    <td><span t-field="cb.name"/></td>
+                                    <td class="text-center"><t t-esc="len(lines)"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="sum(lines.mapped('amount_paid'))"
+                                              t-options='{"widget": "monetary", "display_currency": curr}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="ag-section-title">Par mode de paiement</div>
+                        <table class="ag-table">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th class="text-center">Nb</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="modes" t-value="set(docs.mapped('payment_method'))"/>
+                                <tr t-foreach="modes" t-as="m">
+                                    <t t-set="lines" t-value="docs.filtered(lambda x: x.payment_method == m)"/>
+                                    <td><span t-esc="pm_labels.get(m, '-')"/></td>
+                                    <td class="text-center"><t t-esc="len(lines)"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="sum(lines.mapped('amount_paid'))"
+                                              t-options='{"widget": "monetary", "display_currency": curr}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_analyse_globale_entry">
+        <t t-call="web.html_container">
+            <t t-call="beton_caisse.report_analyse_globale_entry_doc"/>
+        </t>
+    </template>
+
+    <!-- ========== Décaissements ========== -->
+    <template id="report_analyse_globale_expense_doc">
+        <t t-call="web.external_layout">
+            <div class="page ag-page">
+                <t t-call="beton_caisse.analyse_globale_style"/>
+                <t t-set="title" t-value="'Analyse globale - Décaissements'"/>
+                <t t-call="beton_caisse.analyse_globale_header"/>
+
+                <t t-set="dates" t-value="[d.date for d in docs if d.date]"/>
+                <t t-set="approuves" t-value="docs.filtered(lambda x: x.state == 'approuve')"/>
+                <t t-set="achats" t-value="docs.filtered(lambda x: x.purchase_id)"/>
+                <t t-set="ndf" t-value="docs.filtered(lambda x: x.expense_sheet_id)"/>
+                <t t-set="total_paid" t-value="sum(docs.mapped('amount_paid'))"/>
+                <t t-set="curr" t-value="docs[:1].company_currency_id"/>
+                <t t-set="pm_labels" t-value="{'cash': 'Espèces', 'cheque': 'Chèque', 'virement': 'Virement bancaire', 'carte': 'Carte bancaire'}"/>
+                <t t-set="state_labels" t-value="{'draft': 'Brouillon', 'approuve': 'Approuvé'}"/>
+
+                <div class="ag-kpis">
+                    <div class="ag-kpi red">
+                        <div class="ag-kpi-label">Décaissements</div>
+                        <div class="ag-kpi-value"><t t-esc="len(docs)"/></div>
+                    </div>
+                    <div class="ag-kpi orange">
+                        <div class="ag-kpi-label">Total décaissé</div>
+                        <div class="ag-kpi-value">
+                            <span t-esc="total_paid"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                    <div class="ag-kpi blue">
+                        <div class="ag-kpi-label">Achats / Notes de frais</div>
+                        <div class="ag-kpi-value"><t t-esc="len(achats)"/> / <t t-esc="len(ndf)"/></div>
+                    </div>
+                    <div class="ag-kpi purple">
+                        <div class="ag-kpi-label">Période</div>
+                        <div class="ag-kpi-value" style="font-size:13px;">
+                            <span t-if="dates">
+                                <t t-esc="min(dates).strftime('%d/%m/%Y')"/> -
+                                <t t-esc="max(dates).strftime('%d/%m/%Y')"/>
+                            </span>
+                            <span t-else="">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ag-section-title">Détail des décaissements</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Référence</th>
+                            <th>Bénéficiaire</th>
+                            <th>Source</th>
+                            <th>Caisse</th>
+                            <th>Mode</th>
+                            <th>État</th>
+                            <th class="text-end">Montant payé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="d">
+                            <td><span t-esc="d.date and d.date.strftime('%d/%m/%Y') or ''"/></td>
+                            <td><span t-field="d.name"/></td>
+                            <td><span t-field="d.fournisseur.name"/></td>
+                            <td>
+                                <t t-if="d.purchase_id">
+                                    <span class="ag-badge ag-badge-grey">Achat</span>
+                                </t>
+                                <t t-elif="d.expense_sheet_id">
+                                    <span class="ag-badge ag-badge-orange">Note de frais</span>
+                                </t>
+                                <t t-else="">-</t>
+                            </td>
+                            <td><span t-field="d.cashbox_id.name"/></td>
+                            <td><span t-esc="pm_labels.get(d.payment_method, '-')"/></td>
+                            <td>
+                                <span t-attf-class="ag-badge {{ 'ag-badge-green' if d.state == 'approuve' else 'ag-badge-orange' }}"
+                                      t-esc="state_labels.get(d.state, '-')"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="d.amount_paid"
+                                      t-options='{"widget": "monetary", "display_currency": d.company_currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7" class="text-end">Total :</td>
+                            <td class="text-end">
+                                <span t-esc="total_paid"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div style="margin: 10px 0 14px; padding: 8px 12px; border: 1px solid #c5cae9; border-radius: 4px; background: #e8eaf6;">
+                    <strong>Arrêté le montant à la somme de :</strong>
+                    <span style="font-style: italic;">
+                        <t t-esc="curr.amount_to_text(total_paid) if curr else '%.2f' % total_paid"/>
+                    </span>
+                </div>
+
+                <div class="ag-grid-2">
+                    <div>
+                        <div class="ag-section-title">Par caisse</div>
+                        <table class="ag-table">
+                            <thead>
+                                <tr><th>Caisse</th><th class="text-center">Nb</th><th class="text-end">Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="cashboxes" t-value="docs.mapped('cashbox_id')"/>
+                                <tr t-foreach="cashboxes" t-as="cb">
+                                    <t t-set="lines" t-value="docs.filtered(lambda x: x.cashbox_id == cb)"/>
+                                    <td><span t-field="cb.name"/></td>
+                                    <td class="text-center"><t t-esc="len(lines)"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="sum(lines.mapped('amount_paid'))"
+                                              t-options='{"widget": "monetary", "display_currency": curr}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="ag-section-title">Par mode de paiement</div>
+                        <table class="ag-table">
+                            <thead>
+                                <tr><th>Mode</th><th class="text-center">Nb</th><th class="text-end">Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="modes" t-value="set(docs.mapped('payment_method'))"/>
+                                <tr t-foreach="modes" t-as="m">
+                                    <t t-set="lines" t-value="docs.filtered(lambda x: x.payment_method == m)"/>
+                                    <td><span t-esc="pm_labels.get(m, '-')"/></td>
+                                    <td class="text-center"><t t-esc="len(lines)"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="sum(lines.mapped('amount_paid'))"
+                                              t-options='{"widget": "monetary", "display_currency": curr}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Récap par bénéficiaire -->
+                <div class="ag-section-title">Récapitulatif par bénéficiaire</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr><th>Bénéficiaire</th><th class="text-center">Nb</th><th class="text-end">Total payé</th></tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="partners" t-value="docs.mapped('fournisseur')"/>
+                        <tr t-foreach="partners" t-as="p">
+                            <t t-set="plines" t-value="docs.filtered(lambda x: x.fournisseur.id == p.id)"/>
+                            <td><span t-field="p.name"/></td>
+                            <td class="text-center"><t t-esc="len(plines)"/></td>
+                            <td class="text-end">
+                                <span t-esc="sum(plines.mapped('amount_paid'))"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_analyse_globale_expense">
+        <t t-call="web.html_container">
+            <t t-call="beton_caisse.report_analyse_globale_expense_doc"/>
+        </t>
+    </template>
+
+    <!-- ========== Transferts ========== -->
+    <template id="report_analyse_globale_transfer_doc">
+        <t t-call="web.external_layout">
+            <div class="page ag-page">
+                <t t-call="beton_caisse.analyse_globale_style"/>
+                <t t-set="title" t-value="'Analyse globale - Transferts'"/>
+                <t t-call="beton_caisse.analyse_globale_header"/>
+
+                <t t-set="dates" t-value="[d.date for d in docs if d.date]"/>
+                <t t-set="total_amount" t-value="sum(docs.mapped('amount'))"/>
+                <t t-set="curr" t-value="docs[:1].company_currency_id"/>
+
+                <div class="ag-kpis">
+                    <div class="ag-kpi blue">
+                        <div class="ag-kpi-label">Transferts</div>
+                        <div class="ag-kpi-value"><t t-esc="len(docs)"/></div>
+                    </div>
+                    <div class="ag-kpi teal">
+                        <div class="ag-kpi-label">Total transféré</div>
+                        <div class="ag-kpi-value">
+                            <span t-esc="total_amount"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                    <div class="ag-kpi purple">
+                        <div class="ag-kpi-label">Période</div>
+                        <div class="ag-kpi-value" style="font-size:13px;">
+                            <span t-if="dates">
+                                <t t-esc="min(dates).strftime('%d/%m/%Y')"/> -
+                                <t t-esc="max(dates).strftime('%d/%m/%Y')"/>
+                            </span>
+                            <span t-else="">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ag-section-title">Détail des transferts</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Référence</th>
+                            <th>Caisse source</th>
+                            <th>Caisse destination</th>
+                            <th>Description</th>
+                            <th class="text-end">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="d">
+                            <td><span t-esc="d.date and d.date.strftime('%d/%m/%Y') or ''"/></td>
+                            <td><span t-field="d.name"/></td>
+                            <td><span t-field="d.source_cashbox_id.name"/></td>
+                            <td><span t-field="d.destination_cashbox_id.name"/></td>
+                            <td><span t-field="d.description"/></td>
+                            <td class="text-end">
+                                <span t-field="d.amount"
+                                      t-options='{"widget": "monetary", "display_currency": d.company_currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-end">Total :</td>
+                            <td class="text-end">
+                                <span t-esc="total_amount"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div style="margin: 10px 0 14px; padding: 8px 12px; border: 1px solid #c5cae9; border-radius: 4px; background: #e8eaf6;">
+                    <strong>Arrêté le montant à la somme de :</strong>
+                    <span style="font-style: italic;">
+                        <t t-esc="curr.amount_to_text(total_amount) if curr else '%.2f' % total_amount"/>
+                    </span>
+                </div>
+
+                <!-- Flux par paire de caisses -->
+                <div class="ag-section-title">Flux par couple Source -> Destination</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr><th>Source</th><th>Destination</th><th class="text-center">Nb</th><th class="text-end">Total</th></tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="pairs" t-value="set((d.source_cashbox_id.id, d.destination_cashbox_id.id) for d in docs)"/>
+                        <tr t-foreach="pairs" t-as="p">
+                            <t t-set="lines" t-value="docs.filtered(lambda x: x.source_cashbox_id.id == p[0] and x.destination_cashbox_id.id == p[1])"/>
+                            <td><span t-esc="lines[:1].source_cashbox_id.name"/></td>
+                            <td><span t-esc="lines[:1].destination_cashbox_id.name"/></td>
+                            <td class="text-center"><t t-esc="len(lines)"/></td>
+                            <td class="text-end">
+                                <span t-esc="sum(lines.mapped('amount'))"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_analyse_globale_transfer">
+        <t t-call="web.html_container">
+            <t t-call="beton_caisse.report_analyse_globale_transfer_doc"/>
+        </t>
+    </template>
+
+    <!-- ========== Recharges ========== -->
+    <template id="report_analyse_globale_recharge_doc">
+        <t t-call="web.external_layout">
+            <div class="page ag-page">
+                <t t-call="beton_caisse.analyse_globale_style"/>
+                <t t-set="title" t-value="'Analyse globale - Recharges'"/>
+                <t t-call="beton_caisse.analyse_globale_header"/>
+
+                <t t-set="dates" t-value="[d.date for d in docs if d.date]"/>
+                <t t-set="total_amount" t-value="sum(docs.mapped('amount'))"/>
+                <t t-set="curr" t-value="docs[:1].company_currency_id"/>
+                <t t-set="avg_amount" t-value="(total_amount / len(docs)) if docs else 0.0"/>
+
+                <div class="ag-kpis">
+                    <div class="ag-kpi blue">
+                        <div class="ag-kpi-label">Recharges</div>
+                        <div class="ag-kpi-value"><t t-esc="len(docs)"/></div>
+                    </div>
+                    <div class="ag-kpi green">
+                        <div class="ag-kpi-label">Total rechargé</div>
+                        <div class="ag-kpi-value">
+                            <span t-esc="total_amount"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                    <div class="ag-kpi orange">
+                        <div class="ag-kpi-label">Moyenne</div>
+                        <div class="ag-kpi-value">
+                            <span t-esc="avg_amount"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                    <div class="ag-kpi purple">
+                        <div class="ag-kpi-label">Période</div>
+                        <div class="ag-kpi-value" style="font-size:13px;">
+                            <span t-if="dates">
+                                <t t-esc="min(dates).strftime('%d/%m/%Y')"/> -
+                                <t t-esc="max(dates).strftime('%d/%m/%Y')"/>
+                            </span>
+                            <span t-else="">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ag-section-title">Détail des recharges</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Caisse</th>
+                            <th>Note</th>
+                            <th>Utilisateur</th>
+                            <th class="text-end">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="d">
+                            <td><span t-esc="d.date and d.date.strftime('%d/%m/%Y') or ''"/></td>
+                            <td><span t-field="d.cashbox_id.name"/></td>
+                            <td><span t-field="d.note"/></td>
+                            <td><span t-field="d.user_id.name"/></td>
+                            <td class="text-end">
+                                <span t-field="d.amount"
+                                      t-options='{"widget": "monetary", "display_currency": d.company_currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-end">Total :</td>
+                            <td class="text-end">
+                                <span t-esc="total_amount"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div style="margin: 10px 0 14px; padding: 8px 12px; border: 1px solid #c5cae9; border-radius: 4px; background: #e8eaf6;">
+                    <strong>Arrêté le montant à la somme de :</strong>
+                    <span style="font-style: italic;">
+                        <t t-esc="curr.amount_to_text(total_amount) if curr else '%.2f' % total_amount"/>
+                    </span>
+                </div>
+
+                <div class="ag-section-title">Par caisse</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr><th>Caisse</th><th class="text-center">Nb</th><th class="text-end">Total</th></tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="cashboxes" t-value="docs.mapped('cashbox_id')"/>
+                        <tr t-foreach="cashboxes" t-as="cb">
+                            <t t-set="lines" t-value="docs.filtered(lambda x: x.cashbox_id == cb)"/>
+                            <td><span t-field="cb.name"/></td>
+                            <td class="text-center"><t t-esc="len(lines)"/></td>
+                            <td class="text-end">
+                                <span t-esc="sum(lines.mapped('amount'))"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_analyse_globale_recharge">
+        <t t-call="web.html_container">
+            <t t-call="beton_caisse.report_analyse_globale_recharge_doc"/>
+        </t>
+    </template>
+
+    <!-- ========== Versements ========== -->
+    <template id="report_analyse_globale_versement_doc">
+        <t t-call="web.external_layout">
+            <div class="page ag-page">
+                <t t-call="beton_caisse.analyse_globale_style"/>
+                <t t-set="title" t-value="'Analyse globale - Versements'"/>
+                <t t-call="beton_caisse.analyse_globale_header"/>
+
+                <t t-set="dates" t-value="[d.date for d in docs if d.date]"/>
+                <t t-set="clients" t-value="docs.filtered(lambda x: x.partner_type == 'client')"/>
+                <t t-set="fournisseurs" t-value="docs.filtered(lambda x: x.partner_type == 'fournisseur')"/>
+                <t t-set="total_amount" t-value="sum(docs.mapped('montant'))"/>
+                <t t-set="curr" t-value="docs[:1].currency_id or env.company.currency_id"/>
+                <t t-set="pt_labels" t-value="{'client': 'Client', 'fournisseur': 'Fournisseur'}"/>
+
+                <div class="ag-kpis">
+                    <div class="ag-kpi blue">
+                        <div class="ag-kpi-label">Versements</div>
+                        <div class="ag-kpi-value"><t t-esc="len(docs)"/></div>
+                    </div>
+                    <div class="ag-kpi green">
+                        <div class="ag-kpi-label">Clients</div>
+                        <div class="ag-kpi-value">
+                            <t t-esc="len(clients)"/> /
+                            <span t-esc="sum(clients.mapped('montant'))"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                    <div class="ag-kpi red">
+                        <div class="ag-kpi-label">Fournisseurs</div>
+                        <div class="ag-kpi-value">
+                            <t t-esc="len(fournisseurs)"/> /
+                            <span t-esc="sum(fournisseurs.mapped('montant'))"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                    <div class="ag-kpi purple">
+                        <div class="ag-kpi-label">Total versé</div>
+                        <div class="ag-kpi-value">
+                            <span t-esc="total_amount"
+                                  t-options='{"widget": "monetary", "display_currency": curr}'/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ag-section-title">Détail des versements</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Référence</th>
+                            <th>Partenaire</th>
+                            <th>Type</th>
+                            <th>Caisse</th>
+                            <th>Description</th>
+                            <th class="text-end">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="d">
+                            <td><span t-esc="d.date and d.date.strftime('%d/%m/%Y') or ''"/></td>
+                            <td><span t-field="d.name"/></td>
+                            <td><span t-field="d.partner_id.name"/></td>
+                            <td>
+                                <span t-attf-class="ag-badge {{ 'ag-badge-green' if d.partner_type == 'client' else 'ag-badge-orange' }}"
+                                      t-esc="pt_labels.get(d.partner_type, '-')"/>
+                            </td>
+                            <td><span t-field="d.cashbox_id.name"/></td>
+                            <td><span t-field="d.description"/></td>
+                            <td class="text-end">
+                                <span t-field="d.montant"
+                                      t-options='{"widget": "monetary", "display_currency": d.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="text-end">Total :</td>
+                            <td class="text-end">
+                                <span t-esc="total_amount"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div style="margin: 10px 0 14px; padding: 8px 12px; border: 1px solid #c5cae9; border-radius: 4px; background: #e8eaf6;">
+                    <strong>Arrêté le montant à la somme de :</strong>
+                    <span style="font-style: italic;">
+                        <t t-esc="curr.amount_to_text(total_amount) if curr else '%.2f' % total_amount"/>
+                    </span>
+                </div>
+
+                <!-- Récap par partenaire -->
+                <div class="ag-section-title">Récapitulatif par partenaire</div>
+                <table class="ag-table">
+                    <thead>
+                        <tr><th>Partenaire</th><th>Type</th><th class="text-center">Nb</th><th class="text-end">Total</th></tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="partners" t-value="docs.mapped('partner_id')"/>
+                        <t t-set="pt_labels" t-value="{'client': 'Client', 'fournisseur': 'Fournisseur'}"/>
+                        <tr t-foreach="partners" t-as="p">
+                            <t t-set="plines" t-value="docs.filtered(lambda x: x.partner_id.id == p.id)"/>
+                            <td><span t-field="p.name"/></td>
+                            <td>
+                                <span t-esc="pt_labels.get(plines[:1].partner_type, '-')"/>
+                            </td>
+                            <td class="text-center"><t t-esc="len(plines)"/></td>
+                            <td class="text-end">
+                                <span t-esc="sum(plines.mapped('montant'))"
+                                      t-options='{"widget": "monetary", "display_currency": curr}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_analyse_globale_versement">
+        <t t-call="web.html_container">
+            <t t-call="beton_caisse.report_analyse_globale_versement_doc"/>
+        </t>
+    </template>
+
+</odoo>

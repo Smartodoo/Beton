@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <!-- Menu Item -->
+    <!--    <menuitem -->
+    <!--        id="menu_cunsomation_stock_root" -->
+    <!--        name="Consommations"-->
+    <!--        parent="[base_menu_parent_id]"-->
+    <!--        sequence="30"-->
+    <!--        groups="base.group_user"/>-->
+    <!--    -->
+    <!--    <menuitem -->
+    <!--        id="menu_cunsomation_stock" -->
+    <!--        name="Consommations Stock"-->
+    <!--        parent="menu_cunsomation_stock_root"-->
+    <!--        action="action_cunsomation_stock"-->
+    <!--        sequence="10"-->
+    <!--        groups="base.group_user"/>-->
+
+    <!-- Tree View -->
+    <record id="view_cunsomation_stock_tree" model="ir.ui.view">
+        <field name="name">cunsomation.stock.tree</field>
+        <field name="model">cunsomation.stock</field>
+        <field name="arch" type="xml">
+            <tree string="Consommations Stock" decoration-danger="quantity &lt;= 0">
+                <field name="product_id" string="Produit"/>
+                <field name="project_id" string="Projet"/>
+                <field name="quantity" string="Quantité" widget="float"/>
+                <field name="date_consumption" string="Date consommation"/>
+                <field name="user_id" string="Utilisateur" widget="many2one_avatar"/>
+                <field name="company_id" string="Société" groups="base.group_multi_company"/>
+                <field name="purchase_order_id" string="Bon de commande"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_cunsomation_stock_search" model="ir.ui.view">
+        <field name="name">cunsomation.stock.search</field>
+        <field name="model">cunsomation.stock</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher Consommations">
+                <field name="product_id" string="Produit"/>
+                <field name="project_id" string="Projet"/>
+                <field name="user_id" string="Utilisateur"/>
+                <field name="purchase_order_id" string="Bon de commande"/>
+                <field name="date_consumption" string="Date consommation"/>
+
+                <filter
+                        name="today"
+                        string="Aujourd'hui"
+                        domain="[('date_consumption', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+
+                <filter
+                        name="this_week"
+                        string="Cette semaine"
+                        domain="[('date_consumption', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('date_consumption', '&lt;=', (context_today() + datetime.timedelta(days=7)).strftime('%Y-%m-%d 23:59:59'))]"/>
+
+                <filter
+                        name="my_consumptions"
+                        string="Mes consommations"
+                        domain="[('user_id', '=', uid)]"/>
+
+                <separator/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_by_product" string="Produit" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_by_project" string="Projet" context="{'group_by': 'project_id'}"/>
+                    <filter name="group_by_user" string="Utilisateur" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_date" string="Date" context="{'group_by': 'date_consumption:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <!--    <record id="view_cunsomation_stock_form" model="ir.ui.view">-->
+    <!--        <field name="name">cunsomation.stock.form</field>-->
+    <!--        <field name="model">cunsomation.stock</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <form string="Consommation Stock">-->
+    <!--                <header>-->
+    <!--                    <button-->
+    <!--                        name="unlink"-->
+    <!--                        type="object"-->
+    <!--                        string="Supprimer"-->
+    <!--                        class="oe_highlight"-->
+    <!--                        confirm="Êtes-vous sûr de vouloir supprimer cette consommation ? Le stock sera réapprovisionné."-->
+    <!--                        groups="base.group_system"/>-->
+    <!--                    <field name="quantity" widget="float" class="oe_edit_only"/>-->
+    <!--                </header>-->
+
+    <!--                <sheet>-->
+    <!--                    <div class="oe_button_box" name="button_box">-->
+    <!--                        <button-->
+    <!--                            class="oe_stat_button"-->
+    <!--                            icon="fa-external-link"-->
+    <!--                            type="action"-->
+    <!--                            name="%(action_cunsomation_stock)d"-->
+    <!--                            string="Voir toutes les consommations"/>-->
+    <!--                    </div>-->
+
+    <!--                    <div class="oe_title">-->
+    <!--                        <h1>-->
+    <!--                            <field name="product_id" placeholder="Nom du produit..." class="oe_inline"/>-->
+    <!--                        </h1>-->
+    <!--                    </div>-->
+
+    <!--                    <group>-->
+    <!--                        <group string="Informations Générales">-->
+    <!--                            <field name="name" string="Produit" required="1"/>-->
+    <!--                            <field name="project_id" string="Projet" required="1"/>-->
+    <!--                            <field name="quantity" string="Quantité consommée" required="1"/>-->
+    <!--                            <field name="date_consumption" string="Date de consommation"/>-->
+    <!--                        </group>-->
+
+    <!--                        <group string="Informations Complémentaires">-->
+    <!--                            <field name="user_id" string="Utilisateur"/>-->
+    <!--                            <field name="company_id" string="Société" groups="base.group_multi_company"/>-->
+    <!--                            <field name="purchase_order_id" string="Bon de commande"/>-->
+    <!--                        </group>-->
+    <!--                    </group>-->
+
+    <!--                    &lt;!&ndash; Show available stock &ndash;&gt;-->
+    <!--                    <div class="alert alert-warning" attrs="{'invisible': [('quantity', '&lt;=', 0)]}">-->
+    <!--                        <strong>Note:</strong> Cette consommation sera automatiquement déduite du stock disponible.-->
+    <!--                    </div>-->
+
+    <!--                    &lt;!&ndash; Show related stock information &ndash;&gt;-->
+    <!--                    <div class="oe_chatter">-->
+    <!--                        <field name="message_follower_ids" widget="mail_followers"/>-->
+    <!--                        <field name="message_ids" widget="mail_thread"/>-->
+    <!--                    </div>-->
+    <!--                </sheet>-->
+    <!--            </form>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!-- Alternative: Simplified Form View -->
+    <record id="view_cunsomation_stock_form_simple" model="ir.ui.view">
+        <field name="name">cunsomation.stock.form.simple</field>
+        <field name="model">cunsomation.stock</field>
+        <field name="arch" type="xml">
+            <form string="Consommation Stock">
+                <sheet>
+                    <group>
+                        <group string="Détails">
+                            <field name="product_id" string="Produit"/>
+                            <field name="project_id" string="Projet"/>
+                            <field name="quantity" string="Quantité"/>
+                            <field name="date_consumption" string="Date"/>
+                        </group>
+                        <group string="Références">
+                            <field name="user_id" string="Utilisateur"/>
+                            <field name="purchase_order_id" string="Bon de commande"/>
+                            <field name="available_product_ids" invisible="0"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Action for Cunsomation Stock -->
+    <record id="action_cunsomation_stock" model="ir.actions.act_window">
+        <field name="name">Consommations Stock</field>
+        <field name="res_model">cunsomation.stock</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune consommation enregistrée.
+            </p>
+            <p>
+                Les consommations stock représentent les produits consommés pour chaque projet.
+                Chaque consommation est automatiquement déduite du stock disponible.
+            </p>
+        </field>
+    </record>
+</odoo>

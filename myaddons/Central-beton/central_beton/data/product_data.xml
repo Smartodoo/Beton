@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Product Category for Beton -->
+        <record id="product_category_beton" model="product.category">
+            <field name="name">Matieres Premieres Beton</field>
+        </record>
+
+        <!-- Ciment CEM I 42.5 -->
+        <record id="product_ciment" model="product.template">
+            <field name="name">Ciment CEM I 42.5</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="is_matiere_beton" eval="True"/>
+            <field name="type_matiere_beton">ciment</field>
+            <field name="emplacement_beton">silo</field>
+            <field name="standard_price">12.0</field>
+            <field name="list_price">15.0</field>
+        </record>
+
+        <!-- Sable 0/4 -->
+        <record id="product_sable" model="product.template">
+            <field name="name">Sable 0/4</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="is_matiere_beton" eval="True"/>
+            <field name="type_matiere_beton">sable</field>
+            <field name="emplacement_beton">tremie</field>
+            <field name="standard_price">1.5</field>
+            <field name="list_price">2.0</field>
+        </record>
+
+        <!-- Gravier 4/8 -->
+        <record id="product_gravier_4_8" model="product.template">
+            <field name="name">Gravier 4/8</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="is_matiere_beton" eval="True"/>
+            <field name="type_matiere_beton">gravier</field>
+            <field name="emplacement_beton">tremie</field>
+            <field name="standard_price">2.0</field>
+            <field name="list_price">2.5</field>
+        </record>
+
+        <!-- Gravier 8/16 -->
+        <record id="product_gravier_8_16" model="product.template">
+            <field name="name">Gravier 8/16</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="is_matiere_beton" eval="True"/>
+            <field name="type_matiere_beton">gravier</field>
+            <field name="emplacement_beton">tremie</field>
+            <field name="standard_price">2.2</field>
+            <field name="list_price">2.8</field>
+        </record>
+
+        <!-- Eau -->
+        <record id="product_eau" model="product.template">
+            <field name="name">Eau de Gachage</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="is_matiere_beton" eval="True"/>
+            <field name="type_matiere_beton">eau</field>
+            <field name="emplacement_beton">bassin</field>
+            <field name="standard_price">0.05</field>
+            <field name="list_price">0.1</field>
+        </record>
+
+        <!-- Adjuvant -->
+        <record id="product_adjuvant" model="product.template">
+            <field name="name">Adjuvant Plastifiant</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="is_matiere_beton" eval="True"/>
+            <field name="type_matiere_beton">adjuvant</field>
+            <field name="emplacement_beton">cuve</field>
+            <field name="standard_price">150.0</field>
+            <field name="list_price">180.0</field>
+        </record>
+
+        <!-- Product Category for Finished Concrete -->
+        <record id="product_category_beton_fini" model="product.category">
+            <field name="name">Beton</field>
+        </record>
+
+        <!-- Beton C25/30 - Finished Product -->
+        <record id="product_beton_c25_30" model="product.template">
+            <field name="name">Beton C25/30</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton_fini"/>
+            <field name="uom_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="uom_po_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="standard_price">0.0</field>
+            <field name="list_price">8000.0</field>
+        </record>
+
+        <!-- Beton C30/37 - Finished Product -->
+        <record id="product_beton_c30_37" model="product.template">
+            <field name="name">Beton C30/37</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton_fini"/>
+            <field name="uom_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="uom_po_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="standard_price">0.0</field>
+            <field name="list_price">9000.0</field>
+        </record>
+
+        <!-- Beton C35/45 - Finished Product -->
+        <record id="product_beton_c35_45" model="product.template">
+            <field name="name">Beton C35/45</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_beton_fini"/>
+            <field name="uom_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="uom_po_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="standard_price">0.0</field>
+            <field name="list_price">10000.0</field>
+        </record>
+
+    </data>
+</odoo>

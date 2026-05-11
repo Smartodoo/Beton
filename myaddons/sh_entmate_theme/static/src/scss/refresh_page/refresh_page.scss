@@ -1,0 +1,18 @@
+.o_form_view{
+    .o_form_sheet{
+        .o_notebook{
+            .sh_refresh{
+                display: none !important;
+            }
+        }
+    }
+} 
+.modal.o_technical_modal{
+    .modal-footer{
+        .o_cp_buttons{
+            .sh_refresh{
+                display: none !important;
+            }
+        }
+    }
+}

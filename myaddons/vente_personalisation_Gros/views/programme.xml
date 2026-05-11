@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- vues de modéle 'programme' -->
+    <record id="view_programme_form" model="ir.ui.view">
+        <field name="name">programme.form</field>
+        <field name="model">programme</field>
+        <field name="arch" type="xml">
+            <form string="Programme">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="nom"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="adresse"/>
+                            <field name="phone"/>
+                        </group>
+                        <group>
+                            <field name="beton"/>
+                            <field name="qty"/>
+                            <field name="date"/>
+                            <field name="price_unit"/>
+                            <field name="giraphe"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="notes">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_programme_tree" model="ir.ui.view">
+        <field name="name">programme.tree</field>
+        <field name="model">programme</field>
+        <field name="arch" type="xml">
+            <tree string="Programme">
+                <field name="nom"/>
+                <field name="adresse"/>
+                <field name="phone"/>
+                <field name="beton"/>
+                <field name="qty"/>
+                <field name="date"/>
+                <field name="price_unit"/>
+                <field name="giraphe"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_programme_search" model="ir.ui.view">
+        <field name="name">programme.search</field>
+        <field name="model">programme</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="nom"/>
+                <field name="phone"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_programme" model="ir.actions.act_window">
+        <field name="name">Client</field>
+        <field name="res_model">programme</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_programme" name="Programme" parent="sale.sale_menu_root" sequence="45"/>
+    <menuitem id="menu_programme_list" name="Programmes" parent="menu_programme" action="action_programme"
+              sequence="1"/>
+</odoo>

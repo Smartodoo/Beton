@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire mrp.production -->
+    <record id="view_mrp_production_form_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.beton</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Domaine sur le produit : uniquement produits fabriqués -->
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('product_tmpl_id.detailed_type', '=', 'fabrique')]</attribute>
+            </xpath>
+
+            <!-- Smart button Vente -->
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_voir_vente" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o">
+                    <field name="vente_count" widget="statinfo" string="Vente"/>
+                </button>
+            </xpath>
+
+            <!-- Boutons Créer Vente -->
+            <xpath expr="//header" position="inside">
+                <button name="action_creer_vente" type="object"
+                        string="Créer la vente" class="btn-secondary"
+                        icon="fa-file-text-o"/>
+                <button name="action_creer_confirmer_vente" type="object"
+                        string="Créer et confirmer la vente" class="btn-primary"
+                        icon="fa-check"/>
+            </xpath>
+
+            <!-- Ajouter les onglets béton dans le notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Détails Béton" name="details_beton">
+                    <group>
+                        <group string="Chantier / Client">
+                            <field name="centrale_id"/>
+                            <field name="client_id"/>
+                            <field name="chantier"/>
+                            <field name="destination"/>
+                            <field name="distance"/>
+                        </group>
+                        <group string="Production">
+                            <field name="nombre_camion"/>
+                            <field name="nombre_gachees"/>
+                            <field name="objectif"/>
+                            <field name="taux_production"/>
+                            <field name="ecart_production"/>
+                            <field name="operateur_id"/>
+                            <field name="heure_debut" widget="float_time"/>
+                            <field name="heure_fin" widget="float_time"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Service">
+                            <field name="inclure_service"/>
+                            <field name="service_product_id" invisible="not inclure_service"
+                                   required="inclure_service"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Pièces jointes" name="documents_beton">
+                    <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+                </page>
+                <page string="Transport" name="transport_beton">
+                    <field name="transport_ligne_ids">
+                        <tree editable="bottom">
+                            <field name="vehicle_id"/>
+                            <field name="chauffeur_id"/>
+                            <field name="quantite"/>
+                            <field name="heure_depart"/>
+                            <field name="heure_arrivee"/>
+                            <field name="temps_attente"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Héritage vue tree mrp.production -->
+    <record id="view_mrp_production_tree_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.production.tree.inherit.beton</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="centrale_id" optional="show"/>
+                <field name="client_id" optional="show"/>
+                <field name="chantier" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Héritage vue recherche mrp.production -->
+    <record id="view_mrp_production_search_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.production.search.inherit.beton</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_prod_fabrique"
+                        string="Produits fabriqués"
+                        domain="[('product_id.product_tmpl_id.detailed_type', '=', 'fabrique')]"/>
+                <separator/>
+                <field name="centrale_id"/>
+                <field name="client_id"/>
+                <field name="chantier"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="groupby_centrale" string="Centrale"
+                            context="{'group_by': 'centrale_id'}"/>
+                    <filter name="groupby_client" string="Client"
+                            context="{'group_by': 'client_id'}"/>
+                    <filter name="groupby_operateur" string="Opérateur"
+                            context="{'group_by': 'operateur_id'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action pour les ordres de fabrication béton -->
+    <record id="action_beton_mrp_production" model="ir.actions.act_window">
+        <field name="name">Ordres de Fabrication Béton</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field name="domain">[('product_id.product_tmpl_id.detailed_type', '=', 'fabrique')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre premier ordre de fabrication béton
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,542 @@
+/*--body-background-color--*/
+
+@if $body_background_type =='bg_color' {
+    @if $body_font_family !='False' {
+        .o_web_client {
+            font-family: $body_font_family !important;
+        }
+
+        .o_control_panel {
+            font-family: $body_font_family !important;
+        }
+
+        .breadcrumb {
+            font-family: $body_font_family !important;
+        }
+    }
+
+    .o_web_client {
+        background: $body_background_color;
+        color: #4E4E4E;
+    }
+
+    .o_control_panel {
+        background-color: $body_background_color ;
+    }
+}
+
+/*--body-background-color--*/
+
+
+
+/*--body-background-img--*/
+
+@if $body_background_type =='bg_img' {
+
+    .o_mail_thread .o_thread_message.o_mail_not_discussion,
+    .o_mail_activity .o_thread_message.o_mail_not_discussion {
+        background-color: rgba(255, 255, 255, 0) !important;
+    }
+
+    // <-- krushna code for bg img start -->
+
+    .o_navbar{
+        background: rgba(255, 255, 255, 0.85);
+   
+        .multi_tab_section{
+            .multi_tab_div{
+                background: rgba(255, 255, 255, 0.85);
+                &.tab_active{
+                    background: rgba($primaryColor , $alpha:0.2);
+                }
+            }
+        }
+    }
+    .o_action_manager {
+        background: rgba(255, 255, 255, 0.85);
+        .o_action{
+            background: transparent;
+            .o_control_panel{
+                background: transparent !important;
+            }
+            .o_content{
+                background: transparent;
+                .o_kanban_renderer{
+                    // --Kanban-background : transparent;
+                }
+                // .o_list_renderer{
+                //     table{
+                //         tbody{
+                //             tr{
+                //                 background: transparent !important;
+                //             }
+                //         }
+                //     }
+                // }
+                .o_pivot_buttons{
+                    .o_pivot{
+                        table{
+                            thead{
+                                tr{
+                                    th{
+                                        &.bg-100{
+                                            background: rgba(255, 255, 255, 0.85);
+                                        }
+                                    }
+                                }
+                            }
+                            tbody{
+                                tr{
+                                    td{
+                                        &.bg-100{
+                                            background: rgba(255, 255, 255, 0.85);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // .o_activity_view{
+                //     table{
+                //         &.bg-view{
+                //             background: transparent !important;
+                //         }
+                //         tr{
+                //             border-color: #b9b2b2;
+                //             td{
+                //                 border-color: #b9b2b2;
+                //             }
+                //         }
+                //     }
+                // }
+                // .o_calendar_container{
+                //     background: rgba(255, 255, 255, 0.85);
+                //     .o_calendar_renderer{
+                //         .o_calendar_widget{
+                //             .fc-view-container{
+                //                 .fc-view{
+                //                     table{
+                //                         tbody{
+                //                             tr{
+
+                //                             }
+                //                         }
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+                .o_form_renderer{
+                    .o_form_sheet_bg{
+                        .o_form_sheet{
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                            .o_notebook{
+                                .o_notebook_headers{
+                                    .nav-tabs{
+                                        background: transparent;
+                                        .nav-item{
+                                            .nav-link{
+                                                &.active{
+                                                    background: transparent;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // <-- krushna code for bg img end -->
+
+    .o_no_thread_window {
+        .o_mail_thread {
+            .a_right {
+                .o_thread_message_core {
+                    .o_mail_info {
+                        color: #000000 !important;
+                    }
+                }
+            }
+        }
+
+        .o_mail_activity {
+            .a_right {
+                .o_thread_message_core {
+                    .o_mail_info {
+                        color: #000000 !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_thread_window {
+        .o_mail_thread {
+            .a_right {
+                .o_thread_message_core {
+                    .o_mail_info {
+                        color: #000000 !important;
+                    }
+                }
+            }
+        }
+
+        .o_mail_activity {
+            .a_right {
+                .o_thread_message_core {
+                    .o_mail_info {
+                        color: #000000 !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_mail_thread {
+        .a_left {
+            .o_thread_message_core {
+                .o_mail_info {
+                    color: #000000 !important;
+                }
+            }
+        }
+    }
+
+    .o_mail_activity {
+        .a_left {
+            .o_thread_message_core {
+                .o_mail_info {
+                    color: #000000 !important;
+                }
+            }
+        }
+    }
+
+    .o_mail_thread {
+        .o_thread_message {
+            .o_thread_message_core {
+                .o_mail_info {
+                    color: #000000 !important;
+                }
+            }
+        }
+    }
+
+    .o_mail_activity {
+        .o_thread_message {
+            .o_thread_message_core {
+                .o_mail_info {
+                    color: #000000 !important;
+                }
+            }
+        }
+    }
+
+    .o_kanban_view {
+        &.o_kanban_grouped {
+            background-color: transparent;
+        }
+
+        /*--kanban--*/
+    }
+
+    .o_graph {
+        .o_graph_container {
+            .o_graph_svg_container {
+                svg {
+                    background: #ffffffc7;
+                }
+            }
+        }
+    }
+
+    /*--graph--*/
+    // .o_searchview{padding: 1px 25px 2px 5px;}/*--searchview--*/
+
+    /*--form_view--*/
+    .o_form_view {
+        .o_form_sheet_bg {
+            >.o_form_sheet {
+                background: transparent;
+            }
+        }
+    }
+
+    html {
+        .o_web_client {
+            >.o_main {
+                .o_main_content {
+                    .o_content {
+                        background-color: rgba(255, 255, 255, 0.65);
+                    }
+                }
+            }
+        }
+    }
+
+    /*--discss--*/
+    .o_mail_discuss {
+        .o_mail_discuss_content {
+            background-color: transparent !important;
+        }
+    }
+
+    /*--settings--*/
+    .o_base_settings {
+        .o_setting_container {
+            .settings {
+                background-color: rgba(255, 255, 255, 0.65);
+            }
+        }
+    }
+
+    .o_web_settings_dashboard {
+        background: transparent !important;
+    }
+
+    .o_form_view {
+        .o_form_statusbar {
+            background: transparent !important;
+        }
+    }
+
+    .o_kanban_view {
+        .o_kanban_ungrouped {
+            background: transparent !important;
+        }
+    }
+
+    .o_main_navbar {
+        background-color: transparent;
+    }
+
+    .o_form_statusbar {
+        .o_field_widget {
+            .o_arrow_button {
+                background: #fff;
+            }
+        }
+    }
+
+    .o_form_view {
+        .o_form_sheet_bg {
+            background: transparent !important;
+        }
+    }
+
+    .o_form_view {
+        .o_FormRenderer_chatterContainer {
+            background: transparent !important;
+        }
+    }
+
+    .oe_chatter {
+        .o-mail-Chatter {
+            .o-mail-Chatter-top {
+                background-color: transparent;
+            }
+        }
+    }
+
+    /*--list--*/
+    @if $predefined_list_view_boolean =="False" {
+        .o_list_view {
+            background-color: rgba(255, 255, 255, 0.65);
+        }
+
+        .o_list_view thead {
+            background-color: rgba(255, 255, 255, 0.65);
+        }
+
+        .table-striped {
+            tbody {
+                tr {
+                    &:nth-of-type(odd) {
+                        background-color: rgba(255, 255, 255, 0.65);
+                    }
+                }
+            }
+        }
+
+        .ui-sortable tr {
+            background-color: rgba(255, 255, 255, 0.65);
+        }
+
+
+        .o_mail_thread {
+            .o_thread_message.o_mail_not_discussion {
+                border-bottom: 1px solid #9c9c9c;
+            }
+        }
+
+        .o_mail_activity {
+            .o_thread_message.o_mail_not_discussion {
+                border-bottom: 1px solid #9c9c9c;
+            }
+        }
+
+        .o_mail_thread {
+            .o_thread_date_separator {
+                border-bottom: 1px solid #9c9c9c;
+            }
+        }
+
+        .o_mail_activity {
+            .o_thread_date_separator {
+                border-bottom: 1px solid #9c9c9c;
+            }
+        }
+
+        html {
+            .o_web_client {
+                >.o_action_manager {
+                    background-color: rgba(255, 255, 255, 0.65) !important;
+
+                    .o_action {
+                        background-color: rgba(255, 255, 255, 0.65) !important;
+                    }
+                }
+            }
+        }
+
+        .o_web_client {
+            .main-content.sh_main_content {
+                background-color: rgba(255, 255, 255, 0.65) !important;
+            }
+        }
+
+
+        .o_control_panel {
+            .o_cp_action_menus {
+                .o-dropdown.dropdown {
+                    &:hover {
+                        background: transparent !important;
+                    }
+                }
+            }
+
+            background: transparent !important;
+
+        }
+
+        .o_FormRenderer_chatterContainer {
+            .o_ChatterContainer {
+                .o_Chatter {
+                    background: transparent !important;
+
+                    .o_Chatter_scrollPanel,
+                    .o_ThreadView,
+                    .o_ThreadView_bottomPart,
+                    .o_ThreadView_core,
+                    .o_MessageList.o_ThreadView_messageList,
+                    .o_MessageList_separator {
+                        background: transparent !important;
+                    }
+
+                    .o_MessageList {
+                        .o_Message {
+                            background: transparent !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .o_cp_bottom {
+            .o_cp_buttons {
+                .btn-secondary {
+                    &:hover {
+                        background: transparent !important;
+                    }
+                }
+            }
+        }
+
+
+        .o_cp_bottom {
+            .o_cp_buttons {
+                .btn-secondary {
+                    &:hover {
+                        border: 1.5px solid #b3b4b5 !important;
+                    }
+                }
+            }
+        }
+
+        /*--list--*/
+    }
+
+    @include media-breakpoint-down(md){
+
+        .o_control_panel {
+            .btn.o_enable_searchview {
+                background: transparent;
+                color: #ffff;
+            }
+        }
+
+        .o_control_panel {
+            >.o_cp_right {
+                >.o_cp_pager {
+                    .o_pager_counter {
+                        color: #ffff;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_form_view {
+        .o_form_sheet_bg {
+            background: rgba(255, 255, 255, 0.65);
+        }
+    }
+
+    .o_form_view {
+        .o_form_statusbar {
+            background-color: #ebebeb;
+        }
+    }
+
+    @if $body_font_family !='False' {
+        .o_web_client {
+            font-family: $body_font_family !important;
+        }
+
+        .o_control_panel {
+            font-family: $body_font_family !important;
+        }
+
+        .breadcrumb {
+            font-family: $body_font_family !important;
+        }
+    }
+
+    .o_web_client {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/web/image?model=sh.ent.theme.config.settings&id=1&field=body_background_image');
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: #4E4E4E;
+    }
+
+    .breadcrumb {
+        background-color: transparent !important;
+    }
+    .o_control_panel,
+    .o_control_panel .breadcrumb {
+        background: transparent !important;
+    }
+
+    .o_control_panel {
+        background: rgba(255, 255, 255, 0.541) !important;
+    }
+}
+
+/*--body-background-img--*/

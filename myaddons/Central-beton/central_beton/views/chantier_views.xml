@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_chantier_form" model="ir.ui.view">
+        <field name="name">central.beton.chantier.form</field>
+        <field name="model">central.beton.chantier</field>
+        <field name="arch" type="xml">
+            <form string="Chantier">
+                <header>
+                    <button name="action_start" string="Demarrer"
+                            type="object" class="btn-primary"
+                            invisible="state != 'nouveau'"/>
+                    <button name="action_done" string="Terminer"
+                            type="object" class="btn-primary"
+                            invisible="state != 'en_cours'"/>
+                    <button name="action_suspend" string="Suspendre"
+                            type="object"
+                            invisible="state != 'en_cours'"/>
+                    <button name="action_resume" string="Reprendre"
+                            type="object" class="btn-primary"
+                            invisible="state != 'suspendu'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="nouveau,en_cours,termine"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_livraisons" type="object"
+                                class="oe_stat_button" icon="fa-truck">
+                            <field name="livraison_count" widget="statinfo"
+                                   string="Livraisons"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                        <h2><field name="designation" placeholder="Designation du chantier"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="client_id"/>
+                            <field name="responsable_chantier"/>
+                            <field name="telephone"/>
+                            <field name="distance_km"/>
+                        </group>
+                        <group>
+                            <field name="date_debut"/>
+                            <field name="date_fin_prevue"/>
+                            <field name="date_fin_reelle"/>
+                            <field name="volume_commande"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Volumes">
+                            <field name="volume_livre"/>
+                            <field name="volume_restant"/>
+                            <field name="taux_avancement" widget="progressbar"/>
+                        </group>
+                        <group string="Localisation">
+                            <field name="latitude"/>
+                            <field name="longitude"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Adresse" name="adresse">
+                            <field name="adresse"/>
+                        </page>
+                        <page string="Livraisons" name="livraisons">
+                            <field name="livraison_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="date_chargement"/>
+                                    <field name="volume"/>
+                                    <field name="vehicule_id"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Commandes" name="commandes">
+                            <field name="commande_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="date_order"/>
+                                    <field name="amount_total"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_chantier_tree" model="ir.ui.view">
+        <field name="name">central.beton.chantier.tree</field>
+        <field name="model">central.beton.chantier</field>
+        <field name="arch" type="xml">
+            <tree string="Chantiers">
+                <field name="name"/>
+                <field name="designation"/>
+                <field name="client_id"/>
+                <field name="distance_km"/>
+                <field name="volume_commande"/>
+                <field name="volume_livre"/>
+                <field name="taux_avancement" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'nouveau'"
+                       decoration-success="state == 'en_cours'"
+                       decoration-muted="state == 'termine'"
+                       decoration-warning="state == 'suspendu'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_chantier_search" model="ir.ui.view">
+        <field name="name">central.beton.chantier.search</field>
+        <field name="model">central.beton.chantier</field>
+        <field name="arch" type="xml">
+            <search string="Chantiers">
+                <field name="name"/>
+                <field name="designation"/>
+                <field name="client_id"/>
+                <filter name="en_cours" string="En Cours"
+                        domain="[('state', '=', 'en_cours')]"/>
+                <filter name="nouveau" string="Nouveaux"
+                        domain="[('state', '=', 'nouveau')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_client" string="Client"
+                            context="{'group_by': 'client_id'}"/>
+                    <filter name="group_state" string="Etat"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_chantier" model="ir.actions.act_window">
+        <field name="name">Chantiers</field>
+        <field name="res_model">central.beton.chantier</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_en_cours': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrer un nouveau chantier
+            </p>
+        </field>
+    </record>
+
+</odoo>

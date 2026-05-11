@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_mouvement_stock_form" model="ir.ui.view">
+        <field name="name">central.beton.mouvement.stock.form</field>
+        <field name="model">central.beton.mouvement.stock</field>
+        <field name="arch" type="xml">
+            <form string="Mouvement de Stock">
+                <header>
+                    <button name="action_validate" string="Valider"
+                            type="object" class="btn-primary"
+                            invisible="state != 'brouillon'"/>
+                    <button name="action_cancel" string="Annuler"
+                            type="object"
+                            invisible="state != 'brouillon'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="brouillon,valide"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_mouvement"/>
+                            <field name="product_id"/>
+                            <field name="quantite"/>
+                            <field name="uom_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="centrale_id"/>
+                            <field name="fournisseur_id"
+                                   invisible="type_mouvement != 'entree'"/>
+                            <field name="numero_bl"
+                                   invisible="type_mouvement != 'entree'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                        <field name="stock_move_id" readonly="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_mouvement_stock_tree" model="ir.ui.view">
+        <field name="name">central.beton.mouvement.stock.tree</field>
+        <field name="model">central.beton.mouvement.stock</field>
+        <field name="arch" type="xml">
+            <tree string="Mouvements de Stock"
+                  decoration-success="type_mouvement == 'entree'"
+                  decoration-warning="type_mouvement == 'sortie'"
+                  decoration-danger="type_mouvement == 'perte'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="type_mouvement"/>
+                <field name="product_id"/>
+                <field name="quantite"/>
+                <field name="uom_id"/>
+                <field name="fournisseur_id" optional="show"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_mouvement_stock_search" model="ir.ui.view">
+        <field name="name">central.beton.mouvement.stock.search</field>
+        <field name="model">central.beton.mouvement.stock</field>
+        <field name="arch" type="xml">
+            <search string="Mouvements">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="fournisseur_id"/>
+                <filter name="entree" string="Entrees"
+                        domain="[('type_mouvement', '=', 'entree')]"/>
+                <filter name="sortie" string="Sorties"
+                        domain="[('type_mouvement', '=', 'sortie')]"/>
+                <filter name="perte" string="Pertes"
+                        domain="[('type_mouvement', '=', 'perte')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'type_mouvement'}"/>
+                    <filter name="group_product" string="Produit"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter name="group_date" string="Date"
+                            context="{'group_by': 'date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_mouvement_stock" model="ir.actions.act_window">
+        <field name="name">Mouvements de Stock</field>
+        <field name="res_model">central.beton.mouvement.stock</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrer un mouvement de stock
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_beton_cashbox_recharge_wizard_form" model="ir.ui.view">
+        <field name="name">beton.cashbox.recharge.wizard.form</field>
+        <field name="model">beton.cashbox.recharge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enrichir la Caisse">
+                <group>
+                    <field name="cashbox_id" readonly="1"/>
+                    <field name="amount"/>
+                    <field name="note"/>
+                </group>
+                <footer>
+                    <button string="Confirmer" name="action_confirm_recharge"
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_fabrication" model="ir.actions.report">
+        <field name="name">Fiche de Fabrication</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">central_beton.report_fabrication_document</field>
+        <field name="report_file">central_beton.report_fabrication_document</field>
+        <field name="print_report_name">'FAB_%s' % object.name</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_fabrication_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">Fiche de Fabrication</h2>
+                        <h3 class="text-center"><t t-esc="doc.name"/></h3>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Centrale:</strong></td>
+                                        <td><t t-esc="doc.centrale_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Formule:</strong></td>
+                                        <td><t t-esc="doc.bom_id.display_name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Operateur:</strong></td>
+                                        <td><t t-esc="doc.user_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Chantier:</strong></td>
+                                        <td><t t-esc="doc.chantier_id.designation or ''"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Date Debut:</strong></td>
+                                        <td><t t-esc="doc.date_start" t-options='{"widget": "datetime"}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Date Fin:</strong></td>
+                                        <td><t t-esc="doc.date_finished" t-options='{"widget": "datetime"}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Volume Prevu:</strong></td>
+                                        <td><t t-esc="doc.product_qty"/> m3</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Volume Produit:</strong></td>
+                                        <td><t t-esc="doc.volume_produit"/> m3</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4">Composants</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Matiere</th>
+                                    <th class="text-end">Qte Theorique</th>
+                                    <th class="text-end">Qte Reelle</th>
+                                    <th>Unite</th>
+                                    <th class="text-end">Ecart (%)</th>
+                                    <th class="text-end">Cout</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.move_raw_ids" t-as="move">
+                                    <tr>
+                                        <td><t t-esc="move.product_id.name"/></td>
+                                        <td class="text-end"><t t-esc="'%.1f' % move.product_uom_qty"/></td>
+                                        <td class="text-end"><t t-esc="'%.1f' % move.quantity"/></td>
+                                        <td><t t-esc="move.product_uom.name"/></td>
+                                        <td class="text-end">
+                                            <t t-if="move.product_uom_qty">
+                                                <t t-esc="'%.1f' % ((move.quantity - move.product_uom_qty) / move.product_uom_qty * 100)"/>
+                                            </t>
+                                            <t t-else="">0.0</t>
+                                        </td>
+                                        <td class="text-end"><t t-esc="'%.2f' % (move.quantity * move.product_id.standard_price)"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5" class="text-end"><strong>Cout Total:</strong></td>
+                                    <td class="text-end"><strong><t t-esc="'%.2f' % doc.cout_total"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-end"><strong>Cout / m3:</strong></td>
+                                    <td class="text-end"><strong><t t-esc="'%.2f' % doc.cout_m3"/></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Temperature:</strong></td>
+                                        <td><t t-esc="doc.temperature_beton"/> C</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Affaissement:</strong></td>
+                                        <td><t t-esc="doc.affaissement"/> cm</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>N Gachee:</strong></td>
+                                        <td><t t-esc="doc.numero_gachee or ''"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3" t-if="doc.notes">
+                            <div class="col-12">
+                                <strong>Notes:</strong>
+                                <p><t t-esc="doc.notes"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

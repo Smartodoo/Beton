@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire stock.scrap (Rebut) -->
+    <record id="view_stock_scrap_form_inherit_beton" model="ir.ui.view">
+        <field name="name">stock.scrap.form.inherit.beton</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <separator string="Pièces jointes"/>
+                <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

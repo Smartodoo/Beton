@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@class='row']" position="replace">
+                <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
+                    <div class="col-6">
+                        <t t-set="information_block">
+                            <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                                <strong>Shipping Address:</strong>
+                                <div t-field="o.partner_shipping_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            </div>
+
+                        </t>
+                    </div>
+                    <div class="col-6" name="address_not_same_as_shipping">
+                        <t t-set="address">
+                            <address class="mb-0" t-field="o.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
+                                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                                   t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+
+                            </div>
+                            <div id="partner_fiscal_info_same">
+                                <p t-if="o.partner_id.vat">
+                                    <strong>N.I.F:</strong>
+                                    <span t-field="o.partner_id.vat"/>
+                                </p>
+                                <p t-if="o.partner_id.nis">
+                                    <strong>N.I.S:</strong>
+                                    <span t-field="o.partner_id.nis"/>
+                                </p>
+                                <p t-if="o.partner_id.ai">
+                                    <strong>A.I:</strong>
+                                    <span t-field="o.partner_id.ai"/>
+                                </p>
+                                <p t-if="o.partner_id.company_registry">
+                                    <strong>R.C:</strong>
+                                    <span t-field="o.partner_id.company_registry"/>
+                                </p>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <t t-elif="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
+                    <div class="offset-col-6 col-6" name="address_same_as_shipping">
+                        <t t-set="address">
+                            <address class="mb-0" t-field="o.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
+                                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                                   t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+
+                            </div>
+                            <div id="partner_fiscal_info_same">
+                                <p t-if="o.partner_id.vat">
+                                    <strong>N.I.F:</strong>
+                                    <span t-field="o.partner_id.vat"/>
+                                </p>
+                                <p t-if="o.partner_id.nis">
+                                    <strong>N.I.S:</strong>
+                                    <span t-field="o.partner_id.nis"/>
+                                </p>
+                                <p t-if="o.partner_id.ai">
+                                    <strong>A.I:</strong>
+                                    <span t-field="o.partner_id.ai"/>
+                                </p>
+                                <p t-if="o.partner_id.company_registry">
+                                    <strong>R.C:</strong>
+                                    <span t-field="o.partner_id.company_registry"/>
+                                </p>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="offset-col-6 col-6" name="no_shipping">
+                        <t t-set="address">
+                            <address class="mb-0" t-field="o.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
+                                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                                   t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                            </div>
+                            <div id="partner_fiscal_info_same">
+                                <p t-if="o.partner_id.vat">
+                                    <strong>N.I.F:</strong>
+                                    <span t-field="o.partner_id.vat"/>
+                                </p>
+                                <p t-if="o.partner_id.nis">
+                                    <strong>N.I.S:</strong>
+                                    <span t-field="o.partner_id.nis"/>
+                                </p>
+                                <p t-if="o.partner_id.ai">
+                                    <strong>A.I:</strong>
+                                    <span t-field="o.partner_id.ai"/>
+                                </p>
+                                <p t-if="o.partner_id.company_registry">
+                                    <strong>R.C:</strong>
+                                    <span t-field="o.partner_id.company_registry"/>
+                                </p>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+
+</odoo>

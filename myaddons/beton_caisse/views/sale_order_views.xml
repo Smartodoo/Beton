@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ===== Vue formulaire : ribbons + smart button + montants ===== -->
+    <record id="view_sale_order_form_beton_caisse" model="ir.ui.view">
+        <field name="name">sale.order.form.beton.caisse</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+
+            <!-- Ribbons paiement caisse -->
+            <xpath expr="//sheet" position="inside">
+                <field name="beton_payment_state" invisible="1"/>
+                <field name="beton_amount_paid" invisible="1"/>
+                <field name="beton_amount_residual" invisible="1"/>
+            </xpath>
+            <xpath expr="//sheet/div[1]" position="before">
+                <widget name="web_ribbon" title="Paye" bg_color="text-bg-success"
+                        invisible="beton_payment_state != 'paid' or state != 'sale'"/>
+                <widget name="web_ribbon" title="Paiement Partiel" bg_color="text-bg-warning"
+                        invisible="beton_payment_state != 'partial' or state != 'sale'"/>
+            </xpath>
+
+            <!-- Smart button paiements caisse -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_beton_payments" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="beton_payment_count == 0">
+                    <field name="beton_payment_count" widget="statinfo"
+                           string="Paiements caisse"/>
+                </button>
+            </xpath>
+
+            <!-- Bouton enregistrer paiement : cache si non confirme ou totalement paye -->
+            <xpath expr="//header" position="inside">
+                <field name="beton_is_fully_paid" invisible="1"/>
+                <button name="action_register_beton_payment" type="object"
+                        string="Enregistrer un paiement"
+                        class="btn-primary"
+                        icon="fa-money"
+                        invisible="beton_is_fully_paid or state != 'sale'"
+                        groups="beton_caisse.group_beton_caisse_caissier"/>
+            </xpath>
+
+            <!-- Montants paye / reste a payer directement sous le total -->
+            <xpath expr="//group[@name='sale_total']/field[@name='tax_totals']" position="after">
+                <field name="beton_amount_paid" readonly="1" string="Montant paye"
+                       widget="monetary" class="text-success"
+                       invisible="beton_payment_state == 'not_paid'"/>
+                <field name="beton_amount_residual" readonly="1" string="Reste a payer"
+                       widget="monetary" class="text-danger fw-bold"
+                       invisible="beton_amount_residual &lt;= 0 or beton_payment_state == 'not_paid'"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ===== Vue liste : montants + badge etat paiement ===== -->
+    <record id="view_sale_order_tree_beton_caisse" model="ir.ui.view">
+        <field name="name">sale.order.tree.beton.caisse</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="beton_amount_paid" optional="show" string="Paye"
+                       widget="monetary" sum="Total paye"/>
+                <field name="beton_amount_residual" optional="show" string="Reste"
+                       widget="monetary" sum="Total reste"
+                       decoration-danger="beton_amount_residual &gt; 0"/>
+                <field name="beton_payment_state" widget="badge" optional="show"
+                       string="Etat paiement"
+                       decoration-success="beton_payment_state == 'paid'"
+                       decoration-warning="beton_payment_state == 'partial'"
+                       decoration-danger="beton_payment_state == 'not_paid'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Meme chose pour la vue devis/quotation -->
+    <record id="view_quotation_tree_beton_caisse" model="ir.ui.view">
+        <field name="name">sale.order.quotation.tree.beton.caisse</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="beton_amount_paid" optional="show" string="Paye"
+                       widget="monetary" sum="Total paye"/>
+                <field name="beton_amount_residual" optional="show" string="Reste"
+                       widget="monetary" sum="Total reste"
+                       decoration-danger="beton_amount_residual &gt; 0"/>
+                <field name="beton_payment_state" widget="badge" optional="show"
+                       string="Etat paiement"
+                       decoration-success="beton_payment_state == 'paid'"
+                       decoration-warning="beton_payment_state == 'partial'"
+                       decoration-danger="beton_payment_state == 'not_paid'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ===== Filtres de recherche par etat paiement ===== -->
+    <record id="view_sale_order_search_beton_caisse" model="ir.ui.view">
+        <field name="name">sale.order.search.beton.caisse</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_beton_paid" string="Paye (caisse)"
+                        domain="[('beton_payment_state', '=', 'paid')]"/>
+                <filter name="filter_beton_partial" string="Paiement partiel"
+                        domain="[('beton_payment_state', '=', 'partial')]"/>
+                <filter name="filter_beton_not_paid" string="Non paye"
+                        domain="[('beton_payment_state', '=', 'not_paid')]"/>
+                <separator/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="groupby_beton_payment" string="Etat paiement caisse"
+                            context="{'group_by': 'beton_payment_state'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

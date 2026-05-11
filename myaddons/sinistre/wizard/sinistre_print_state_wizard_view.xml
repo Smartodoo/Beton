@@ -1,0 +1,104 @@
+<odoo>
+    <record id="view_sinistre_print_state_wizard" model="ir.ui.view">
+        <field name="name">sinistre.print.state.wizard.form</field>
+        <field name="model">sinistre.print.state.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Impression des Sinistres par État">
+                <group>
+                    <field name="state"/>
+                </group>
+                <footer>
+                    <button name="print_report_state" type="object" string="Imprimer" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sinistre_print_state_wizard" model="ir.actions.act_window">
+        <field name="name">Impression par État</field>
+        <field name="res_model">sinistre.print.state.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+     <record id="view_sinistre_print_state_reglement_wizard_form" model="ir.ui.view">
+        <field name="name">sinistre.print.state.reglement.wizard.form</field>
+        <field name="model">sinistre.print.state.reglement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Impression par état de règlement">
+                <group>
+                    <field name="payment_state"/>
+                </group>
+                <footer>
+                    <button name="print_report_reglement" string="Imprimer" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sinistre_print_state_reglement_wizard" model="ir.actions.act_window">
+        <field name="name">Impression par état de règlement</field>
+        <field name="res_model">sinistre.print.state.reglement.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_sinistre_print_driver_wizard_form" model="ir.ui.view">
+        <field name="name">sinistre.print.driver.wizard.form</field>
+        <field name="model">sinistre.print.driver.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Impression des sinistres par conducteur">
+                <group>
+                    <field name="driver_id"/>
+                </group>
+                <footer>
+                    <button name="print_report_driver"
+                            type="object"
+                            string="Imprimer"
+                            class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action du wizard -->
+    <record id="action_sinistre_print_driver_wizard" model="ir.actions.act_window">
+        <field name="name">Imprimer par conducteur</field>
+        <field name="res_model">sinistre.print.driver.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+        <!-- Vue Form du Wizard -->
+    <record id="view_sinistre_print_plate_wizard_form" model="ir.ui.view">
+        <field name="name">sinistre.print.plate.wizard.form</field>
+        <field name="model">sinistre.print.plate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Impression des sinistres par plaque"    >
+                <group>
+                    <field name="license_plate"/>
+                </group>
+                <footer>
+                    <button name="print_report_plate" string="Imprimer"
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Window du Wizard -->
+    <record id="action_open_sinistre_print_plate_wizard" model="ir.actions.act_window">
+        <field name="name">Impression par plaque</field>
+        <field name="res_model">sinistre.print.plate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sinistre_print_plate_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

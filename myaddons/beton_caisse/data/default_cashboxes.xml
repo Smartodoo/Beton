@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="beton_cashbox_principale" model="beton.cashbox">
+            <field name="name">Caisse Principale</field>
+            <field name="type">principale</field>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="beton_cashbox_secondaire" model="beton.cashbox">
+            <field name="name">Caisse Secondaire</field>
+            <field name="type">secondaire</field>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="beton_cashbox_banque" model="beton.cashbox">
+            <field name="name">Caisse Banque</field>
+            <field name="type">banque</field>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="notes">Caisse spécialisée pour les paiements via journal banque.</field>
+        </record>
+    </data>
+</odoo>

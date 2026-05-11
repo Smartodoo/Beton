@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_beton_essai_form" model="ir.ui.view">
+        <field name="name">beton.essai.form</field>
+        <field name="model">beton.essai</field>
+        <field name="arch" type="xml">
+            <form string="Essai Béton">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations">
+                            <field name="date"/>
+                            <field name="formule_beton_id"/>
+                            <field name="fabrication_id"/>
+                            <field name="client_id"/>
+                            <field name="chantier"/>
+                            <field name="heure_prelevement" widget="float_time"/>
+                            <field name="temperature_beton"/>
+                        </group>
+                        <group string="Résultats">
+                            <field name="resistance_7j"/>
+                            <field name="resistance_14j"/>
+                            <field name="resistance_21j"/>
+                            <field name="resistance_28j"/>
+                            <field name="conforme"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="reference_lot"/>
+                            <field name="nom_laboratoire"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="observations"/>
+                    </group>
+
+                    <!-- Section Non-Conformité : visible uniquement quand conforme = 'non' -->
+                    <group string="Non-Conformité" invisible="conforme != 'non'">
+                        <group>
+                            <field name="nc_description"/>
+                            <field name="nc_gravite"/>
+                        </group>
+                        <group>
+                            <field name="nc_action_corrective"/>
+                            <field name="nc_responsable_id"/>
+                        </group>
+                        <group colspan="2" invisible="not nc_created">
+                            <field name="nc_id"/>
+                        </group>
+                    </group>
+                    <field name="nc_created" invisible="1"/>
+                    <separator string="Pièces jointes"/>
+                    <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_essai_tree" model="ir.ui.view">
+        <field name="name">beton.essai.tree</field>
+        <field name="model">beton.essai</field>
+        <field name="arch" type="xml">
+            <tree string="Essais Béton">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="formule_beton_id"/>
+                <field name="client_id"/>
+                <field name="chantier"/>
+                <field name="resistance_7j"/>
+                <field name="resistance_14j"/>
+                <field name="resistance_21j"/>
+                <field name="resistance_28j"/>
+                <field name="conforme" widget="badge"
+                       decoration-success="conforme == 'oui'"
+                       decoration-danger="conforme == 'non'"
+                       decoration-info="conforme == 'en_attente'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_beton_essai" model="ir.actions.act_window">
+        <field name="name">Essais Béton</field>
+        <field name="res_model">beton.essai</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre premier essai béton
+            </p>
+        </field>
+    </record>
+</odoo>

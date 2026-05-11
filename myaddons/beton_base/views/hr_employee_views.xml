@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire hr.employee -->
+    <record id="view_employee_form_inherit_beton" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.beton</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="role_employe"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Chauffeur" name="chauffeur_info" invisible="role_employe != 'chauffeur'">
+                    <group>
+                        <group string="Permis de conduire">
+                            <field name="categorie_permis"/>
+                            <field name="numero_permis"/>
+                            <field name="date_expiration_permis"/>
+                        </group>
+                        <group string="Brevet">
+                            <field name="brevet"/>
+                            <field name="date_expiration_brevet"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Filtrer les chauffeurs dans la vue liste employé -->
+    <record id="view_employee_search_inherit_beton" model="ir.ui.view">
+        <field name="name">hr.employee.search.inherit.beton</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_chauffeur" string="Chauffeurs"
+                        domain="[('role_employe', '=', 'chauffeur')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Filtre conducteur (chauffeur) sur parc auto -->
+    <record id="view_fleet_vehicle_form_inherit_chauffeur" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.chauffeur</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='driver_id']" position="attributes">
+                <attribute name="domain">[('is_chauffeur', '=', True)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Cron : vérification expiration permis/brevet chauffeurs
+         noupdate=1 : évite que les upgrades du module ré-écrivent ce record,
+         ce qui peut échouer si le cron est en cours d'exécution (lock). -->
+    <data noupdate="1">
+        <record id="ir_cron_check_expiration_chauffeur" model="ir.cron">
+            <field name="name">Vérification expiration permis/brevet chauffeurs</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_expiration_chauffeur()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,1618 @@
+.btn{
+	box-shadow: none;
+	&:focus,&.focus{
+		box-shadow: none;
+	}
+}
+.alert-primary{
+	background-color: rgba($primaryColor, $alpha: 0.2) !important;
+	border-color: $primaryColor !important;
+}
+.border-primary{
+	border-color: $primaryColor !important;
+}
+.btn-primary {
+	&:not(.btn-light), &:not(.btn-link){
+		background-color: $primaryColor;
+		border-color: $primaryColor;color: #ffffff;
+		&:not(.btn-link) {
+			&:hover {
+				background-color: darken($primaryColor, 10%) !important;
+				border-color: darken($primaryColor, 10%) !important;color: #ffffff;
+				box-shadow: 0 0 2px rgba(0,0,0,.12), 0 2px 2px rgba(0,0,0,.2);
+			}
+		}
+		&:active,&.active{
+			background-color: rgba($primaryColor, $alpha: 0.2) !important;
+			border-color: $primaryColor !important;
+		}
+	}
+	&:not(:disabled) {
+		&:not(.disabled) {
+			&:active {
+				background-color: darken($primaryColor, 10%);
+				border-color: darken($primaryColor, 10%);
+				&:focus {
+					box-shadow: none;
+				}
+			}
+		}
+	}
+	&:focus {
+		box-shadow: none;
+	}
+}
+.btn-check:checked{
+	+ .btn-secondary{
+		background: rgba($extra_color , $alpha: 0.2);
+    	border-color: $extra_color;color: #374151;
+	}
+}
+.btn-check{
+	&:active{
+		+ .btn-secondary{
+			background: rgba($extra_color , $alpha: 0.2);
+			border-color: $extra_color;color: #374151;
+		}
+	}
+}
+.show{
+	 > .btn-secondary.dropdown-toggle{
+		background: rgba($extra_color , $alpha: 0.2);
+    	border-color: $extra_color;color: #374151;
+	 }
+}
+
+.btn-secondary {
+	&.active,&:active{
+		background: rgba($extra_color , $alpha: 0.2);
+    	border-color: $extra_color;color: #374151;
+	}
+	&:hover{
+		color: #1F2937;background: darken($secondaryColor, 10%);
+    	border-color: darken($secondaryColor, 10%);
+	}
+}
+.btn-outline-secondary{
+	&:active{
+		background-color: rgba($primaryColor, $alpha: 0.2) !important;
+		border-color: $primaryColor !important;
+	}
+}
+.show {
+	>.btn-primary.dropdown-toggle {
+		background-color: $primaryColor;
+		border-color: $primaryColor;
+		&:focus {
+			box-shadow: none;
+		}
+	}
+}
+
+.o_dropdown {
+	.dropdown-toggle {
+		&:first-child {
+			background-color: $secondaryColor;
+			border-color: $secondaryColor;
+			border: 0px;
+			margin-right: 5px;
+		}
+	}
+}
+
+
+
+/*--style-1--*/
+@if $button_style == 'style_1'{
+
+	.btn {
+		border-radius: 0px;
+	}
+	.o_form_sheet {
+		.sh_full_screen_icon_div {
+			.full_form_toggle {
+				border-radius: 0px;
+			}
+		}
+	}
+	.o_menu_systray {
+		.sh_language_icon {
+			img.sh_lang_flag {
+				border-radius: 0px;
+			}
+		}
+	}
+	.o_main_navbar {
+		.o_menu_systray {
+			.sh_bookmark {
+				.sh_bookmark_search_div {
+					.sh_bookmark_search.form-control {
+						border-radius: 0px;
+					}
+				}
+			}
+		}
+	}
+	
+	
+.btn-primary {
+	border-radius: 0px !important;
+}
+.btn-info {
+	border-radius: 0px !important;
+}
+.btn-secondary {
+	&:not(.o_arrow_button) {
+		border-radius: 0px !important;
+	}
+}
+.btn-outline-primary {
+	border-radius: 0px !important;
+}
+.btn-light {
+	border-radius: 0px !important;
+}
+.btn-outline-secondary {
+	&:not(.oe_stat_button) {
+		border-radius: 0px !important;
+	}
+}
+
+
+	// notification info btn style 1  // 
+
+	.o_notification_manager {
+		.toast.o_notification.bg-warning {
+			.toast-body {
+				border-radius: 0px;
+				.btn-primary {
+					border-radius: 0px !important;
+				}
+			}
+		}
+		.o_notification.bg-warning {
+			.o_notification_body {
+				border-radius: 0px;
+				.o_notification_buttons {
+					.btn.btn-primary {
+						border-radius: 0px !important;
+					}
+				}
+			}
+			border-radius: 0px;
+		}
+		.o_notification {
+			.toast-header {
+				border-radius: 0px !important;
+			}
+		}
+		.o_notification.bg-danger {
+			border-radius: 0px !important;
+			.o_notification_body {
+				border-radius: 0px !important;
+			}
+		}
+		.o_notification.bg-info {
+			border-radius: 0px !important;
+			.o_notification_body {
+				border-radius: 0px !important;
+			}
+		}
+	}
+	
+	/* TO DO */ 
+	.todo_layout .add_todo_section .input-group .sh_add_todo_input,
+	.todo_layout .add_todo_section .input-group-append .btn.sh_add_todo,
+	.todo_layout .card .card-body,.todo_layout .card,
+	.todo_layout .card .sh-card-header .sh_mark_completed_tooltip, .todo_layout .card .sh-card-header-button .sh_to_do_edit_btn .sh_mark_edit_tooltip, .todo_layout .card .sh-card-header-button .sh_to_do_remove_btn .sh_mark_remove_tooltip, .todo_layout .card .sh-card-header-button .sh_to_do_save_btn .sh_mark_save_tooltip,
+	.todo_layout .card .card-header{border-radius: 0px !important;}
+	/*zoom in/out view*/
+
+
+	.o_searchview .o_searchview_input_container .o_searchview_facet{border-radius: 5px !important; border-color: transparent;}
+	.o_searchview .o_searchview_input_container .o_searchview_facet .o_searchview_facet_label{border-top-right-radius: 0 !important;border-bottom-right-radius: 0 !important;border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important;}
+
+	//  <--- list view click btn --->
+
+	.o_web_client{
+	.o_action_manager{
+		.o_list_view{
+			.o_content{
+				.o_list_renderer{
+					table{
+						tr{
+							td{
+								.btn{
+									border-radius: 0 ;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+			// .o_control_panel{
+			// 	.o_control_panel_main{
+			// 		.o_control_panel_navigation{
+			// 			.o_cp_switch_buttons{
+			// 				.btn{
+			// 					margin-right: 1px;
+			// 					&:first-child{
+			// 						border-top-right-radius: 0 !important;border-bottom-right-radius: 0 !important;border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important;
+			// 					}
+			// 					&:last-child{
+			// 						border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important;
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// }
+					// <---___+++--- DISCUSS START ---+++___--->
+
+					.o-mail-Discuss{
+						.o-mail-Discuss-content{
+							div{
+								.d-flex{
+									.o-discuss-Call{
+										.o-discuss-Call-main{
+											.o-discuss-Call-overlay{
+												div{
+													.o-discuss-CallActionList{
+														div{
+															.btn{
+																border-radius: 0px !important;
+																.fa-stack{
+																	display: flex !important;
+																	align-items: center !important;
+																	justify-content: center !important;
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+		
+					// <---___+++--- DISCUSS END ---+++___--->
+	}
+	}
+
+}
+/*--style-1--*/
+
+/*--style-2--*/
+@if $button_style == 'style_2'{
+	.o_cp_bottom{
+		.o_cp_buttons{
+			.btn{
+				border-radius: 4px!important;
+			}
+		} 
+	} 
+	.o_main_navbar{
+		.o_menu_systray{
+			.sh_bookmark{
+				.sh_wqm_quick_menu_submenu_list_cls{
+					.sh_bookmark_search_div{
+						.sh_bookmark_search{
+							&.form-control{border-radius: 4px!important;}
+						}
+					} 
+				} 
+			} 
+		} 
+	} 
+	
+	
+.btn-primary {
+	border-radius: 4px !important;
+}
+.btn-info {
+	border-radius: 4px !important;
+}
+.btn-secondary {
+	&:not(.o_arrow_button) {
+		border-radius: 4px !important;
+	}
+}
+.btn-outline-primary {
+	border-radius: 4px !important;
+}
+.btn-light {
+	border-radius: 4px !important;
+}
+.btn-outline-secondary {
+	&:not(.oe_stat_button) {
+		border-radius: 4px !important;
+	}
+}
+
+
+
+	.o_form_sheet{
+		.sh_full_screen_icon_div{
+			.full_form_toggle{border-radius: 0px 0px 0px 4px;}
+		} 
+	} 
+	
+.btn-group {
+	>.btn {
+		&:not(:last-child) {
+			&:not(.dropdown-toggle) {
+				border-radius: 4px;
+			}
+		}
+	}
+	>.btn-group {
+		&:not(:last-child) {
+			>.btn {
+				border-radius: 4px;
+			}
+		}
+	}
+}
+
+	
+.o_cp_switch_activity {
+	border-radius: 4px !important;
+}
+.o_menu_systray {
+	.sh_language_icon {
+		img.sh_lang_flag {
+			border-radius: 4px !important;
+		}
+	}
+}
+
+
+.btn-group {
+	>.btn {
+		&:not(:first-child) {
+			border-radius: 4px !important;
+		}
+	}
+	>.btn-group {
+		&:not(:first-child) {
+			>.btn {
+				border-radius: 4px !important;
+			}
+		}
+	}
+}
+
+	// notification info btn style 2  // 
+	
+.o_notification_manager {
+	.o_notification.bg-warning {
+		.o_notification_body {
+			border-radius: 4px !important;
+			.o_notification_buttons {
+				.btn.btn-primary {
+					border-radius: 4px !important;
+				}
+			}
+		}
+		border-radius: 4px !important;
+	}
+	.toast.o_notification.bg-warning {
+		.toast-body {
+			border-radius: 4px !important;
+			.btn-primary {
+				border-radius: 4px !important;
+			}
+		}
+	}
+	.o_notification {
+		.toast-header {
+			border-radius: 4px !important;
+		}
+	}
+	.o_notification.bg-danger {
+		border-radius: 4px !important;
+		.o_notification_body {
+			border-radius: 4px !important;
+		}
+	}
+	.o_notification.bg-info {
+		border-radius: 4px !important;
+		.o_notification_body {
+			border-radius: 4px !important;
+		}
+	}
+}
+	/* TO DO */ 
+	
+.todo_layout {
+	.add_todo_section {
+		.input-group {
+			.sh_add_todo_input {
+				border-radius: 4px 0px 0px 4px;
+			}
+		}
+		.input-group-append {
+			.btn.sh_add_todo {
+				border-radius: 0px 4px 4px 0px !important;
+			}
+		}
+	}
+	.card {
+		.card-body {
+			border-radius: 4px;
+		}
+		border-radius: 4px;
+		.sh-card-header {
+			.sh_mark_completed_tooltip {
+				border-radius: 4px;
+			}
+		}
+		.sh-card-header-button {
+			.sh_to_do_edit_btn {
+				.sh_mark_edit_tooltip {
+					border-radius: 4px;
+				}
+			}
+			.sh_to_do_remove_btn {
+				.sh_mark_remove_tooltip {
+					border-radius: 4px;
+				}
+			}
+			.sh_to_do_save_btn {
+				.sh_mark_save_tooltip {
+					border-radius: 4px;
+				}
+			}
+		}
+		.card-header {
+			border-radius: 4px;
+		}
+	}
+}
+
+		.o_searchview {
+			.o_searchview_input_container {
+				.o_searchview_facet {
+					border-radius: 4px !important;
+					.o_searchview_facet_label {
+						border-radius: 4px !important;
+					}
+				}
+			}
+		}
+		
+		// <--- list view click btn --->
+
+	.o_web_client{
+		.o_action_manager{
+			.o_list_view{
+				.o_content{
+					.o_list_renderer{
+						table{
+							tr{
+								td{
+									.btn{
+										border-radius: 4px ;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			.owl-carousel{
+				.owl-stage-outer{
+					.owl-stage{
+						.owl-item{
+							.item{
+								border-radius: 4px;
+							}
+						}
+					}
+				}
+			}
+						// <---___+++--- DISCUSS START ---+++___--->
+
+			.o-mail-Discuss{
+				.o-mail-Discuss-content{
+					div{
+						.d-flex{
+							.o-discuss-Call{
+								.o-discuss-Call-main{
+									.o-discuss-Call-overlay{
+										div{
+											.o-discuss-CallActionList{
+												div{
+													.btn{
+														border-radius: 5px !important;
+														.fa-stack{
+															display: flex !important;
+															align-items: center !important;
+															justify-content: center !important;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- DISCUSS END ---+++___--->
+		}
+	}
+}
+/*--style-2--*/
+
+/*--style-3--*/
+@if $button_style == 'style_3'{
+
+	.o_form_sheet {
+		.sh_full_screen_icon_div {
+			.full_form_toggle {
+				border-radius: 0px 0px 0px 0px;
+			}
+		}
+	}
+	
+.btn-primary {
+	border-radius: 0px 15px 0px 15px !important;
+}
+.btn-info {
+	border-radius: 0px 15px 0px 15px !important;
+}
+.btn-secondary {
+	&:not(.o_arrow_button) {
+		border-radius: 0px 15px 0px 15px !important;
+	}
+}
+.btn-outline-primary {
+	border-radius: 0px 15px 0px 15px !important;
+}
+.btn-light {
+	border-radius: 0px 15px 0px 15px !important;
+}
+.btn-outline-secondary {
+	&:not(.oe_stat_button) {
+		border-radius: 0px 15px 0px 15px !important;
+	}
+}
+
+
+
+.o_main_navbar {
+	.o_menu_systray {
+		.sh_bookmark {
+			.sh_wqm_quick_menu_submenu_list_cls {
+				.sh_bookmark_search_div {
+					.sh_bookmark_search.form-control {
+						border-radius: 0px 15px 0px 15px !important;
+					}
+				}
+			}
+		}
+	}
+}
+
+.o_menu_systray {
+	.sh_language_icon {
+		img.sh_lang_flag {
+			border-radius: 0px 10px 0px 10px !important;
+		}
+	}
+}
+
+	// notification info btn style 3  // 
+
+	.o_notification_manager {
+		.o_notification.bg-warning {
+			.o_notification_body {
+				border-radius: 0 15px !important;
+				.o_notification_buttons {
+					.btn.btn-primary {
+						border-radius: 0 15px !important;
+					}
+				}
+			}
+			border-radius: 0 15px !important;
+		}
+		.toast.o_notification.bg-warning {
+			.toast-body {
+				border-radius: 0 15px !important;
+				.btn-primary {
+					border-radius: 0 15px !important;
+				}
+			}
+		}
+		.o_notification {
+			.toast-header {
+				border-radius: 0 15px !important;
+			}
+		}
+		.o_notification.bg-danger {
+			border-radius: 0 15px !important;
+			.o_notification_body {
+				border-radius: 0 15px !important;
+			}
+		}
+		.o_notification.bg-info {
+			border-radius: 0 15px !important;
+			.o_notification_body {
+				border-radius: 0 15px !important;
+			}
+		}
+	}
+	
+	/* TO DO */ 
+	
+.todo_layout {
+	.add_todo_section {
+		.input-group {
+			.sh_add_todo_input {
+				border-radius: 0px 0px 0px 15px;
+			}
+		}
+		.input-group-append {
+			.btn.sh_add_todo {
+				border-radius: 0px 15px 0px 0px;
+			}
+		}
+	}
+	.card {
+		.card-body {
+			border-radius: 0px 15px 0px 15px;
+		}
+		border-radius: 0px 15px 0px 15px;
+		.sh-card-header {
+			.sh_mark_completed_tooltip {
+				border-radius: 0px 15px 0px 15px;
+			}
+		}
+		.sh-card-header-button {
+			.sh_to_do_edit_btn {
+				.sh_mark_edit_tooltip {
+					border-radius: 0px 15px 0px 15px;
+				}
+			}
+			.sh_to_do_remove_btn {
+				.sh_mark_remove_tooltip {
+					border-radius: 0px 15px 0px 15px;
+				}
+			}
+			.sh_to_do_save_btn {
+				.sh_mark_save_tooltip {
+					border-radius: 0px 15px 0px 15px;
+				}
+			}
+		}
+		.card-header {
+			border-radius: 0px 15px 0px 0px;
+		}
+	}
+}
+
+	/* Zoom in/out view */ 
+    .o_web_client{
+		.sh_zoom_view_layout{
+			button.btn.sh_zoom{border-top-right-radius: 15px !important;border-bottom-left-radius: 15px !important;}
+		} 
+	} 
+    .sh_zoom_view_layout{
+		.sh-zoom-panel{
+			.sh_reset{
+				border-radius: 0px 10px 0px 10px;
+			}	
+		} 
+	} 
+	.sh_zoom_view_layout{
+		.sh-zoom-panel{border-radius: 0px 10px 0px 10px;}
+	} 
+	.o_control_panel{
+		.o_cp_bottom_right{
+			.btn-group{
+				&.o_cp_switch_buttons{
+					.btn{
+						border-radius: 0px 15px !important;
+					}
+				} 
+			}
+		} 
+	} 
+	.o_control_panel{
+		.o_cp_bottom_right{
+			.o_cp_pager{
+				.o_pager{
+					.btn{
+						border-radius: 0px 15px !important;
+
+					}
+				} 
+			} 
+		} 
+	} 
+	.modal{
+		&.o_technical_modal{
+			&.show{
+				&.o_web_editor_dialog{
+					.modal-content{
+						.modal-body{
+							input{
+								&.form-control{
+									border-radius: 0px 15px !important;
+								}
+							}
+						} 
+					} 
+				} 
+			}
+		}
+	}
+	.modal{
+		&.o_technical_modal{
+			&.show{
+				&.o_web_editor_dialog{
+					.modal-content{
+						.modal-body{
+							select{
+								border-radius: 0px 15px !important;
+							}
+						} 
+					} 
+				} 
+			}
+		}
+	}
+	.o_control_panel{
+		.o_cp_top{
+			.o_cp_bottom_right{
+				.btn{
+					&.btn-light{
+						&.o_form_button_save{
+							border-radius: 0px 15px !important;
+						}
+					}
+				}
+			} 
+		} 
+	} 
+	.o_control_panel{
+		.o_cp_bottom_right{
+			.o_form_button_create{
+				border-radius: 0px 15px !important;
+			}
+		}
+	} 
+	.o_content{
+		.o_Chatter{
+			.o_Chatter_fixedPanel{
+				.o_ChatterTopbar_button{
+					border-radius: 0px 15px !important;
+				}
+			} 
+		} 
+	}
+	.o_control_panel{
+		.o_cp_bottom_right{
+			.o_cp_action_menus{
+				.o-dropdown{
+					>button{
+						&.btn{
+							&.btn-light{
+								border-radius: 0px 15px !important;
+							}
+						}
+					}
+				}
+			}
+		} 
+	} 
+	.o_menu_systray{
+		.o_MessagingMenu{
+			.o_MessagingMenu_dropdownMenu{
+				.btn{
+					&.btn-secondary{
+						border-radius: 0px 15px !important;
+					}
+				}
+			} 
+		} 
+	} 
+	.o_calendar_view{
+		.fc-view-container{
+			.o_cw_popover{
+				&.popover{
+					&.card{
+						.card-footer{
+							.o-calendar-attendee-status{
+								.btn{
+									&.btn-secondary{
+										&.dropdown-toggle{
+											border-radius: 0px 15px !important;
+										}
+									}
+								}
+							} 
+						} 
+					} 
+				}
+			}
+		} 
+	} 
+	.o_menu_systray{
+		.sh_language_icon{
+			img{
+				&.sh_lang_flag{
+					border-radius: 0px 15px !important;
+				}
+			}
+		} 
+	} 
+	.o_spreadsheet_dashboard_action{
+		.o_component_with_search_panel{
+			.o-chart-container{
+				.o-scorecard{
+					border-radius: 0px 15px !important;
+				}
+			} 
+		} 
+	}
+	.o_kanban_view{
+		.o_kanban_renderer{
+			&.o_kanban_grouped{
+				.o_kanban_record{
+					border-radius: 0px 15px !important;
+				}
+			} 
+		}
+	} 
+	body{
+		.btn{
+			&.btn-primary{
+				border-radius: 0px 15px !important;
+			}
+		}
+	} 
+	body{
+		.btn{
+			&.btn-light{
+				&:not(.oe_stat_button){
+					&:not(.o_button_more){
+						border-radius: 0px 15px !important;
+					}
+				}
+			}
+		}
+	} 
+	.o_kanban_view .o_kanban_record .oe_module_desc .oe_module_action .btn.btn-info.btn-sm,
+	.o_kanban_view .o_kanban_record .oe_module_desc .oe_module_action .btn-group-sm>.btn.btn-info,
+	.o_form_view .o_kanban_ungrouped .o_kanban_record .oe_kanban_global_click,
+	.o_FormRenderer_chatterContainer .o_Chatter_fixedPanel .o_ChatterTopbar .o_ChatterTopbar_actions .o_ChatterTopbar_button,
+	.o_onboarding_main .o_onboarding_step .o_onboarding_step_content .o_onboarding_step_action,
+	.o_base_settings .o_setting_container .o_settings_container .o_setting_box .o_setting_right_pane .badge.o_enterprise_label,
+	.o_kanban_view .o_kanban_renderer.o_kanban_grouped .o_kanban_record .oe_kanban_global_click,
+	.o_kanban_view .o_kanban_record .o_payment_provider_desc .o_payment_kanban_info .badge,
+	.o_PopoverView .o_ActivityMarkDonePopoverContent .o_ActivityMarkDonePopoverContent_buttons .o_ActivityMarkDonePopoverContent_discardButton,
+	.o_hr_attendance_kiosk_mode_container .o_hr_attendance_kiosk_mode .o_hr_attendance_sign_in_out_icon {
+		border-radius: 0px 15px !important;
+		span{
+			border-radius: 0px 15px !important;
+		}
+	}
+
+
+	.o_form_view .o_form_view_container .o_control_panel .o_control_panel_main .o_control_panel_breadcrumbs .o_control_panel_main_buttons > div .btn{border-radius: 0 15px;}
+	.o_form_view .o_form_view_container .o_control_panel .o_control_panel_main .o_control_panel_breadcrumbs .o_control_panel_main_buttons > div .btn{border-radius: 0 15px;}
+
+	.o_searchview .o_searchview_input_container .o_searchview_facet{border-radius: 0 15px !important;}
+	.o_searchview .o_searchview_input_container .o_searchview_facet .o_searchview_facet_label{border-radius: 0 15px !important; height: max-content;}
+	.o_searchview .o_searchview_input_container .o_searchview_facet .position-absolute{border-radius: 0 15px !important; }
+
+		// <--- list view click btn --->
+
+		.o_web_client{
+			.o_action_manager{
+				.o_list_view{
+					.o_content{
+						.o_list_renderer{
+							table{
+								tr{
+									td{
+										.btn{
+											border-radius: 0 15px ;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				.owl-carousel{
+					.owl-stage-outer{
+						.owl-stage{
+							.owl-item{
+								.item{
+									border-radius: 0 15px;
+								}
+							}
+						}
+					}
+				}
+			// <---___+++--- DISCUSS START ---+++___--->
+
+			.o-mail-Discuss{
+				.o-mail-Discuss-content{
+					div{
+						.d-flex{
+							.o-discuss-Call{
+								.o-discuss-Call-main{
+									.o-discuss-Call-overlay{
+										div{
+											.o-discuss-CallActionList{
+												div{
+													.btn{
+														border-radius: 0 15px !important;
+														.fa-stack{
+															display: flex !important;
+															align-items: center !important;
+															justify-content: center !important;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- DISCUSS END ---+++___--->
+			}
+		}
+}
+/*--style-3--*/
+
+/*--style-4--*/
+@if $button_style == 'style_4'{
+	.btn-primary,.btn-info, .btn-secondary:not(.o_arrow_button), .btn-outline-primary, .btn-light, .btn-outline-secondary:not(.oe_stat_button){
+		border-radius: 15px !important;
+	}
+
+	// // notification info btn style 4  // 
+	
+.o_notification_manager {
+	.o_notification.bg-warning {
+		.o_notification_body {
+			border-radius: 15px !important;
+			.o_notification_buttons {
+				.btn.btn-primary {
+					border-radius: 15px !important;
+				}
+			}
+		}
+		border-radius: 15px !important;
+	}
+	.toast.o_notification.bg-warning {
+		.toast-body {
+			border-radius: 15px !important;
+			.btn-primary {
+				border-radius: 15px !important;
+			}
+		}
+	}
+	.o_notification {
+		.toast-header {
+			border-radius: 15px !important;
+		}
+	}
+	.o_notification.bg-danger {
+		border-radius: 15px;
+		.o_notification_body {
+			border-radius: 15px;
+		}
+	}
+	.o_notification.bg-info {
+		border-radius: 15px;
+		.o_notification_body {
+			border-radius: 15px;
+		}
+	}
+}
+//  /* TO DO */ 
+	
+.todo_layout {
+	.add_todo_section {
+		.input-group {
+			.sh_add_todo_input {
+				border-radius: 15px !important;
+			}
+		}
+		.input-group-append {
+			.btn.sh_add_todo {
+				border-radius: 15px !important;
+			}
+		}
+	}
+	.card {
+		.card-body {
+			border-radius: 15px !important;
+		}
+		border-radius: 15px !important;
+		.sh-card-header {
+			.sh_mark_completed_tooltip {
+				border-radius: 15px !important;
+			}
+		}
+		.sh-card-header-button {
+			.sh_to_do_edit_btn {
+				.sh_mark_edit_tooltip {
+					border-radius: 15px !important;
+				}
+			}
+			.sh_to_do_remove_btn {
+				.sh_mark_remove_tooltip {
+					border-radius: 15px !important;
+				}
+			}
+			.sh_to_do_save_btn {
+				.sh_mark_save_tooltip {
+					border-radius: 15px !important;
+				}
+			}
+		}
+		.card-header {
+			border-radius: 15px !important;
+		}
+	}
+}
+
+	
+	// crm change 
+
+	.o_web_client{
+		.o_action_manager{
+
+		// <---___+++--- CRM START ---+++___--->
+
+			// <---kanban view start --->
+				// crm control panel 
+				.o_control_panel{
+							.o_control_panel_main{
+								.o_control_panel_breadcrumbs{
+									.o_control_panel_main_buttons{
+										div {
+											.btn{
+												border-radius: 15px;
+											}
+										}
+									}
+								}
+								.o_control_panel_actions{
+									.o_cp_searchview{
+										.o_searchview {
+											.o_searchview_input_container{
+												.o_searchview_facet{
+													border-radius: 15px !important;
+													height: max-content ;
+													.o_searchview_facet_label{
+														border-radius: 15px !important;
+														span{
+															border-radius: 15px;
+														}
+													}
+												}
+												input{
+													padding: 0 !important;
+													margin: 0 !important;
+												}
+											}
+										}
+									}
+								}
+								.o_control_panel_navigation{
+									.o_cp_switch_buttons{
+										.btn{
+											border-radius: 15px;
+										}
+									}
+								}
+							}
+				}
+
+				.owl-carousel{
+					.owl-stage-outer{
+						.owl-stage{
+							.owl-item{
+								.item{
+									border-radius: 15px !important;
+								}
+							}
+						}
+					}
+				}
+
+				// crm form view 
+				.o_form_view{
+						.o_form_view_container{
+							.o_content{
+								.o_form_renderer{
+									.o_form_sheet_bg{
+										.o_form_statusbar{
+											.o_statusbar_buttons{
+												.btn{
+													border-radius: 15px;
+												}
+											}
+										}
+										.o_form_sheet{
+											.o_notebook_content{
+												.tab-pane{
+													.o_hr_skills_editable{
+														.o_field_widget{
+															.o_list_view{
+																.o_list_renderer{
+																	.btn{
+																		border-radius: 15px;
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+									.o-mail-Form-chatter{
+										.o-mail-Chatter{
+											.o-mail-Chatter-top{
+												.o-mail-Chatter-topbar{
+													.btn{
+														border-radius: 15px;
+													}
+												}
+												div{
+													.o-mail-Composer{
+														.o-mail-Composer-coreMain{
+															div{
+																.btn{
+																	border-radius: 15px;
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}	
+				// <---kanban view end --->
+					
+
+				// <---list view start--->
+					.o_list_view{
+								.o_content{
+									.o_list_renderer{
+										table{
+											tr{
+												td{
+													.btn{
+														border-radius: 15px ;
+													}
+												}
+											}
+										}
+									}
+								}
+					}
+				// <---list view start--->
+
+
+				// <---calendar view start--->
+					.o_calendar_view{
+					.o_content{
+						.o_calendar_container{
+							.o_calendar_header{
+								div{
+									.btn{
+										border-radius: 15px;
+									}
+								}
+								.btn{
+									border-radius: 15px;
+								}
+							}
+						}
+					}
+					}
+				// <---calendar view end--->
+
+
+				// <---pivot view start--->
+					.o_pivot_view{
+						.o_content{
+							.o_pivot_buttons{
+								.btn-group{
+									.btn{
+										border-radius: 15px;
+									}
+								}
+							}
+						}
+					}
+				// <---pivot view end--->
+
+
+				// <---graph view start--->
+					.o_graph_view{
+						.o_content{
+							.o_graph_renderer{
+								div{
+									.btn-group{
+										.btn{
+											border-radius: 15px;
+										}
+									}
+								}
+							}
+						}
+					}
+				// <---graph view end--->
+
+			// <---___+++--- CRM END ---+++___--->
+
+
+
+			// <---___+++--- SALE START ---+++___--->
+
+			.o_list_view{
+				.o_onboarding_container{
+					.o_onboarding_main{
+						.o_onboarding_wrap{
+							.o_onboarding_steps{
+								.o_onboarding_step{
+									.o_onboarding_step_content{
+										.btn{
+											border-radius: 15px;
+										}
+									}	
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- SALE END ---+++___--->
+
+
+
+			// <---___+++--- DISCUSS START ---+++___--->
+
+			.o-mail-Discuss{
+				.o-mail-DiscussSidebar{
+					div{
+						.btn{
+							border-radius: 15px !important;
+						}
+					}
+				}
+				.o-mail-Discuss-content{
+					div{
+						.d-flex{
+							.o-discuss-Call{
+								.o-discuss-Call-main{
+									.o-discuss-Call-overlay{
+										div{
+											.o-discuss-CallActionList{
+												div{
+													.btn{
+														border-radius: 15px !important;
+														.fa-stack{
+															display: flex !important;
+															align-items: center !important;
+															justify-content: center !important;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- DISCUSS END ---+++___--->
+
+
+
+			// <---___+++--- PRUCHASE START ---+++___--->
+
+			.o_purchase_dashboard_list_view{
+				.o_content{
+					.o_purchase_dashboard{
+						div{
+							.btn{
+								border-radius: 15px !important;
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- PRUCHASE END ---+++___--->
+
+
+
+			// <---___+++--- INVENTORY START ---+++___--->
+
+			.o_kanban_dashboard{
+				.o_content{
+					.o_kanban_renderer{
+						.o_kanban_record{
+							div{
+								.o_kanban_card_content{
+									.o_kanban_primary_left{
+										.btn{
+											border-radius: 15px !important;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- INVENTORY END ---+++___--->
+
+
+
+			// <---___+++--- RECRUITMENT START ---+++___--->
+
+			.o_hr_recruitment_kanban{
+				.o_content{
+					.o_kanban_renderer{
+						.o_kanban_record{
+							div{
+								.o_recruitment_job_container{
+									.row{
+										div{
+											.btn{
+												border-radius: 15px;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- RECRUITMENT END ---+++___--->
+
+
+
+			// <---___+++--- LIVE CHAT START ---+++___--->
+
+			.o_kanban_view{
+				.o_content{
+					.o_renderer{
+						.o_kanban_record{
+							.oe_kanban_global_click{
+								.oe_kanban_details{
+									div{
+										div{
+											.btn{
+												border-radius: 15px;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- LIVE CHAT END ---+++___--->
+
+
+
+			// <---___+++--- APPS START ---+++___--->
+
+			.o_view_controller{
+				.o_content{
+					.o_kanban_renderer{
+						.o_kanban_record{
+							.oe_module_vignette{
+								.oe_module_desc{
+									.oe_module_action{
+										.btn{
+											border-radius: 15px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- APPS END ---+++___--->
+
+
+
+			// <---___+++--- SETTING START ---+++___--->
+
+			.o-settings-form-view{
+				.o_form_view_container{
+					.o_control_panel{
+						.o_control_panel_main{
+							.o_control_panel_breadcrumbs{
+								div{
+									.btn{
+										border-radius: 15px;
+									}
+								}
+							}
+						}
+					}
+					.o_content{
+						.o_form_renderer{
+							.o_setting_container{
+								.settings{
+									.app_settings_block{
+										#invite_users{
+											.o_settings_container{
+												.o_searchable_setting{
+													.o_setting_right_pane{
+														div{
+															.btn{
+																border-radius: 15px;
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// <---___+++--- SETTING END ---+++___--->
+
+		}
+			
+		// popup box in form view (Schedule Activity) start
+		.o-main-components-container{
+				.o-overlay-container{
+					.o_dialog{
+						.modal{
+							.modal-dialog{
+								.modal-content{
+									.modal-footer{
+										footer{
+											>.btn{
+												border-radius: 15px;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+		}
+		// popup box in form view (Schedule Activity) end
+
+		// calendar view model start 
+		.o-main-components-container{
+				.o-overlay-container{
+					.o_popover{
+						.o_cw_body{
+							.card-footer{
+								.btn{
+									border-radius: 15px;
+								}
+							}
+						}
+					}
+					.o_dialog{
+						.modal{
+							.modal-dialog{
+								.modal-content{
+									.modal-footer{
+										.btn{
+											border-radius: 15px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+		}
+		// calendar view model end 
+
+		// dicuss invite people popup start 
+		.o-main-components-container{
+			.o-overlay-container{
+				.o_popover{
+					.o-mail-ActionPanel{
+						.o-discuss-ChannelInvitation-has-size-constraints{
+							div{
+								.btn{
+									border-radius: 15px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		// dicuss invite people popup end
+
+		// zoom button start
+		.sh_zoom_view_layout{
+			.btn{
+				border-radius: 15px;
+			}
+		}
+		// zoom button end 
+
+		
+	}
+	// <---___+++--- WEBSITE START ---+++___--->
+
+	#wrapwrap{
+		.o_header_standard{
+			.navbar{
+			.container{
+				.navbar-nav{
+					li{
+						.btn{
+							border-radius: 15px !important;
+						}
+						.oe_structure{
+							.oe_unremovable{
+								.container{
+									.btn{
+										border-radius: 15px !important;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			}
+		}
+	}
+
+	// <---___+++--- WEBSITE END ---+++___--->
+}
+/*--style-4--*/
+
+// <--- ... this file have no path in manifest ... --->
+

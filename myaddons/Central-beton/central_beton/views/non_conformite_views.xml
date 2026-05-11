@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_non_conformite_form" model="ir.ui.view">
+        <field name="name">central.beton.non.conformite.form</field>
+        <field name="model">central.beton.non.conformite</field>
+        <field name="arch" type="xml">
+            <form string="Non-Conformite">
+                <header>
+                    <button name="action_traiter" string="Prendre en Charge"
+                            type="object" class="btn-primary"
+                            invisible="state != 'ouverte'"/>
+                    <button name="action_cloturer" string="Cloturer"
+                            type="object" class="btn-primary"
+                            invisible="state != 'en_traitement'"/>
+                    <button name="action_rouvrir" string="Rouvrir"
+                            type="object"
+                            invisible="state != 'cloturee'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="ouverte,en_traitement,cloturee"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_nc"/>
+                            <field name="gravite" widget="badge"
+                                   decoration-warning="gravite == 'mineure'"
+                                   decoration-danger="gravite in ('majeure', 'critique')"/>
+                            <field name="date_detection"/>
+                            <field name="detecte_par_id"/>
+                        </group>
+                        <group>
+                            <field name="essai_id"/>
+                            <field name="production_id"/>
+                            <field name="chantier_id"/>
+                            <field name="responsable_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <group>
+                                <field name="description" nolabel="1"
+                                       placeholder="Decrivez la non-conformite..."/>
+                            </group>
+                        </page>
+                        <page string="Analyse et Actions" name="actions">
+                            <group>
+                                <field name="cause_analyse"
+                                       placeholder="Analyse des causes..."/>
+                                <field name="action_immediate"
+                                       placeholder="Actions immediates prises..."/>
+                                <field name="action_corrective"
+                                       placeholder="Actions correctives prevues..."/>
+                                <field name="date_cloture"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_non_conformite_tree" model="ir.ui.view">
+        <field name="name">central.beton.non.conformite.tree</field>
+        <field name="model">central.beton.non.conformite</field>
+        <field name="arch" type="xml">
+            <tree string="Non-Conformites"
+                  decoration-danger="gravite == 'critique'"
+                  decoration-warning="gravite == 'majeure'">
+                <field name="name"/>
+                <field name="date_detection"/>
+                <field name="type_nc"/>
+                <field name="gravite" widget="badge"
+                       decoration-warning="gravite == 'mineure'"
+                       decoration-danger="gravite in ('majeure', 'critique')"/>
+                <field name="essai_id" optional="show"/>
+                <field name="responsable_id"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'ouverte'"
+                       decoration-warning="state == 'en_traitement'"
+                       decoration-success="state == 'cloturee'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_non_conformite_search" model="ir.ui.view">
+        <field name="name">central.beton.non.conformite.search</field>
+        <field name="model">central.beton.non.conformite</field>
+        <field name="arch" type="xml">
+            <search string="Non-Conformites">
+                <field name="name"/>
+                <field name="type_nc"/>
+                <filter name="ouvertes" string="Ouvertes"
+                        domain="[('state', '=', 'ouverte')]"/>
+                <filter name="en_traitement" string="En Traitement"
+                        domain="[('state', '=', 'en_traitement')]"/>
+                <filter name="critique" string="Critiques"
+                        domain="[('gravite', '=', 'critique')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'type_nc'}"/>
+                    <filter name="group_gravite" string="Gravite"
+                            context="{'group_by': 'gravite'}"/>
+                    <filter name="group_state" string="Etat"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_non_conformite" model="ir.actions.act_window">
+        <field name="name">Non-Conformites</field>
+        <field name="res_model">central.beton.non.conformite</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_ouvertes': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune non-conformite enregistree
+            </p>
+        </field>
+    </record>
+
+</odoo>

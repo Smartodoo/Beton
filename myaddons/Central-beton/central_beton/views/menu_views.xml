@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Dashboard Client Action -->
+    <record id="action_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard Central Beton</field>
+        <field name="tag">central_beton.dashboard</field>
+    </record>
+
+    <!-- Root Menu -->
+    <menuitem id="menu_central_beton_root"
+              name="Central Beton"
+              web_icon="central_beton,static/description/icon.png"
+              sequence="100"/>
+
+    <!-- ===== Production (seq 10) ===== -->
+    <menuitem id="menu_production"
+              name="Production"
+              parent="menu_central_beton_root"
+              sequence="10"/>
+
+    <menuitem id="menu_fabrication"
+              name="Fabrications"
+              parent="menu_production"
+              action="action_beton_production"
+              sequence="10"/>
+
+    <menuitem id="menu_formule"
+              name="Formules Beton"
+              parent="menu_production"
+              action="action_beton_bom"
+              sequence="20"/>
+
+    <menuitem id="menu_centrale_production"
+              name="Centrales"
+              parent="menu_production"
+              action="action_centrale"
+              sequence="30"/>
+
+    <!-- ===== Transport & Livraison (seq 20) ===== -->
+    <menuitem id="menu_transport"
+              name="Transport et Livraison"
+              parent="menu_central_beton_root"
+              sequence="20"/>
+
+    <menuitem id="menu_livraison"
+              name="Livraisons"
+              parent="menu_transport"
+              action="action_livraison"
+              sequence="10"/>
+
+    <menuitem id="menu_camion_malaxeur"
+              name="Camions Malaxeurs"
+              parent="menu_transport"
+              action="action_camion_malaxeur"
+              sequence="20"/>
+
+    <!-- ===== Qualite & Laboratoire (seq 30) ===== -->
+    <menuitem id="menu_qualite"
+              name="Qualite et Laboratoire"
+              parent="menu_central_beton_root"
+              sequence="30"/>
+
+    <menuitem id="menu_essai"
+              name="Essais Beton"
+              parent="menu_qualite"
+              action="action_essai"
+              sequence="10"/>
+
+    <menuitem id="menu_non_conformite"
+              name="Non-Conformites"
+              parent="menu_qualite"
+              action="action_non_conformite"
+              sequence="20"/>
+
+    <!-- ===== Stocks & Appro (seq 40) ===== -->
+    <menuitem id="menu_stocks"
+              name="Stocks et Appro"
+              parent="menu_central_beton_root"
+              sequence="40"/>
+
+    <menuitem id="menu_product_beton"
+              name="Matieres Premieres"
+              parent="menu_stocks"
+              action="action_product_beton"
+              sequence="10"/>
+
+    <menuitem id="menu_mouvement_stock"
+              name="Mouvements de Stock"
+              parent="menu_stocks"
+              action="action_mouvement_stock"
+              sequence="20"/>
+
+    <!-- ===== Ventes & Chantiers (seq 50) ===== -->
+    <menuitem id="menu_ventes"
+              name="Ventes et Chantiers"
+              parent="menu_central_beton_root"
+              sequence="50"/>
+
+    <menuitem id="menu_partner_beton"
+              name="Clients Beton"
+              parent="menu_ventes"
+              action="action_partner_beton"
+              sequence="10"/>
+
+    <menuitem id="menu_chantier"
+              name="Chantiers"
+              parent="menu_ventes"
+              action="action_chantier"
+              sequence="20"/>
+
+    <menuitem id="menu_sale_order_beton"
+              name="Commandes"
+              parent="menu_ventes"
+              action="action_sale_order_beton"
+              sequence="30"/>
+
+    <!-- ===== Maintenance (seq 60) ===== -->
+    <menuitem id="menu_maintenance"
+              name="Maintenance"
+              parent="menu_central_beton_root"
+              sequence="60"/>
+
+    <menuitem id="menu_equipment_beton"
+              name="Equipements"
+              parent="menu_maintenance"
+              action="action_equipment_beton"
+              sequence="10"/>
+
+    <menuitem id="menu_maintenance_request_beton"
+              name="Interventions"
+              parent="menu_maintenance"
+              action="action_maintenance_request_beton"
+              sequence="20"/>
+
+    <!-- ===== Finance & Couts (seq 70) ===== -->
+    <menuitem id="menu_finance"
+              name="Finance et Couts"
+              parent="menu_central_beton_root"
+              sequence="70"/>
+
+    <menuitem id="menu_cout_revient"
+              name="Couts de Revient"
+              parent="menu_finance"
+              action="action_cout_revient"
+              sequence="10"/>
+
+    <menuitem id="menu_invoice_beton"
+              name="Factures Clients"
+              parent="menu_finance"
+              action="action_invoice_beton"
+              sequence="20"/>
+
+    <!-- ===== Tableaux de Bord (seq 80) ===== -->
+    <menuitem id="menu_tableaux_bord"
+              name="Tableaux de Bord"
+              parent="menu_central_beton_root"
+              sequence="80"/>
+
+    <menuitem id="menu_dashboard"
+              name="Dashboard"
+              parent="menu_tableaux_bord"
+              action="action_dashboard"
+              sequence="10"/>
+
+    <menuitem id="menu_report_production"
+              name="Analyse Production"
+              parent="menu_tableaux_bord"
+              action="action_report_production"
+              sequence="20"/>
+
+    <menuitem id="menu_report_livraison"
+              name="Analyse Livraisons"
+              parent="menu_tableaux_bord"
+              action="action_report_livraison"
+              sequence="30"/>
+
+    <!-- ===== Configuration (seq 90, managers only) ===== -->
+    <menuitem id="menu_configuration"
+              name="Configuration"
+              parent="menu_central_beton_root"
+              sequence="90"
+              groups="group_central_beton_manager"/>
+
+    <menuitem id="menu_config_centrale"
+              name="Centrales"
+              parent="menu_configuration"
+              action="action_centrale"
+              sequence="10"/>
+
+    <menuitem id="menu_config_formule"
+              name="Formules Beton"
+              parent="menu_configuration"
+              action="action_beton_bom"
+              sequence="20"/>
+
+</odoo>

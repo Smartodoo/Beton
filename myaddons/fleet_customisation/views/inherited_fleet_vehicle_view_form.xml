@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <record id="view_vehicle_fleet_form_inherit" model="ir.ui.view">
+            <field name="name">fleet.vehicle.form.inherit</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_date']" position="replace">
+                    <field name="order_date" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='horsepower_tax']" position="replace">
+                    <field name="horsepower_tax" widget="monetary" string="vignette"/>
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="carrosserie_id"/>
+                </xpath>
+                <xpath expr="//field[@name='location']" position="after">
+                    <field name="technical_file" filename="technical_file_name"
+                           widget="many2many_binary"
+                           options="{'no_create': True}"/>
+                    <field name="technical_file_name" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='vin_sn']" position="after">
+                    <field name="type_vin"/>
+                    <label for="point_total"/>
+                    <div class="o_row o_hr_narrow_field">
+                        <field name="point_total"/>
+                        <field name="unite_point_total" options="{'no_create': True, 'no_edit': True,'no_open': True}"/>
+                    </div>
+                    <label for="charge_utile"/>
+                    <div class="o_row o_hr_narrow_field">
+                        <field name="charge_utile"/>
+                        <field name="unite_charge_utile"
+                               options="{'no_create': True, 'no_edit': True,'no_open': True}"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_fleet_vehicle_log_services_form_inherit" model="ir.ui.view">
+            <field name="name">fleet.vehicle.log.services.form.inherit</field>
+            <field name="model">fleet.vehicle.log.services</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_form"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="replace">
+                    <group col="2">
+                        <group>
+                            <field name="service_type_id" options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="description"/>
+                            <field name="date"/>
+                            <field name="name_service" invisible="1"/>
+
+                            <field name="n_police"
+                                   invisible="name_service in ['Maintenance et Réparation','Vidange','contrôle technique']"/>
+                            <field name="date_de_fin" string="valider jusqu'à"
+                                   invisible="name_service in ['Maintenance et Réparation','Vidange']"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="vendor_id" widget="many2one_avatar"/>
+                        </group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="purchaser_id" widget="many2one_avatar"
+                                   options="{'no_create': True, 'no_edit': True}"/>
+                            <label for="odometer"/>
+                            <div class="o_row">
+                                <field name="odometer" class="w-25"/>
+                                <field name="odometer_unit" class="ps-1 ps-sm-0"/>
+                            </div>
+                            <label for="prochaine_vidange"
+                                   invisible="name_service in ['Maintenance et Réparation', 'Assurance', 'contrôle technique']"/>
+                            <div class="o_row"
+                                 invisible="name_service in ['Maintenance et Réparation', 'Assurance', 'contrôle technique']">
+                                <field name="prochaine_vidange" class="w-25"/>
+                                <field name="odometer_unit" class="ps-1 ps-sm-0"/>
+                            </div>
+
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_fleet_contract_tree_colored" model="ir.ui.view">
+            <field name="name">fleet.vehicle.log.contract.tree.colored</field>
+            <field name="model">fleet.vehicle.log.contract</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-warning">days_left &lt;= 15 and days_left &gt; 7</attribute>
+                    <attribute name="decoration-danger">days_left &lt;= 7</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

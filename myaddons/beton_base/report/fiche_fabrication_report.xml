@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_fiche_fabrication" model="ir.actions.report">
+        <field name="name">Fiche de Fabrication Béton</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_fiche_fabrication</field>
+        <field name="report_file">beton_base.report_fiche_fabrication</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_fiche_fabrication">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page beton-fiche-fab">
+                        <style>
+                            .beton-fiche-fab { font-size:14pt !important; line-height:1.5; }
+                            .beton-fiche-fab * { font-size:inherit; }
+                            .beton-fiche-fab .row > div { padding-bottom:4pt; }
+                            .beton-title { color:#1F4E79; text-align:center; letter-spacing:2px;
+                                           border-bottom:3px solid #1F4E79; padding-bottom:10pt;
+                                           margin-bottom:18pt; font-weight:700; font-size:24pt !important; }
+                            .beton-section-title { background:#1F4E79; color:#fff; padding:8pt 12pt;
+                                                   margin-top:14pt; margin-bottom:10pt;
+                                                   border-radius:3px; font-size:16pt !important; font-weight:700;
+                                                   letter-spacing:1pt; text-transform:uppercase; }
+                            .beton-info-card { border:1px solid #d0dde9; border-left:5px solid #1F4E79;
+                                               padding:10pt 14pt; margin-bottom:8pt;
+                                               background:#f7fafc; border-radius:3px; }
+                            .beton-info-card .label { color:#5a6c7d; font-size:12pt !important;
+                                                      text-transform:uppercase; letter-spacing:0.3pt;
+                                                      font-weight:700; display:block;
+                                                      margin-bottom:4pt; }
+                            .beton-info-card .value { color:#1a202c; font-size:16pt !important; font-weight:600;
+                                                      word-break:break-word; }
+                            .beton-table { width:100%; border-collapse:collapse; margin-top:8pt;
+                                           font-size:14pt !important; }
+                            .beton-table thead { background:#1F4E79; color:#fff; }
+                            .beton-table th { padding:10pt; font-size:14pt !important; font-weight:700;
+                                              text-align:left; }
+                            .beton-table td { padding:9pt 10pt; font-size:14pt !important;
+                                              border-bottom:1px solid #dee2e6; }
+                            .beton-table tbody tr:nth-child(even) { background:#f7fafc; }
+                            .beton-sign-box { border-top:1.5px solid #333; margin-top:50pt;
+                                              padding-top:8pt; text-align:center; font-weight:700;
+                                              font-size:14pt !important; }
+                        </style>
+
+                        <h2 class="beton-title">FICHE DE FABRICATION BÉTON</h2>
+
+                        <t t-set="bon_commande"
+                           t-value="o.env['sale.order'].search([('production_beton_id', '=', o.id)], order='date_order desc', limit=1)"/>
+
+                        <div class="beton-section-title">Informations générales</div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">N° Fabrication</span>
+                                    <span class="value" t-field="o.name"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">N° Bon de Commande</span>
+                                    <span class="value" t-esc="bon_commande.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Date de la Commande</span>
+                                    <span class="value">
+                                        <t t-if="bon_commande" t-esc="bon_commande.date_order.strftime('%d/%m/%Y') if bon_commande.date_order else '—'"/>
+                                        <t t-if="not bon_commande">—</t>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Date planifiée</span>
+                                    <span class="value">
+                                        <t t-esc="o.date_deadline.strftime('%d/%m/%Y %H:%M') if o.date_deadline else (o.date_start.strftime('%d/%m/%Y %H:%M') if o.date_start else '—')"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Date début</span>
+                                    <span class="value">
+                                        <t t-esc="o.date_start.strftime('%d/%m/%Y %H:%M') if o.date_start else '—'"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Centrale</span>
+                                    <span class="value" t-esc="o.centrale_id.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Opérateur</span>
+                                    <span class="value" t-esc="o.operateur_id.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Destination</span>
+                                    <span class="value" t-esc="o.destination or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Distance</span>
+                                    <span class="value">
+                                        <t t-if="o.distance" t-esc="'%.1f km' % o.distance"/>
+                                        <t t-if="not o.distance">—</t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="beton-section-title">Informations Client</div>
+                        <t t-if="o.client_id">
+                            <t t-set="client" t-value="o.client_id"/>
+                            <t t-set="addr_parts" t-value="[p for p in [client.street, client.street2, client.zip, client.city, (client.state_id.name if client.state_id else False), (client.country_id.name if client.country_id else False)] if p]"/>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="beton-info-card">
+                                        <span class="label">Raison sociale</span>
+                                        <span class="value" t-esc="client.name or '—'"/>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="beton-info-card">
+                                        <span class="label">Téléphone</span>
+                                        <span class="value" t-esc="client.phone or client.mobile or '—'"/>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="beton-info-card">
+                                        <span class="label">Email</span>
+                                        <span class="value" t-esc="client.email or '—'"/>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="beton-info-card">
+                                        <span class="label">Adresse</span>
+                                        <span class="value">
+                                            <t t-esc="', '.join(addr_parts) if addr_parts else '—'"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <t t-if="client.rc or client.nis or client.nif or client.ai">
+                                    <div class="col-3">
+                                        <div class="beton-info-card">
+                                            <span class="label">RC</span>
+                                            <span class="value" t-esc="client.rc or '—'"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="beton-info-card">
+                                            <span class="label">NIS</span>
+                                            <span class="value" t-esc="client.nis or '—'"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="beton-info-card">
+                                            <span class="label">NIF</span>
+                                            <span class="value" t-esc="client.nif or '—'"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="beton-info-card">
+                                            <span class="label">AI</span>
+                                            <span class="value" t-esc="client.ai or '—'"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-if="not o.client_id">
+                            <div class="beton-info-card">
+                                <span class="value">Aucun client renseigné</span>
+                            </div>
+                        </t>
+
+                        <div class="beton-section-title">Produit &amp; Chantier</div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="beton-info-card">
+                                    <span class="label">Produit</span>
+                                    <span class="value" t-esc="o.product_id.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="beton-info-card">
+                                    <span class="label">Nomenclature</span>
+                                    <span class="value" t-esc="o.bom_id.display_name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="beton-info-card">
+                                    <span class="label">Chantier</span>
+                                    <span class="value" t-esc="o.chantier or '—'"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="beton-section-title">Quantités &amp; Horaires</div>
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="beton-info-card">
+                                    <span class="label">Qté demandée</span>
+                                    <span class="value">
+                                        <t t-esc="'%.2f' % o.product_qty"/> <span t-field="o.product_uom_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="beton-info-card">
+                                    <span class="label">Qté produite</span>
+                                    <span class="value">
+                                        <t t-esc="'%.2f' % o.qty_produced"/> <span t-field="o.product_uom_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="beton-info-card">
+                                    <span class="label">Nb gâchées</span>
+                                    <span class="value" t-esc="o.nombre_gachees"/>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="beton-info-card">
+                                    <span class="label">Nb camions</span>
+                                    <span class="value" t-esc="o.nombre_camion"/>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="beton-info-card">
+                                    <span class="label">Heure début</span>
+                                    <span class="value">
+                                        <span t-field="o.heure_debut" t-options='{"widget": "float_time"}'/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="beton-info-card">
+                                    <span class="label">Heure fin</span>
+                                    <span class="value">
+                                        <span t-field="o.heure_fin" t-options='{"widget": "float_time"}'/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="beton-section-title">Consommation matières</div>
+                        <table class="beton-table" t-if="o.move_raw_ids">
+                            <thead>
+                                <tr>
+                                    <th>Matière</th>
+                                    <th class="text-end">Qté prévue</th>
+                                    <th class="text-end">Qté consommée</th>
+                                    <th>UdM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.move_raw_ids" t-as="m">
+                                    <tr>
+                                        <td><span t-field="m.product_id.name"/></td>
+                                        <td class="text-end"><t t-esc="'%.2f' % m.product_uom_qty"/></td>
+                                        <td class="text-end"><t t-esc="'%.2f' % m.quantity"/></td>
+                                        <td><span t-field="m.product_uom"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <div class="beton-sign-box">Signature Opérateur</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-sign-box">Signature Responsable</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-sign-box">Signature Directeur</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

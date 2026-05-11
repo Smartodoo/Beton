@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Ancien modèle beton.livraison remplacé par stock.picking standard -->
+    <!-- Les vues sont conservées vides pour compatibilité avec les installations existantes -->
+
+    <record id="view_beton_livraison_form" model="ir.ui.view">
+        <field name="name">beton.livraison.form</field>
+        <field name="model">beton.livraison</field>
+        <field name="arch" type="xml">
+            <form string="Bon de Livraison (ancien)">
+                <sheet>
+                    <div class="alert alert-warning">
+                        <strong>Ce modèle est obsolète.</strong> Utilisez les Bons de Livraison standard (stock.picking) via le menu Logistique.
+                    </div>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="date"/>
+                        <field name="client_id"/>
+                        <field name="state"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_livraison_tree" model="ir.ui.view">
+        <field name="name">beton.livraison.tree</field>
+        <field name="model">beton.livraison</field>
+        <field name="arch" type="xml">
+            <tree string="Bons de Livraison (ancien)">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="client_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_beton_livraison" model="ir.actions.act_window">
+        <field name="name">Bons de Livraison (ancien)</field>
+        <field name="res_model">beton.livraison</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

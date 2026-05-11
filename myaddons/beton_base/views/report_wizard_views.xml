@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- 1. WIZARD RAPPORT PRODUITS -->
+    <!-- ============================================================ -->
+    <record id="view_product_report_wizard_form" model="ir.ui.view">
+        <field name="name">product.report.wizard.form</field>
+        <field name="model">product.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Produits">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="classification_produit"/>
+                        <field name="supplier_id"/>
+                    </group>
+                </group>
+                <group string="Type de matière">
+                    <group>
+                        <field name="type_matiere_ciment"/>
+                        <field name="type_matiere_sable"/>
+                        <field name="type_matiere_gravier"/>
+                    </group>
+                    <group>
+                        <field name="type_matiere_adjuvant"/>
+                        <field name="type_matiere_eau"/>
+                        <field name="type_matiere_autre"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Critères">
+                        <field name="statut_matiere"/>
+                        <field name="emplacement_beton"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Produits</field>
+        <field name="res_model">product.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 2. WIZARD RAPPORT FORMULES / BOM -->
+    <!-- ============================================================ -->
+    <record id="view_bom_report_wizard_form" model="ir.ui.view">
+        <field name="name">bom.report.wizard.form</field>
+        <field name="model">bom.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Formules Béton">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="product_tmpl_ids" widget="many2many_tags"/>
+                        <field name="classe_resistance"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Critères">
+                        <field name="type_beton"/>
+                        <field name="statut_formule"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bom_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Formules</field>
+        <field name="res_model">bom.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 3. WIZARD RAPPORT FABRICATION -->
+    <!-- ============================================================ -->
+    <record id="view_production_report_wizard_form" model="ir.ui.view">
+        <field name="name">production.report.wizard.form</field>
+        <field name="model">production.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Fabrication">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="centrale_id"/>
+                        <field name="client_id"/>
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="operateur_id"/>
+                        <field name="state"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_production_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Fabrication</field>
+        <field name="res_model">production.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 4. WIZARD RAPPORT LIVRAISONS -->
+    <!-- ============================================================ -->
+    <record id="view_picking_report_wizard_form" model="ir.ui.view">
+        <field name="name">picking.report.wizard.form</field>
+        <field name="model">picking.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Livraisons">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="partner_id"/>
+                        <field name="chantier"/>
+                        <field name="vehicle_id"/>
+                        <field name="chauffeur_id"/>
+                        <field name="state"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_picking_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Livraisons</field>
+        <field name="res_model">picking.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 5. WIZARD RAPPORT COÛTS DE REVIENT -->
+    <!-- ============================================================ -->
+    <record id="view_cout_report_wizard_form" model="ir.ui.view">
+        <field name="name">cout.revient.report.wizard.form</field>
+        <field name="model">cout.revient.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Coûts de Revient">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="formule_beton_id"/>
+                        <field name="marge_type"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cout_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Coûts de Revient</field>
+        <field name="res_model">cout.revient.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 6. WIZARD RAPPORT MOUVEMENTS DE STOCK -->
+    <!-- ============================================================ -->
+    <record id="view_stock_move_report_wizard_form" model="ir.ui.view">
+        <field name="name">stock.move.report.wizard.form</field>
+        <field name="model">stock.move.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Mouvements de Stock">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
+                        <field name="state"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_move_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Mouvements</field>
+        <field name="res_model">stock.move.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

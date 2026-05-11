@@ -1,0 +1,60 @@
+/* Central Beton Dashboard Styles */
+
+.central_beton_dashboard {
+    background-color: #f8f9fa;
+    min-height: 100%;
+}
+
+.central_beton_dashboard .cb-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.central_beton_dashboard .cb-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.central_beton_dashboard .cb-kpi-value {
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.central_beton_dashboard .cb-card-production {
+    border-left: 4px solid #3498db;
+}
+
+.central_beton_dashboard .cb-card-volume {
+    border-left: 4px solid #27ae60;
+}
+
+.central_beton_dashboard .cb-card-livraison {
+    border-left: 4px solid #f39c12;
+}
+
+.central_beton_dashboard .cb-card-camion {
+    border-left: 4px solid #17a2b8;
+}
+
+.central_beton_dashboard .cb-card-nc {
+    border-left: 4px solid #e74c3c;
+}
+
+.central_beton_dashboard .cb-card-essai {
+    border-left: 4px solid #6c757d;
+}
+
+.central_beton_dashboard .card-title {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.central_beton_dashboard .cb-icon {
+    opacity: 0.8;
+}

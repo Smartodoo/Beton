@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Account Move Form -->
+    <record id="view_account_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.central.beton</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="chantier_id"/>
+                <field name="centrale_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Beton Invoices -->
+    <record id="action_invoice_beton" model="ir.actions.act_window">
+        <field name="name">Factures Beton</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'), ('chantier_id', '!=', False)]</field>
+    </record>
+
+</odoo>

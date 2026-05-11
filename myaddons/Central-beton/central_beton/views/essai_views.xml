@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_essai_form" model="ir.ui.view">
+        <field name="name">central.beton.essai.form</field>
+        <field name="model">central.beton.essai</field>
+        <field name="arch" type="xml">
+            <form string="Essai Beton">
+                <header>
+                    <button name="action_start" string="Demarrer"
+                            type="object" class="btn-primary"
+                            invisible="state != 'brouillon'"/>
+                    <button name="action_done" string="Terminer"
+                            type="object" class="btn-primary"
+                            invisible="state != 'en_cours'"/>
+                    <button name="action_create_non_conformite"
+                            string="Creer Non-Conformite"
+                            type="object" class="btn-danger"
+                            invisible="conforme != 'non_conforme'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="brouillon,en_cours,termine"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="production_id"/>
+                            <field name="bom_id"/>
+                            <field name="chantier_id"/>
+                        </group>
+                        <group>
+                            <field name="date_prelevement"/>
+                            <field name="laborantin_id"/>
+                            <field name="non_conformite_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Essais Frais" name="frais">
+                            <group>
+                                <group>
+                                    <field name="affaissement"/>
+                                    <field name="temperature"/>
+                                </group>
+                                <group>
+                                    <field name="teneur_air"/>
+                                    <field name="masse_volumique"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Resistances" name="resistances">
+                            <group>
+                                <group>
+                                    <field name="resistance_7j"/>
+                                    <field name="resistance_14j"/>
+                                </group>
+                                <group>
+                                    <field name="resistance_21j"/>
+                                    <field name="resistance_28j"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="classe_resistance"/>
+                                    <field name="resistance_minimale"/>
+                                </group>
+                                <group>
+                                    <field name="conforme" widget="badge"
+                                           decoration-success="conforme == 'conforme'"
+                                           decoration-danger="conforme == 'non_conforme'"
+                                           decoration-info="conforme == 'en_attente'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_essai_tree" model="ir.ui.view">
+        <field name="name">central.beton.essai.tree</field>
+        <field name="model">central.beton.essai</field>
+        <field name="arch" type="xml">
+            <tree string="Essais Beton"
+                  decoration-success="conforme == 'conforme'"
+                  decoration-danger="conforme == 'non_conforme'">
+                <field name="name"/>
+                <field name="date_prelevement"/>
+                <field name="production_id"/>
+                <field name="bom_id"/>
+                <field name="resistance_7j" optional="show"/>
+                <field name="resistance_28j"/>
+                <field name="resistance_minimale"/>
+                <field name="conforme" widget="badge"
+                       decoration-success="conforme == 'conforme'"
+                       decoration-danger="conforme == 'non_conforme'"
+                       decoration-info="conforme == 'en_attente'"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_essai_search" model="ir.ui.view">
+        <field name="name">central.beton.essai.search</field>
+        <field name="model">central.beton.essai</field>
+        <field name="arch" type="xml">
+            <search string="Essais">
+                <field name="name"/>
+                <field name="production_id"/>
+                <field name="bom_id"/>
+                <filter name="conforme" string="Conforme"
+                        domain="[('conforme', '=', 'conforme')]"/>
+                <filter name="non_conforme" string="Non Conforme"
+                        domain="[('conforme', '=', 'non_conforme')]"/>
+                <filter name="en_attente" string="En Attente"
+                        domain="[('conforme', '=', 'en_attente')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_formule" string="Formule"
+                            context="{'group_by': 'bom_id'}"/>
+                    <filter name="group_conformite" string="Conformite"
+                            context="{'group_by': 'conforme'}"/>
+                    <filter name="group_date" string="Date"
+                            context="{'group_by': 'date_prelevement:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_essai" model="ir.actions.act_window">
+        <field name="name">Essais Beton</field>
+        <field name="res_model">central.beton.essai</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrer un nouvel essai beton
+            </p>
+        </field>
+    </record>
+
+</odoo>

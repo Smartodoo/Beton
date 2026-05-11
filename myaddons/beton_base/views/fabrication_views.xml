@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Ancien modèle beton.fabrication remplacé par mrp.production standard -->
+
+    <record id="view_beton_fabrication_form" model="ir.ui.view">
+        <field name="name">beton.fabrication.form</field>
+        <field name="model">beton.fabrication</field>
+        <field name="arch" type="xml">
+            <form string="Ordre de Fabrication (ancien)">
+                <sheet>
+                    <div class="alert alert-warning">
+                        <strong>Ce modèle est obsolète.</strong> Utilisez les Ordres de Fabrication (mrp.production) via le menu Production.
+                    </div>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="date" readonly="1"/>
+                        <field name="state" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_fabrication_tree" model="ir.ui.view">
+        <field name="name">beton.fabrication.tree</field>
+        <field name="model">beton.fabrication</field>
+        <field name="arch" type="xml">
+            <tree string="Ordres de Fabrication (ancien)">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_beton_fabrication_search" model="ir.ui.view">
+        <field name="name">beton.fabrication.search</field>
+        <field name="model">beton.fabrication</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_beton_fabrication" model="ir.actions.act_window">
+        <field name="name">Ordres de Fabrication (ancien)</field>
+        <field name="res_model">beton.fabrication</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

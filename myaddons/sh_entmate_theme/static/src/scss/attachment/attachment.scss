@@ -1,0 +1,216 @@
+.o_action_manager {
+    .o_list_view {
+        .o_content {
+            .sh_main_attachment_div {
+                height: 40px;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+}
+
+.o_action_manager {
+    .o_list_view {
+        .o_content {
+            .sh_main_attachment_div {
+                .sh_inner_attachment_div {
+                    .sh_attachment_item {
+                        padding: 5px;
+                        transition: .5s all;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.o_action_manager {
+    .o_list_view {
+        .o_content {
+            .sh_main_attachment_div {
+                .sh_inner_attachment_div {
+                    .sh_attachment_item {
+                        .sh_attachment_icon {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.o_action_manager {
+    .o_list_view {
+        .o_content {
+            .sh_main_attachment_div {
+                .sh_inner_attachment_div {
+                    .sh_attachment_item:hover {
+                        border-color: $primaryColor !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.o_action_manager {
+    .o_list_view {
+        .o_content {
+            .sh_main_attachment_div {
+                .sh_inner_attachment_div {
+                    .sh_attachment_item:not(.sh_attachment_item_counter) .sh_attachment_name {
+                        white-space: nowrap !important;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        line-height: normal;
+                        width: 150px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@if $button_style=='style_1' {
+    .o_action_manager {
+        .o_list_view {
+            .o_content {
+                .sh_main_attachment_div {
+                    .sh_inner_attachment_div {
+                        .sh_attachment_item {
+                            border-radius: 0 !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@if $button_style=='style_2' {
+    .o_action_manager {
+        .o_list_view {
+            .o_content {
+                .sh_main_attachment_div {
+                    .sh_inner_attachment_div {
+                        .sh_attachment_item {
+                            border-radius: 4px !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@if $button_style=='style_3' {
+    .o_action_manager {
+        .o_list_view {
+            .o_content {
+                .sh_main_attachment_div {
+                    .sh_inner_attachment_div {
+                        .sh_attachment_item {
+                            border-radius: 0px 15px 0px 15px !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@if $button_style=='style_4' {
+    .o_action_manager {
+        .o_list_view {
+            .o_content {
+                .sh_main_attachment_div {
+                    .sh_inner_attachment_div {
+                        .sh_attachment_item {
+                            border-radius: 15px !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@include media-breakpoint-down(lg) {
+    .o_action_manager .o_list_view .o_content .sh_main_attachment_div .sh_inner_attachment_div {
+        flex-wrap: nowrap !important;
+        overflow: auto;
+        width: 100%;
+        justify-content: start !important;
+    }
+}
+
+// 3-7-2023 // 
+
+#myModal {
+    top: 36px;background-color: rgba(0, 0, 0, 0.7);position: fixed;left: 0;z-index: 1057;display: none;width: 100%;height: 100%;overflow-x: hidden;overflow-y: auto;outline: 0;
+    .modal-dialog {
+        padding: 0 !important;height: calc(100% - 100px);pointer-events: all;
+        .attch-modal-content {
+            color: var(--biz-theme-body-text-color) !important;
+            .attch-viewer-header {
+                position: fixed;top: 0;left: 0;background-color: rgba(0, 0, 0, 0.75) !important;color: #ced4da !important;width: 100% !important;display: -webkit-box;display: -webkit-flex;display: flex;align-items: center;justify-content: space-between;height: 40px;
+                .download_clsoe_div {
+                    display: -webkit-box;
+                    display: -webkit-flex;
+                    display: flex;
+
+                    a {
+                        color: #ced4da !important;
+                    }
+                }
+            }
+
+            .o_viewer_zoomer {
+                align-items: center;
+                justify-content: center;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+
+                iframe,
+                #myModal .modal-dialog .attch-modal-content .o_viewer_zoomer a,
+                #myModal .modal-dialog .attch-modal-content .o_viewer_zoomer video {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .o_viewer_img {
+                    background-color: black;
+                    max-height: 100%;
+                }
+            }
+
+            .o_viewer_toolbar {
+                justify-content: center;
+                bottom: 0;
+
+                a {
+                    background-color: var(--AttachmentViewer_toolbarButton-background-color, #343a40);
+                    color: #fff;
+                }
+            }
+
+            .arrow {
+                position: fixed;top: 50%;transform: translateY(-50%);width: 40px;display: -webkit-box;display: -webkit-flex;display: flex;height: 40px;align-items: center;justify-content: center;
+            }
+
+            .move_previous {
+                left: 15px !important;
+            }
+
+            .move_next {
+                right: 15px !important;
+            }
+        }
+    }
+}
+

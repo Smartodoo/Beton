@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_cout_revient_form" model="ir.ui.view">
+        <field name="name">central.beton.cout.revient.form</field>
+        <field name="model">central.beton.cout.revient</field>
+        <field name="arch" type="xml">
+            <form string="Cout de Revient">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="bom_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="periode_debut"/>
+                            <field name="periode_fin"/>
+                            <field name="volume_produit"/>
+                        </group>
+                    </group>
+                    <group>
+                        <button name="action_calculer" string="Calculer depuis les Fabrications"
+                                type="object" class="btn-primary"/>
+                    </group>
+                    <notebook>
+                        <page string="Couts Matieres" name="matieres">
+                            <group>
+                                <group>
+                                    <field name="cout_ciment"/>
+                                    <field name="cout_sable"/>
+                                    <field name="cout_gravier"/>
+                                </group>
+                                <group>
+                                    <field name="cout_eau"/>
+                                    <field name="cout_adjuvant"/>
+                                    <field name="cout_matieres" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Autres Couts" name="autres">
+                            <group>
+                                <group>
+                                    <field name="cout_main_oeuvre"/>
+                                    <field name="cout_energie"/>
+                                    <field name="cout_transport"/>
+                                </group>
+                                <group>
+                                    <field name="cout_maintenance"/>
+                                    <field name="cout_amortissement"/>
+                                    <field name="cout_indirect"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group class="oe_subtotal_footer">
+                        <field name="cout_total" class="oe_subtotal_footer_separator"/>
+                        <field name="cout_m3" class="oe_subtotal_footer_separator"/>
+                    </group>
+                    <field name="notes" placeholder="Notes..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_cout_revient_tree" model="ir.ui.view">
+        <field name="name">central.beton.cout.revient.tree</field>
+        <field name="model">central.beton.cout.revient</field>
+        <field name="arch" type="xml">
+            <tree string="Couts de Revient">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="bom_id"/>
+                <field name="periode_debut"/>
+                <field name="periode_fin"/>
+                <field name="volume_produit"/>
+                <field name="cout_matieres"/>
+                <field name="cout_total"/>
+                <field name="cout_m3"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_cout_revient_search" model="ir.ui.view">
+        <field name="name">central.beton.cout.revient.search</field>
+        <field name="model">central.beton.cout.revient</field>
+        <field name="arch" type="xml">
+            <search string="Couts de Revient">
+                <field name="name"/>
+                <field name="bom_id"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_formule" string="Formule"
+                            context="{'group_by': 'bom_id'}"/>
+                    <filter name="group_date" string="Date"
+                            context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_cout_revient" model="ir.actions.act_window">
+        <field name="name">Couts de Revient</field>
+        <field name="res_model">central.beton.cout.revient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Analyser les couts de revient
+            </p>
+        </field>
+    </record>
+
+</odoo>

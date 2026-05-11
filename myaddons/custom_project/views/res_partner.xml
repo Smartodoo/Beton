@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Vue Formulaire projects.associated -->
+    <record id="view_project_associated_form" model="ir.ui.view">
+        <field name="name">project.associated.form</field>
+        <field name="model">projects.associated</field>
+        <field name="arch" type="xml">
+
+            <form string="Project Associated">
+                <header>
+
+                    <button name="open_situation"
+                            type="object"
+                            string="Situation ST"
+                            class="oe_stat_button"/>
+                    <button name="export_convention_xlsx"
+                            type="object"
+                            string="Exporter la convention (XLSX)"
+                            class="btn-primary"
+                            icon="fa-download"/>
+                    <button name="print_convention_pdf"
+                            type="object"
+                            string="print la convention"
+                            class="btn-primary"
+                            icon="fa-download"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group class="col-6">
+                            <field name="project_id" domain="[('state', '=', 'confirmed')]"/>
+                            <field name="state"/>
+                        </group>
+                        <group class="col-6">
+                            <field name="client_id"/>
+                            <field name="original_subcontractor_id" invisible="1"/>
+                            <field name="tax_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="original_subcontractor_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Taches">
+                            <group class="col-6">
+                                <field name="lots_id"/>
+                            </group>
+
+                            <field name="task_line_ids" nolabel="1" widget="section_and_note_one2many">
+                                <tree editable="bottom">
+                                    <field name="no"/>
+                                    <field name="task_id"
+                                           options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <!--                                    <field name="name"/>-->
+                                    <field name="project" invisible="1"/>
+                                    <field name="description"/>
+                                    <field name="unit"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="total_price"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <div class="text-end mt-2">
+                        <span class="o_form_label" style="color: gray;">Total :</span>
+                        <div style="display: inline-block; margin-left: 5px;">
+                            <field name="total_price" readonly="1"
+                                   class="text-end"
+                                   nolabel="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-2">
+                        <span class="o_form_label" style="color: gray;">TVA :</span>
+                        <div style="display: inline-block; margin-left: 5px;">
+                            <field name="tax_totale" readonly="1"
+                                   class="text-end"
+                                   nolabel="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-2">
+                        <span class="o_form_label" style="color: gray;">Total :</span>
+                        <div style="display: inline-block; margin-left: 5px;">
+                            <field name="total" readonly="1"
+                                   class="text-end"
+                                   nolabel="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </div>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue Liste projects.associated -->
+    <record id="view_project_associated_tree" model="ir.ui.view">
+        <field name="name">project.associated.tree</field>
+        <field name="model">projects.associated</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="project_id"/>
+                <field name="client_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action projects.associated -->
+    <record id="action_open_views_projects_associated" model="ir.actions.act_window">
+        <field name="name">Projets Associés</field>
+        <field name="res_model">projects.associated</field>
+        <field name="context">{'default_original_subcontractor_id': context.get('default_original_subcontractor_id')}
+        </field>
+        <field name="domain">[('original_subcontractor_id', '=', context.get('default_original_subcontractor_id'))]
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Vue héritée de res.partner -->
+    <record id="view_partner_form_inherited" model="ir.ui.view">
+        <field name="name">res.partner.form_inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Bons">
+                    <field name="vendor_bons_ids" context="{'default_vendor_id': active_id}">
+                        <tree create="true" delete="true">
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="total_price"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <!-- Champ représentant -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="nombre_situations" readonly="1"/>
+            </xpath>
+            <xpath expr="//button[@name='schedule_meeting']" position="before">
+                <button name="action_open_situations"
+                        type="object"
+                        string="Situations"
+                        class="oe_stat_button"
+                        icon="fa-folder-open">
+                    <field string="Situations" name="nombre_situations" widget="statinfo"/>
+
+                </button>
+
+
+                <button name="%(custom_project.action_open_views_projects_associated)d"
+                        type="action"
+                        icon="fa-check"
+                        context="{'default_original_subcontractor_id': active_id}"
+                        groups="base.group_user">
+                    <field string="Convention" name="nombre_situations" widget="statinfo"/>
+                </button> <button name="action_open_vendor_bons" type="object" class="oe_stat_button"
+                        icon="fa-file-text-o">
+                    <field name="vendor_bons_count" widget="statinfo"/>
+                </button>
+                <button name="action_open_stock" type="object" class="oe_stat_button" icon="fa-cubes">
+                    <field name="stock_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <!-- Bouton Convention (rendu visible dynamiquement en Python uniquement maintenant) -->
+            
+            <xpath expr="//field[@name='website']" position="after">
+                <field name="project_ids" string='Project' widget="many2many_tags"/>
+            </xpath>
+            <!-- Onglet suivi sous-traitant -->
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Suivi Sous-traitant">
+                    <group>
+                        <field name="nombre_projets"/>
+                        <field name="nombre_situations"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_tree_inherited" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="project_ids"/>
+                <field name="nombre_projets"/>
+                <field name="nombre_situations"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

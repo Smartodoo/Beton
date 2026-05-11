@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Pivot View -->
+    <record id="view_report_production_pivot" model="ir.ui.view">
+        <field name="name">central.beton.report.production.pivot</field>
+        <field name="model">central.beton.report.production</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse Production">
+                <field name="date_fabrication" type="row" interval="month"/>
+                <field name="bom_id" type="col"/>
+                <field name="volume_produit" type="measure"/>
+                <field name="cout_total" type="measure"/>
+                <field name="nb_fabrications" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_report_production_graph" model="ir.ui.view">
+        <field name="name">central.beton.report.production.graph</field>
+        <field name="model">central.beton.report.production</field>
+        <field name="arch" type="xml">
+            <graph string="Analyse Production" type="bar">
+                <field name="date_fabrication" interval="month"/>
+                <field name="volume_produit" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_report_production_tree" model="ir.ui.view">
+        <field name="name">central.beton.report.production.tree</field>
+        <field name="model">central.beton.report.production</field>
+        <field name="arch" type="xml">
+            <tree string="Analyse Production">
+                <field name="date_fabrication"/>
+                <field name="centrale_id"/>
+                <field name="bom_id"/>
+                <field name="classe_resistance"/>
+                <field name="volume_prevu" sum="Total Prevu"/>
+                <field name="volume_produit" sum="Total Produit"/>
+                <field name="cout_total" sum="Cout Total"/>
+                <field name="cout_m3" avg="Cout Moyen/m3"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_report_production_search" model="ir.ui.view">
+        <field name="name">central.beton.report.production.search</field>
+        <field name="model">central.beton.report.production</field>
+        <field name="arch" type="xml">
+            <search string="Analyse Production">
+                <field name="centrale_id"/>
+                <field name="bom_id"/>
+                <field name="chantier_id"/>
+                <filter name="termine" string="Terminees"
+                        domain="[('state', '=', 'done')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_centrale" string="Centrale"
+                            context="{'group_by': 'centrale_id'}"/>
+                    <filter name="group_formule" string="Formule"
+                            context="{'group_by': 'bom_id'}"/>
+                    <filter name="group_classe" string="Classe"
+                            context="{'group_by': 'classe_resistance'}"/>
+                    <filter name="group_month" string="Mois"
+                            context="{'group_by': 'date_fabrication:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_report_production" model="ir.actions.act_window">
+        <field name="name">Analyse Production</field>
+        <field name="res_model">central.beton.report.production</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="context">{'search_default_termine': 1}</field>
+    </record>
+
+</odoo>

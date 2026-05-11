@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_move_form_inherit_beton_caisse" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.beton.caisse</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="beton_source_fully_paid" invisible="1"/>
+            </xpath>
+            <xpath expr="//sheet/div[1]" position="before">
+                <widget name="web_ribbon"
+                        title="Payée via Caisse Béton"
+                        bg_color="text-bg-success"
+                        invisible="not beton_source_fully_paid"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info mb-0"
+                     role="alert"
+                     invisible="not beton_source_fully_paid"
+                     style="border-radius: 0;">
+                    <i class="fa fa-info-circle" title="Information" role="img" aria-label="Information"/>
+                    <strong> Paiement verrouillé :</strong>
+                    le bon d'origine de cette facture est déjà totalement payé via la caisse béton.
+                    Aucun nouveau paiement ne peut être enregistré.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

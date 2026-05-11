@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_livraison_form" model="ir.ui.view">
+        <field name="name">central.beton.livraison.form</field>
+        <field name="model">central.beton.livraison</field>
+        <field name="arch" type="xml">
+            <form string="Livraison">
+                <header>
+                    <button name="action_charger" string="Charger"
+                            type="object" class="btn-primary"
+                            invisible="state != 'prevu'"/>
+                    <button name="action_depart" string="Depart"
+                            type="object" class="btn-primary"
+                            invisible="state != 'charge'"/>
+                    <button name="action_arrivee" string="Arrivee"
+                            type="object" class="btn-primary"
+                            invisible="state != 'en_route'"/>
+                    <button name="action_livrer" string="Livre"
+                            type="object" class="btn-primary"
+                            invisible="state != 'sur_site'"/>
+                    <button name="action_cancel" string="Annuler"
+                            type="object"
+                            invisible="state in ('livre', 'annule')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="prevu,charge,en_route,sur_site,livre"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="chantier_id"/>
+                            <field name="client_id"/>
+                            <field name="bom_id"/>
+                            <field name="volume"/>
+                            <field name="production_id"/>
+                        </group>
+                        <group>
+                            <field name="vehicule_id"/>
+                            <field name="chauffeur_id"/>
+                            <field name="centrale_id"/>
+                            <field name="commande_id"/>
+                            <field name="pompe"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Horaires" name="horaires">
+                            <group>
+                                <group>
+                                    <field name="date_chargement"/>
+                                    <field name="date_depart"/>
+                                    <field name="date_arrivee"/>
+                                </group>
+                                <group>
+                                    <field name="date_debut_dechargement"/>
+                                    <field name="date_fin_dechargement"/>
+                                    <field name="date_retour"/>
+                                </group>
+                            </group>
+                            <group string="Temps">
+                                <group>
+                                    <field name="temps_trajet"/>
+                                    <field name="temps_sur_site"/>
+                                </group>
+                                <group>
+                                    <field name="temps_rotation"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Controle" name="controle">
+                            <group>
+                                <group>
+                                    <field name="ticket_pesee"/>
+                                    <field name="affaissement"/>
+                                </group>
+                                <group>
+                                    <field name="temperature"/>
+                                    <field name="eau_ajoutee"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_livraison_tree" model="ir.ui.view">
+        <field name="name">central.beton.livraison.tree</field>
+        <field name="model">central.beton.livraison</field>
+        <field name="arch" type="xml">
+            <tree string="Livraisons"
+                  decoration-info="state == 'prevu'"
+                  decoration-warning="state in ('charge', 'en_route', 'sur_site')"
+                  decoration-success="state == 'livre'"
+                  decoration-muted="state == 'annule'">
+                <field name="name"/>
+                <field name="date_chargement"/>
+                <field name="chantier_id"/>
+                <field name="client_id"/>
+                <field name="bom_id" optional="show"/>
+                <field name="volume"/>
+                <field name="vehicule_id"/>
+                <field name="temps_rotation" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'prevu'"
+                       decoration-warning="state in ('charge', 'en_route', 'sur_site')"
+                       decoration-success="state == 'livre'"
+                       decoration-danger="state == 'annule'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_livraison_search" model="ir.ui.view">
+        <field name="name">central.beton.livraison.search</field>
+        <field name="model">central.beton.livraison</field>
+        <field name="arch" type="xml">
+            <search string="Livraisons">
+                <field name="name"/>
+                <field name="chantier_id"/>
+                <field name="client_id"/>
+                <field name="vehicule_id"/>
+                <filter name="today" string="Aujourd'hui"
+                        domain="[('date_chargement', '&gt;=', (context_today()).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="en_cours" string="En Cours"
+                        domain="[('state', 'in', ('charge', 'en_route', 'sur_site'))]"/>
+                <filter name="livre" string="Livrees"
+                        domain="[('state', '=', 'livre')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_chantier" string="Chantier"
+                            context="{'group_by': 'chantier_id'}"/>
+                    <filter name="group_vehicule" string="Vehicule"
+                            context="{'group_by': 'vehicule_id'}"/>
+                    <filter name="group_state" string="Etat"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_date" string="Date"
+                            context="{'group_by': 'date_chargement:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_livraison" model="ir.actions.act_window">
+        <field name="name">Livraisons</field>
+        <field name="res_model">central.beton.livraison</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'search_default_today': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Planifier une nouvelle livraison
+            </p>
+        </field>
+    </record>
+
+</odoo>

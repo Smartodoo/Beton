@@ -1,0 +1,345 @@
+.beton_dashboard {
+    background-color: #f8f9fa;
+    height: 100%;
+    overflow: hidden;
+}
+/* Wrapper scrollable interne */
+.beton_dashboard .dashboard-scroll-wrapper {
+    height: calc(100vh - 46px);
+    overflow-y: scroll;
+    scrollbar-width: auto;              /* Firefox */
+    -ms-overflow-style: scrollbar;      /* IE/Edge */
+}
+.beton_dashboard .dashboard-scroll-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+.beton_dashboard .dashboard-scroll-wrapper::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+.beton_dashboard .dashboard-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #9e9e9e;
+    border-radius: 5px;
+}
+.beton_dashboard .dashboard-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #616161;
+}
+
+/* Date input dans le header (texte blanc sur fond foncé) */
+.beton_dashboard .dashboard-date-input {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.beton_dashboard .dashboard-date-input:focus {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+.beton_dashboard .dashboard-date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* Header */
+.beton_dashboard .dashboard-header {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin-bottom: 24px;
+}
+.beton_dashboard .dashboard-header h2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0;
+}
+.beton_dashboard .dashboard-header .subtitle {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* Sélecteur de période dans le header (texte blanc sur fond bleu foncé) */
+.beton_dashboard .dashboard-period-picker label {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+.beton_dashboard .dashboard-period-picker label i {
+    color: #ffffff;
+}
+.beton_dashboard .dashboard-period-picker .form-select {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+}
+.beton_dashboard .dashboard-period-picker .form-select:focus {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+.beton_dashboard .dashboard-period-picker .form-select option {
+    color: #1a237e;
+    background-color: #ffffff;
+}
+
+/* Section titles */
+.beton_dashboard .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.beton_dashboard .section-title .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+}
+.beton_dashboard .section-icon.bg-production { background: linear-gradient(135deg, #1565c0, #1e88e5); }
+.beton_dashboard .section-icon.bg-logistique { background: linear-gradient(135deg, #2e7d32, #43a047); }
+.beton_dashboard .section-icon.bg-qualite { background: linear-gradient(135deg, #e65100, #f57c00); }
+.beton_dashboard .section-icon.bg-finance { background: linear-gradient(135deg, #6a1b9a, #8e24aa); }
+
+/* KPI Cards */
+.beton_dashboard .kpi-card {
+    border: none;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.beton_dashboard .kpi-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+.beton_dashboard .kpi-card.clickable {
+    cursor: pointer;
+}
+.beton_dashboard .kpi-card .card-body {
+    padding: 20px;
+}
+.beton_dashboard .kpi-card .kpi-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    flex-shrink: 0;
+}
+.beton_dashboard .progress-bar.bg-purple {
+    background: linear-gradient(135deg, #6a1b9a, #ab47bc) !important;
+    color: #ffffff;
+}
+.beton_dashboard .kpi-icon.icon-blue { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+.beton_dashboard .kpi-icon.icon-green { background: linear-gradient(135deg, #2e7d32, #66bb6a); }
+.beton_dashboard .kpi-icon.icon-orange { background: linear-gradient(135deg, #e65100, #ff9800); }
+.beton_dashboard .kpi-icon.icon-purple { background: linear-gradient(135deg, #6a1b9a, #ab47bc); }
+.beton_dashboard .kpi-icon.icon-red { background: linear-gradient(135deg, #c62828, #ef5350); }
+.beton_dashboard .kpi-icon.icon-teal { background: linear-gradient(135deg, #00695c, #26a69a); }
+.beton_dashboard .kpi-icon.icon-indigo { background: linear-gradient(135deg, #283593, #5c6bc0); }
+.beton_dashboard .kpi-icon.icon-amber { background: linear-gradient(135deg, #ff6f00, #ffca28); }
+
+.beton_dashboard .kpi-label {
+    font-size: 0.8rem;
+    color: #757575;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+}
+.beton_dashboard .kpi-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #212121;
+}
+.beton_dashboard .kpi-value small {
+    font-size: 0.7em;
+    font-weight: 500;
+    color: #9e9e9e;
+}
+
+/* Trend badges */
+.beton_dashboard .trend-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 4px;
+}
+.beton_dashboard .trend-up {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+.beton_dashboard .trend-down {
+    background-color: #ffebee;
+    color: #c62828;
+}
+.beton_dashboard .trend-neutral {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+/* Progress bar */
+.beton_dashboard .kpi-progress {
+    height: 6px;
+    border-radius: 3px;
+    background-color: #e0e0e0;
+    margin-top: 8px;
+    overflow: hidden;
+}
+.beton_dashboard .kpi-progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+/* Alert badges */
+.beton_dashboard .alert-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0 8px;
+}
+.beton_dashboard .alert-badge.badge-danger {
+    background-color: #ffebee;
+    color: #c62828;
+}
+.beton_dashboard .alert-badge.badge-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+.beton_dashboard .alert-badge.badge-warning {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+/* Tables */
+.beton_dashboard .dashboard-table {
+    border: none;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+.beton_dashboard .dashboard-table .table-header {
+    background-color: #f5f5f5;
+    padding: 14px 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #424242;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.beton_dashboard .dashboard-table table {
+    margin: 0;
+}
+.beton_dashboard .dashboard-table table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #9e9e9e;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border: none;
+    padding: 10px 16px;
+}
+.beton_dashboard .dashboard-table table td {
+    padding: 10px 16px;
+    border-color: #f5f5f5;
+    font-size: 0.875rem;
+    vertical-align: middle;
+}
+.beton_dashboard .dashboard-table table tbody tr:hover {
+    background-color: #fafafa;
+}
+.beton_dashboard .volume-bar {
+    display: inline-block;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #1565c0, #42a5f5);
+    min-width: 4px;
+}
+
+/* State badges */
+.beton_dashboard .state-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.beton_dashboard .state-badge.state-done {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+.beton_dashboard .state-badge.state-progress {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+.beton_dashboard .state-badge.state-to_close {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+/* Charts */
+.beton_dashboard .chart-container {
+    border: none;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+.beton_dashboard .chart-container .chart-header {
+    background-color: #f5f5f5;
+    padding: 14px 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #424242;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.beton_dashboard .chart-container .chart-body {
+    padding: 16px;
+    position: relative;
+}
+.beton_dashboard .chart-container canvas {
+    max-height: 280px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .beton_dashboard .kpi-value {
+        font-size: 1.3rem;
+    }
+    .beton_dashboard .dashboard-header {
+        padding: 16px 20px;
+    }
+}

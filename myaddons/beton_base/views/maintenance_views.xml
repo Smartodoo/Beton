@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- ÉQUIPEMENT : Héritage vue formulaire         -->
+    <!-- ============================================ -->
+    <record id="view_maintenance_equipment_form_inherit_beton" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.inherit.beton</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Code équipement AVANT le nom dans le titre -->
+            <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                <div class="oe_title">
+                    <label for="code_equipement"/>
+                    <h2><field name="code_equipement"/></h2>
+                    <label for="name"/>
+                    <h1><field name="name" string="Name" placeholder="e.g. LED Monitor"/></h1>
+                </div>
+            </xpath>
+
+            <!-- Champs dans la page Product Information (avant serial_no) -->
+            <xpath expr="//field[@name='serial_no']" position="before">
+                <field name="marque"/>
+                <field name="modele_equipement"/>
+            </xpath>
+
+            <!-- Renommer effective_date en "Date de mise en service" -->
+            <xpath expr="//field[@name='effective_date']" position="attributes">
+                <attribute name="string">Date de mise en service</attribute>
+            </xpath>
+
+            <!-- Champs après effective_date -->
+            <xpath expr="//field[@name='effective_date']" position="after">
+                <field name="heures_fonctionnement"/>
+                <field name="etat_equipement"/>
+                <field name="site"/>
+                <field name="centrale_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ÉQUIPEMENT : Héritage vue tree -->
+    <record id="view_maintenance_equipment_tree_inherit_beton" model="ir.ui.view">
+        <field name="name">maintenance.equipment.tree.inherit.beton</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="code_equipement"/>
+            </xpath>
+            <xpath expr="//field[@name='technician_user_id']" position="after">
+                <field name="etat_equipement" widget="badge"
+                       decoration-success="etat_equipement == 'operationnel'"
+                       decoration-danger="etat_equipement == 'panne'"
+                       decoration-warning="etat_equipement == 'maintenance'"
+                       decoration-muted="etat_equipement == 'reforme'"/>
+                <field name="heures_fonctionnement"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- INTERVENTION : Héritage vue formulaire       -->
+    <!-- Renommage des champs standard + ajouts       -->
+    <!-- ============================================ -->
+    <record id="view_maintenance_request_form_inherit_beton" model="ir.ui.view">
+        <field name="name">maintenance.request.form.inherit.beton</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Renommer "Subjects" → "N° Intervention" -->
+            <xpath expr="//div[hasclass('oe_title')]/label[@for='name']" position="attributes">
+                <attribute name="string">N° Intervention</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="placeholder">N° Intervention</attribute>
+            </xpath>
+
+            <!-- Renommer request_date → "Date" -->
+            <xpath expr="//field[@name='request_date']" position="attributes">
+                <attribute name="string">Date</attribute>
+            </xpath>
+
+            <!-- Renommer maintenance_type → "Type d'intervention" -->
+            <xpath expr="//field[@name='maintenance_type']" position="attributes">
+                <attribute name="string">Type d'intervention</attribute>
+            </xpath>
+
+            <!-- Renommer user_id → "Technicien" -->
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="string">Technicien</attribute>
+            </xpath>
+
+            <!-- Renommer duration → "Durée d'arrêt" -->
+            <xpath expr="//label[@for='duration']" position="attributes">
+                <attribute name="string">Durée d'arrêt</attribute>
+            </xpath>
+
+            <!-- Renommer schedule_date → "Date planifiée" et ajouter prochaine_echeance + coût après -->
+            <xpath expr="//field[@name='schedule_date']" position="after">
+                <field name="prochaine_echeance"/>
+                <field name="cout_intervention"/>
+            </xpath>
+
+            <!-- Renommer onglet "Notes" → "Description de la panne" -->
+            <xpath expr="//page[.//field[@name='description']]" position="attributes">
+                <attribute name="string">Description de la panne</attribute>
+            </xpath>
+            <xpath expr="//field[@name='description']" position="attributes">
+                <attribute name="placeholder">Décrivez la panne rencontrée...</attribute>
+            </xpath>
+
+            <!-- Nouvel onglet "Détails Intervention" avec Action réalisée + Pièces -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Détails Intervention" name="details_intervention">
+                    <group>
+                        <field name="action_realisee" placeholder="Décrivez l'action réalisée..."/>
+                    </group>
+                    <separator string="Pièces utilisées"/>
+                    <field name="piece_ids">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="quantite"/>
+                            <field name="cout_unitaire"/>
+                            <field name="cout_total"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- INTERVENTION : Renommer le menu / action     -->
+    <!-- ============================================ -->
+
+    <!-- Action "Intervention Maintenance" qui pointe vers maintenance.request -->
+    <record id="action_beton_intervention" model="ir.actions.act_window">
+        <field name="name">Interventions Maintenance</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre première intervention maintenance
+            </p>
+        </field>
+    </record>
+</odoo>

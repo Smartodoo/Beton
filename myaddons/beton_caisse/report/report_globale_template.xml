@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_beton_globale_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif;">
+                        <div class="text-center" style="margin-bottom: 20px;">
+                            <h2>Dépenses Globales</h2>
+                            <h4><t t-esc="doc.partner_id.name"/></h4>
+                            <p style="color: #6c757d;">
+                                Type : <t t-esc="{'client': 'Client', 'fournisseur': 'Fournisseur'}.get(doc.partner_type, '-')"/>
+                                <t t-if="doc.date_from and doc.date_to">
+                                    | Du <t t-esc="doc.date_from" t-options="{'widget': 'date'}"/>
+                                    au <t t-esc="doc.date_to" t-options="{'widget': 'date'}"/>
+                                </t>
+                            </p>
+                        </div>
+
+                        <!-- Résumé -->
+                        <table class="table table-bordered" style="margin-bottom: 20px;">
+                            <thead>
+                                <tr style="background: #343a40; color: white;">
+                                    <th class="text-center">Montant Total</th>
+                                    <th class="text-center">Total Versé</th>
+                                    <th class="text-center">Reste à Payer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center" style="font-size: 16px; font-weight: bold;">
+                                    <td><t t-esc="doc.total_amount" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                    <td style="color: #28a745;"><t t-esc="doc.total_paid_amount" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                    <td style="color: #dc3545;"><t t-esc="doc.total_residual_amount" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Détails Encaissements (clients) -->
+                        <t t-if="doc.partner_type == 'client' and doc.entry_ids">
+                            <h4 style="margin-top: 20px;">Détail des Encaissements</h4>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr style="background: #667eea; color: white;">
+                                        <th>Référence</th>
+                                        <th>Date</th>
+                                        <th class="text-end">Montant</th>
+                                        <th class="text-end">Versé</th>
+                                        <th class="text-end">Reste</th>
+                                        <th>État</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.entry_ids" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line.name"/></td>
+                                            <td><t t-esc="line.date" t-options="{'widget': 'date'}"/></td>
+                                            <td class="text-end"><t t-esc="line.amount" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                            <td class="text-end"><t t-esc="line.amount_verse" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                            <td class="text-end"><t t-esc="line.amount_residual" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                            <td><t t-esc="{'draft': 'Brouillon', 'approuve': 'Approuvé'}.get(line.state, '-')"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- Détails Décaissements (fournisseurs) -->
+                        <t t-if="doc.partner_type == 'fournisseur' and doc.expense_ids">
+                            <h4 style="margin-top: 20px;">Détail des Décaissements</h4>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr style="background: #dc3545; color: white;">
+                                        <th>Référence</th>
+                                        <th>Date</th>
+                                        <th class="text-end">Montant</th>
+                                        <th class="text-end">Versé</th>
+                                        <th class="text-end">Reste</th>
+                                        <th>État</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.expense_ids" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line.name"/></td>
+                                            <td><t t-esc="line.date" t-options="{'widget': 'date'}"/></td>
+                                            <td class="text-end"><t t-esc="line.amount" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                            <td class="text-end"><t t-esc="line.amount_verse" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                            <td class="text-end"><t t-esc="line.amount_residual" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/></td>
+                                            <td><t t-esc="{'draft': 'Brouillon', 'approuve': 'Approuvé'}.get(line.state, '-')"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <div style="margin-top: 15px; padding: 8px; border: 1px solid #dee2e6; border-radius: 4px; background: #f8f9fa;">
+                            <strong>Arrêté le montant à la somme de :</strong>
+                            <br/>
+                            <span style="font-style: italic;">
+                                <t t-esc="doc.company_currency_id.amount_to_text(doc.total_amount) if doc.company_currency_id else '%.2f' % doc.total_amount"/>
+                            </span>
+                        </div>
+
+                        <div style="margin-top: 40px;">
+                            <p>Société : <t t-esc="doc.company_id.name"/></p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

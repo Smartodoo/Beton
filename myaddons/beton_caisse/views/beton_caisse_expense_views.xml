@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form -->
+    <record id="view_beton_caisse_expense_form" model="ir.ui.view">
+        <field name="name">beton.caisse.expense.form</field>
+        <field name="model">beton.caisse.expense</field>
+        <field name="arch" type="xml">
+            <form string="Décaissement" create="0">
+                <header>
+                    <button name="action_approve" type="object"
+                            string="Approuver" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_to_draft" type="object"
+                            string="Remettre en brouillon" class="btn-secondary"
+                            invisible="state != 'approuve'"
+                            groups="beton_caisse.group_beton_caisse_comptable"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_preview_report" type="object"
+                                class="oe_stat_button" icon="fa-eye">
+                            <span class="o_stat_text">Aperçu</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Payé"
+                            bg_color="text-bg-success"
+                            invisible="not is_totally_paid"/>
+                    <widget name="web_ribbon" title="Partiel"
+                            bg_color="text-bg-warning"
+                            invisible="not is_partially_paid"/>
+                    <field name="is_totally_paid" invisible="1"/>
+                    <field name="is_partially_paid" invisible="1"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Origine">
+                            <field name="source_type" readonly="state != 'draft'"/>
+                            <field name="purchase_id"
+                                   options="{'no_create':True,'no_create_edit':True}"
+                                   readonly="state != 'draft'"
+                                   invisible="source_type != 'purchase'"/>
+                            <field name="expense_sheet_id"
+                                   options="{'no_create':True,'no_create_edit':True}"
+                                   readonly="state != 'draft'"
+                                   invisible="source_type != 'expense_sheet'"/>
+                            <field name="fournisseur"
+                                   options="{'no_create':True,'no_create_edit':True}"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="amount" widget="monetary"
+                                   readonly="purchase_id or expense_sheet_id"/>
+                            <field name="amount_paid" widget="monetary"
+                                   readonly="state != 'draft'"/>
+                            <field name="amount_verse" widget="monetary"/>
+                            <field name="amount_residual" widget="monetary"/>
+                        </group>
+                        <group string="Caisse">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="cashbox_id"
+                                   options="{'no_create':True,'no_create_edit':True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="description" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mode de paiement">
+                            <group>
+                                <group>
+                                    <field name="payment_method" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                            <group string="Informations bancaires"
+                                   invisible="payment_method == 'cash'">
+                                <group>
+                                    <field name="bank_id"
+                                           options="{'no_create': True, 'no_create_edit': True}"
+                                           readonly="state != 'draft'"/>
+                                    <field name="bank_account_id"
+                                           options="{'no_create': True, 'no_create_edit': True}"
+                                           readonly="state != 'draft'"/>
+                                    <field name="bank_reference"
+                                           required="payment_method in ('cheque', 'virement')"
+                                           readonly="state != 'draft'"/>
+                                    <field name="bank_date" readonly="state != 'draft'"/>
+                                </group>
+                                <group>
+                                    <field name="bank_holder" readonly="state != 'draft'"/>
+                                    <field name="bank_note" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Autres informations">
+                            <group>
+                                <group>
+                                    <field name="user_id"/>
+                                    <field name="company_id" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="payment_id" readonly="1"/>
+                                    <field name="invoice_id" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" nolabel="1"
+                                   placeholder="Notes internes"
+                                   readonly="state != 'draft'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree -->
+    <record id="view_beton_caisse_expense_tree" model="ir.ui.view">
+        <field name="name">beton.caisse.expense.tree</field>
+        <field name="model">beton.caisse.expense</field>
+        <field name="arch" type="xml">
+            <tree string="Décaissements" create="0">
+                <field name="name"/>
+                <field name="source_type" optional="show"/>
+                <field name="purchase_id" optional="show"/>
+                <field name="expense_sheet_id" optional="show"/>
+                <field name="fournisseur"/>
+                <field name="cashbox_id"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="payment_method" optional="show"/>
+                <field name="bank_reference" optional="hide"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="amount" widget="monetary"/>
+                <field name="amount_verse" widget="monetary" optional="show"/>
+                <field name="amount_residual" widget="monetary" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'approuve'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_beton_caisse_expense_search" model="ir.ui.view">
+        <field name="name">beton.caisse.expense.search</field>
+        <field name="model">beton.caisse.expense</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="purchase_id"/>
+                <field name="expense_sheet_id"/>
+                <field name="fournisseur"/>
+                <field name="cashbox_id"/>
+                <field name="date"/>
+                <field name="bank_reference"/>
+                <field name="bank_id"/>
+                <separator/>
+                <filter string="Espèces" name="method_cash" domain="[('payment_method','=','cash')]"/>
+                <filter string="Chèque" name="method_cheque" domain="[('payment_method','=','cheque')]"/>
+                <filter string="Virement" name="method_virement" domain="[('payment_method','=','virement')]"/>
+                <filter string="Carte" name="method_carte" domain="[('payment_method','=','carte')]"/>
+                <separator/>
+                <filter string="Brouillon" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Approuvé" name="approuve" domain="[('state','=','approuve')]"/>
+                <separator/>
+                <filter string="Payé" name="paid" domain="[('is_totally_paid','=',True)]"/>
+                <filter string="Partiellement payé" name="partial" domain="[('is_partially_paid','=',True)]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Fournisseur" name="fournisseur" context="{'group_by':'fournisseur'}"/>
+                    <filter string="Bon d'achat" name="purchase" context="{'group_by':'purchase_id'}"/>
+                    <filter string="Caisse" name="cashbox" context="{'group_by':'cashbox_id'}"/>
+                    <filter string="Caissier" name="user" context="{'group_by':'user_id'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Server Action pour aperçu multi -->
+    <record id="action_preview_beton_expense_multi" model="ir.actions.server">
+        <field name="name">Aperçu PDF</field>
+        <field name="model_id" ref="model_beton_caisse_expense"/>
+        <field name="binding_model_id" ref="model_beton_caisse_expense"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_preview_report_multi()</field>
+    </record>
+
+    <!-- Action (toutes sources — conservée pour compatibilité) -->
+    <record id="action_beton_caisse_expense" model="ir.actions.act_window">
+        <field name="name">Décaissements</field>
+        <field name="res_model">beton.caisse.expense</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action : Décaissements Achats -->
+    <record id="action_beton_caisse_expense_purchase" model="ir.actions.act_window">
+        <field name="name">Décaissements Achats</field>
+        <field name="res_model">beton.caisse.expense</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('source_type', '=', 'purchase')]</field>
+        <field name="context">{'default_source_type': 'purchase'}</field>
+    </record>
+
+    <!-- Action : Décaissements Notes de frais -->
+    <record id="action_beton_caisse_expense_note_frais" model="ir.actions.act_window">
+        <field name="name">Décaissements Notes de frais</field>
+        <field name="res_model">beton.caisse.expense</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('source_type', '=', 'expense_sheet')]</field>
+        <field name="context">{'default_source_type': 'expense_sheet'}</field>
+    </record>
+</odoo>

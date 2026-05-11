@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_purchase_order_form_inherit_beton" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.beton</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('type_partenaire_beton', '=', 'fournisseur')]</attribute>
+                <attribute name="context">{'default_type_partenaire_beton': 'fournisseur', 'default_is_company': True}</attribute>
+            </xpath>
+
+            <!-- Qté en stock sur les lignes de PO (tree + form) -->
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_qty']" position="after">
+                <field name="qty_en_stock" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='product_qty']" position="after">
+                <field name="qty_en_stock"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

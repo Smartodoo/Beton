@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_beton_register_payment_wizard_form" model="ir.ui.view">
+        <field name="name">beton.register.payment.wizard.form</field>
+        <field name="model">beton.register.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enregistrer un paiement">
+                <group>
+                    <group string="Informations">
+                        <field name="payment_type" invisible="1"/>
+                        <field name="sale_order_id" invisible="payment_type != 'sale'" readonly="1"/>
+                        <field name="purchase_order_id" invisible="payment_type != 'purchase'" readonly="1"/>
+                        <field name="expense_sheet_id" invisible="payment_type != 'expense_sheet'" readonly="1"/>
+                        <field name="partner_id"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group string="Situation">
+                        <field name="amount_total" widget="monetary"/>
+                        <field name="amount_already_paid" widget="monetary"/>
+                        <label for="amount_remaining" string="Reste à payer"/>
+                        <div>
+                            <field name="amount_remaining" widget="monetary"
+                                   class="oe_inline"
+                                   style="font-size: 16px; font-weight: bold; color: #dc3545;"/>
+                        </div>
+                    </group>
+                </group>
+                <separator string="Paiement"/>
+                <group>
+                    <group>
+                        <field name="cashbox_id"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                        <field name="montant" widget="monetary"/>
+                        <field name="payment_method"/>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </group>
+                <group string="Informations bancaires"
+                       invisible="payment_method == 'cash'">
+                    <group>
+                        <field name="bank_id"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                        <field name="bank_account_id"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                        <field name="bank_reference"
+                               required="payment_method in ('cheque', 'virement')"/>
+                        <field name="bank_date"/>
+                    </group>
+                    <group>
+                        <field name="bank_holder"/>
+                        <field name="bank_note"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_register_payment"
+                            type="object"
+                            string="Enregistrer le paiement"
+                            class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_beton_register_payment_wizard" model="ir.actions.act_window">
+        <field name="name">Enregistrer un paiement</field>
+        <field name="res_model">beton.register.payment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

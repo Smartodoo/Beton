@@ -1,0 +1,231 @@
+.o_web_client {
+    .o_main_navbar {
+        background-color: #fff ;
+        border-bottom: 0 !important;
+        align-items: center;
+        padding: 10px;
+
+        .o_menu_brand {
+            padding-left: 0;
+            font-size: 1.2em !important;
+            color: #374151;
+        }
+        .o_menu_systray{
+            .todo_layout{
+                #accordion{
+                    margin: 10px 20px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                    overflow: auto !important;
+                    height: 100%;
+                    transition: 0.5s all ease-in-out;
+                    .sh_main_card{
+                        margin: 30px 20px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                        .card-header{
+                            display: flex !important;
+                            flex-direction: unset;
+                            padding: 5px 12px;
+                            background: $primaryColor;
+                            align-items: center;
+                            justify-content: center;
+                        
+                            .sh-card-header{
+                                transition: 0.5s all ease-in-out;
+
+                                .o-checkbox{
+                                    label{
+                                        &::before{
+                                            display: block;
+                                            margin: 0;
+                                        }
+                                        &:after{
+                                            top: 0;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .sh-card-header-button{
+                            display: flex;
+                            margin-left: auto;
+                            .sh_to_do_edit_btn{
+                                color: white;
+                                &:first-child{
+                                    margin-right: 20px;
+                                }
+                            }
+                            span{
+                                color: white;
+                            }
+                        }
+                    }                 
+                }
+            }
+            .o_switch_company_menu{
+                .o-dropdown--menu{
+                    .dropdown-item{
+                        &.focus{
+                            div{
+                                .log_into{
+                                    background-color: rgba($primaryColor , $alpha:0.2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .sh_theme_model{
+                .add_todo_section{
+                    .input-group{
+                        input{
+                            &:focus{
+                                border-color: $extra_color !important;
+                            }
+                        }
+                    }
+                }
+            }
+            .fa{
+                font-size: 1.2em !important;
+            }
+            .dropdown{
+                .dropdown-menu{
+                    border-top: 1px solid #d8dadd;
+                    .o-mail-MessagingMenu{
+                        .btn.btn-link{
+                            &:not(.text-muted){
+                                color: $extra_color;
+                            }
+                        }
+                    }
+                    @include media-breakpoint-down(md){
+                        left: 0px !important;right: auto !important;
+                    }
+                }
+            }  
+        }
+
+        .o_menu_toggle,
+        .o_menu_brand,
+        .o_navbar_apps_menu .dropdown-toggle,
+        .o_nav_entry,
+        .dropdown-toggle {
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            align-items: center;
+            width: auto;
+            border-radius: 0.25rem;
+            user-select: none;
+            background: transparent;
+            font-size: 1em;
+            color: $header_font_color;
+        }
+        .sh_bookmark{
+            .o_user_bookmark_menu{
+                .openDropdown{
+                        color: $header_font_color !important;
+                        .sh_bookmark_icon{
+                        color: $header_font_color !important;
+                        }
+                }
+                
+            }
+        }
+        
+        .sh_language_selector,
+        .todo,
+        .o_full_screen,
+        .sh_calc_util,
+        .sh_bookmark,
+        .theme_settings,
+        .o_night_mode {
+            margin: 0;
+            margin-left: var(--NavBar-entry-margin-left, 0);
+            margin-right: var(--NavBar-entry-margin-right, 0);
+            padding: 10px 10px 10px 10px;
+            color: $header_font_color !important;
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.075);
+            }
+        }
+       
+        .o-mail-DiscussSystray-class {
+            .badge {
+                background: #dc3545;
+                color: #FFFFFF;
+            }
+        }
+
+        .o_menu_sections {
+            height: calc(var(--o-navbar-height) - 20px);
+            align-items: center;
+
+            .dropdown-toggle,
+            .dropdown-item.o_nav_entry {
+                background-color: transparent !important;
+                height: calc(var(--o-navbar-height) - 20px);
+                line-height: unset;
+                @if $button_style=='style_1' {
+                    border-radius: 0rem;
+                }
+                @if $button_style=='style_2' {
+                    border-radius: 0.25rem;
+                }
+                @if $button_style=='style_3' {
+                    border-radius: 0px 15px 0px 15px;
+                }
+                @if $button_style=='style_4' {
+                    border-radius: 15px;
+                }
+
+                span {
+                    color: $header_font_color;
+                }
+
+                &:hover {
+                    background: $secondaryColor !important;
+                }
+            }
+
+            .dropdown.show {
+                .dropdown-toggle {
+                    border-color: $extra_color !important;
+                    background: lighten($extra_color, 70%) !important;
+
+                    span,i {
+                        color: #111827;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// header bckground 
+
+@if $header_bg_type =="bg_img" {
+    .o_web_client {
+        .o_main_navbar {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/web/image?model=sh.ent.theme.config.settings&id=1&field=header_background_image');
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: #4E4E4E;
+        }
+    }
+
+   .o_web_client .o_navbar  .o_main_navbar {
+        background-color: rgba(255, 255, 255, 0.65) !important;
+    }
+}
+
+@if $header_bg_type =="bg_color" {
+    .o_web_client {
+        .o_main_navbar {
+            background: $header_bg_color;
+        }
+    }
+}

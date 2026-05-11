@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hr_expense_sheet_form_inherit_beton_caisse" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.inherit.beton.caisse</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <!-- Champs invisibles nécessaires aux conditions -->
+            <xpath expr="//sheet" position="inside">
+                <field name="beton_payment_state" invisible="1"/>
+                <field name="beton_amount_paid" invisible="1"/>
+                <field name="beton_amount_residual" invisible="1"/>
+            </xpath>
+
+            <!-- Web ribbons -->
+            <xpath expr="//sheet/div[1]" position="before">
+                <widget name="web_ribbon"
+                        title="Payé via Caisse Béton"
+                        bg_color="text-bg-success"
+                        invisible="beton_payment_state != 'paid'"/>
+                <widget name="web_ribbon"
+                        title="Paiement Partiel"
+                        bg_color="text-bg-warning"
+                        invisible="beton_payment_state != 'partial'"/>
+            </xpath>
+
+            <!-- Smart button -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_beton_payments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        invisible="beton_payment_count == 0">
+                    <field name="beton_payment_count"
+                           widget="statinfo"
+                           string="Paiements Béton"/>
+                </button>
+            </xpath>
+
+            <!-- Register Payment : rendre le bouton visible aussi en mode 'company_account'
+                 puisque beton_caisse force tous les sheets à créer un bill (pas de paiement auto). -->
+            <xpath expr="//button[@name='action_register_payment']" position="attributes">
+                <attribute name="invisible">state not in ('post', 'done') or payment_state in ('paid', 'in_payment')</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

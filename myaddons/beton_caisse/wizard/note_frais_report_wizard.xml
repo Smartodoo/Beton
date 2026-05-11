@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_beton_note_frais_report_wizard_form" model="ir.ui.view">
+        <field name="name">beton.note.frais.report.wizard.form</field>
+        <field name="model">beton.note.frais.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Décaissements Notes de frais">
+                <sheet>
+                    <group>
+                        <group string="Période">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group string="Filtres">
+                            <field name="cashbox_id"
+                                   options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="employee_id"
+                                   options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="expense_sheet_id"
+                                   options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_print_report"
+                            type="object"
+                            string="Imprimer le rapport"
+                            class="btn-primary"/>
+                    <button name="action_view_records"
+                            type="object"
+                            string="Aperçu liste"
+                            class="btn-secondary"/>
+                    <button string="Annuler"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_beton_note_frais_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport Notes de frais (par période)</field>
+        <field name="res_model">beton.note.frais.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

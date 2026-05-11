@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Partner Form -->
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.central.beton</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page string="Beton" name="beton"
+                      invisible="not is_beton_client">
+                    <group>
+                        <group>
+                            <field name="type_client_beton"/>
+                            <field name="plafond_credit"/>
+                        </group>
+                        <group>
+                            <field name="encours_client"/>
+                            <field name="depassement_credit" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="conditions_paiement_beton"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_chantiers" type="object"
+                        class="oe_stat_button" icon="fa-building"
+                        invisible="not is_beton_client">
+                    <field name="chantier_count" widget="statinfo"
+                           string="Chantiers"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='company_type']" position="after">
+                <field name="is_beton_client"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Beton Clients -->
+    <record id="action_partner_beton" model="ir.actions.act_window">
+        <field name="name">Clients Beton</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_beton_client', '=', True)]</field>
+        <field name="context">{'default_is_beton_client': True, 'default_customer_rank': 1}</field>
+    </record>
+
+</odoo>

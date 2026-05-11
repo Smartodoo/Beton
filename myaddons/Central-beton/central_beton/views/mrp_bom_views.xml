@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit BOM Form View -->
+    <record id="view_mrp_bom_form_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit.central.beton</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Add is_beton_bom after product_tmpl_id -->
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="is_beton_bom"/>
+            </xpath>
+            <!-- Add concrete fields in a new page -->
+            <xpath expr="//page[@name='miscellaneous']" position="after">
+                <page string="Proprietes Beton" name="beton_properties"
+                      invisible="not is_beton_bom">
+                    <group>
+                        <group>
+                            <field name="classe_resistance"/>
+                            <field name="consistance"/>
+                            <field name="exposition"/>
+                            <field name="dmax"/>
+                        </group>
+                        <group>
+                            <field name="rapport_eau_ciment"/>
+                            <field name="masse_totale"/>
+                            <field name="cout_theorique_m3" widget="monetary"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <!-- Add cost columns to BOM lines tree -->
+            <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="after">
+                <field name="prix_unitaire" invisible="not parent.is_beton_bom"/>
+                <field name="cout_ligne" invisible="not parent.is_beton_bom"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit BOM Tree View -->
+    <record id="view_mrp_bom_tree_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.bom.tree.inherit.central.beton</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="is_beton_bom" optional="hide"/>
+                <field name="classe_resistance" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit BOM Search View -->
+    <record id="view_mrp_bom_search_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.bom.search.inherit.central.beton</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.view_mrp_bom_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[1]" position="before">
+                <filter name="beton_bom" string="Formules Beton"
+                        domain="[('is_beton_bom', '=', True)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Beton BOMs only -->
+    <record id="action_beton_bom" model="ir.actions.act_window">
+        <field name="name">Formules Beton</field>
+        <field name="res_model">mrp.bom</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_beton_bom', '=', True)]</field>
+        <field name="context">{'default_is_beton_bom': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Creer votre premiere formule de beton
+            </p>
+        </field>
+    </record>
+
+</odoo>

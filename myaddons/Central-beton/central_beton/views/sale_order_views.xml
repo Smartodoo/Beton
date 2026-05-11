@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Sale Order Form -->
+    <record id="view_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.central.beton</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="chantier_id"/>
+                <field name="bom_id"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_productions" type="object"
+                        class="oe_stat_button" icon="fa-industry">
+                    <field name="production_count" widget="statinfo"
+                           string="Fabrications"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Sale Order Line -->
+    <record id="view_sale_order_line_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.line.inherit.central.beton</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                <field name="bom_id" optional="hide"/>
+                <field name="volume_m3" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Beton Sales -->
+    <record id="action_sale_order_beton" model="ir.actions.act_window">
+        <field name="name">Commandes Beton</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="domain">[('chantier_id', '!=', False)]</field>
+        <field name="context">{}</field>
+    </record>
+
+</odoo>

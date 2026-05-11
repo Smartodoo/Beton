@@ -1,0 +1,146 @@
+<odoo>
+    <template id="sinistre_report_template">
+        <t t-call="web.external_layout">
+            <main>
+                <div class="page" style="text_center">
+                    <h2 class="text-center">
+                        <t t-if="env.context.get('report_month_name')">
+                            Sinistres —
+                            <t t-esc="env.context.get('report_month_name')"/>
+                            <t t-esc="env.context.get('report_year')"/>
+                        </t>
+                        <t t-elif="env.context.get('report_year') and not env.context.get('report_month_name')">
+                            Sinistres — Année
+                            <t t-esc="env.context.get('report_year')"/>
+                        </t>
+                        <t t-elif="env.context.get('report_state')">
+                            Sinistres — État :
+                            <t t-esc="env.context.get('report_state')"/>
+                        </t>
+                        <t t-elif="env.context.get('report_payment_state')">
+                            Sinistres — État de régelement:
+                            <t t-esc="env.context.get('report_payment_state')"/>
+                        </t>
+                        <t t-elif="env.context.get('report_driver_name')">
+                            Sinistres — Conducteur :
+                            <t t-esc="env.context.get('report_driver_name')"/>
+                        </t>
+                        <t t-elif="env.context.get('report_license_plate')">
+                            Sinistres — Plaque d'immatriculation :
+                            <t t-esc="env.context.get('report_license_plate')"/>
+                        </t>
+                    </h2>
+
+                    <br/>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Modèle</th>
+                                <th>Plaque</th>
+                                <th>Conducteur</th>
+                                <th>Date de l'accident</th>
+                                <th>État de régelement</th>
+                                <th>État</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="docs" t-as="sinistre">
+                                <td>
+                                    <t t-esc="sinistre.model_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="sinistre.license_plate"/>
+                                </td>
+                                <td>
+                                    <t t-esc="sinistre.driver_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="sinistre.date_accident"/>
+                                </td>
+                                <td>
+                                    <t t-if="sinistre.payment_state == 'payé'">Régler</t>
+                                    <t t-if="sinistre.payment_state == 'pas_payé'">Non Réglé</t>
+
+                                </td>
+                                <td>
+                                    <t t-if="sinistre.state == 'draft'">En Attente de PV</t>
+                                    <t t-if="sinistre.state == 'en_cours'">En cours</t>
+                                    <t t-if="sinistre.state == 'terminé'">Clôturé</t>
+                                </td>
+                                <td>
+                                    <t t-esc="sinistre.montant_reparation"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </t>
+    </template>
+
+    <template id="report_sinistre_by_month" inherit_id="sinistre.sinistre_report_template"/>
+    <template id="report_sinistre_by_year" inherit_id="sinistre.sinistre_report_template"/>
+    <template id="report_sinistre_by_state" inherit_id="sinistre.sinistre_report_template"/>
+    <template id="report_sinistre_by_state_reglement" inherit_id="sinistre.sinistre_report_template"/>
+    <template id="report_sinistre_by_conducteur" inherit_id="sinistre.sinistre_report_template"/>
+    <template id="report_sinistre_by_plate" inherit_id="sinistre.sinistre_report_template"/>
+
+
+    <record id="action_report_sinistre_by_month" model="ir.actions.report">
+        <field name="name">Sinistres par mois</field>
+        <field name="model">sinistre</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sinistre.report_sinistre_by_month</field>
+        <field name="report_file">sinistre.sinistre_report_template</field>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Sinistres_par_mois'</field>
+    </record>
+    <record id="action_report_sinistre_by_year" model="ir.actions.report">
+        <field name="name">Sinistres par annee</field>
+        <field name="model">sinistre</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sinistre.report_sinistre_by_year</field>
+        <field name="report_file">sinistre.sinistre_report_template</field>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Sinistres_par_annee'</field>
+
+    </record>
+    <record id="action_report_sinistre_by_state" model="ir.actions.report">
+        <field name="name">Sinistres par état</field>
+        <field name="model">sinistre</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sinistre.report_sinistre_by_state</field>
+        <field name="report_file">sinistre.sinistre_report_template</field>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Sinistres_par_etat'</field>
+    </record>
+    <record id="action_report_sinistre_by_state_reglement" model="ir.actions.report">
+        <field name="name">Sinistres par état de règlement</field>
+        <field name="model">sinistre</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sinistre.report_sinistre_by_state_reglement</field>
+        <field name="report_file">sinistre.sinistre_report_template</field>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Sinistres_par_etat_de_reglement'</field>
+    </record>
+    <record id="action_report_sinistre_by_driver" model="ir.actions.report">
+        <field name="name">Sinistres par conducteur</field>
+        <field name="model">sinistre</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sinistre.report_sinistre_by_conducteur</field>
+        <field name="report_file">sinistre.sinistre_report_template</field>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Sinistres_par_conducteur'</field>
+    </record>
+    <record id="action_report_sinistre_by_plate" model="ir.actions.report">
+        <field name="name">Sinistres par plaque d'immatricultion</field>
+        <field name="model">sinistre</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sinistre.report_sinistre_by_plate</field>
+        <field name="report_file">sinistre.sinistre_report_template</field>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">"'Sinistres_par_plaque_d''immatriculation'"</field>
+    </record>
+
+</odoo>

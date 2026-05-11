@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Menu racine -->
+    <menuitem id="beton_menu_root"
+              name="Centrale à Béton"
+              web_icon="beton_base,static/description/icon.png"
+              sequence="50"/>
+
+    <!-- Tableau de Bord -->
+    <menuitem id="beton_menu_dashboard"
+              name="Tableau de Bord"
+              parent="beton_menu_root"
+              action="action_beton_dashboard"
+              sequence="1"/>
+
+    <!-- Sous-menu Maintenance -->
+    <menuitem id="beton_menu_maintenance"
+              name="Maintenance"
+              parent="beton_menu_root"
+              sequence="6"/>
+
+    <menuitem id="beton_menu_interventions"
+              name="Interventions Maintenance"
+              parent="beton_menu_maintenance"
+              action="action_beton_intervention"
+              sequence="10"/>
+
+    <!-- Sous-menu Qualité & Laboratoire -->
+    <menuitem id="beton_menu_qualite"
+              name="Qualité &amp; Laboratoire"
+              parent="beton_menu_root"
+              sequence="8"/>
+
+    <menuitem id="beton_menu_essais"
+              name="Essais Béton"
+              parent="beton_menu_qualite"
+              action="action_beton_essai"
+              sequence="10"/>
+
+    <menuitem id="beton_menu_nc"
+              name="Non-Conformités"
+              parent="beton_menu_qualite"
+              action="action_beton_nc"
+              sequence="20"/>
+
+    <!-- Sous-menu Logistique -->
+    <menuitem id="beton_menu_logistique"
+              name="Logistique"
+              parent="beton_menu_root"
+              sequence="7"/>
+
+    <menuitem id="beton_menu_livraisons"
+              name="Bons de Livraison"
+              parent="beton_menu_logistique"
+              action="action_beton_stock_picking_livraison"
+              sequence="10"/>
+
+    <menuitem id="beton_menu_bon_sortie"
+              name="Bons de Sortie Service"
+              parent="beton_menu_logistique"
+              action="action_beton_bon_sortie"
+              sequence="20"/>
+
+    <!-- Sous-menu Commercial -->
+    <menuitem id="beton_menu_commercial"
+              name="Commercial"
+              parent="beton_menu_root"
+              sequence="10"/>
+
+    <menuitem id="beton_menu_clients"
+              name="Clients"
+              parent="beton_menu_commercial"
+              action="action_beton_clients"
+              sequence="10"/>
+
+    <!-- Ventes -->
+    <record id="action_beton_sale_order" model="ir.actions.act_window">
+        <field name="name">Ventes</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer un bon de vente</p>
+        </field>
+    </record>
+    <menuitem id="beton_menu_ventes"
+              name="Ventes"
+              parent="beton_menu_commercial"
+              action="action_beton_sale_order"
+              sequence="15"/>
+
+    <menuitem id="beton_menu_fournisseurs"
+              name="Fournisseurs"
+              parent="beton_menu_commercial"
+              action="action_beton_fournisseurs"
+              sequence="20"/>
+
+    <!-- Achats -->
+    <record id="action_beton_purchase_order" model="ir.actions.act_window">
+        <field name="name">Achats</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer un bon d'achat</p>
+        </field>
+    </record>
+    <menuitem id="beton_menu_achats"
+              name="Achats"
+              parent="beton_menu_commercial"
+              action="action_beton_purchase_order"
+              sequence="25"/>
+
+    <!-- Sous-menu Production -->
+    <menuitem id="beton_menu_production"
+              name="Production"
+              parent="beton_menu_root"
+              sequence="5"/>
+
+    <menuitem id="beton_menu_formules"
+              name="Formules Béton"
+              parent="beton_menu_production"
+              action="action_beton_mrp_bom"
+              sequence="10"/>
+
+    <menuitem id="beton_menu_fabrication"
+              name="Ordres de Fabrication"
+              parent="beton_menu_production"
+              action="action_beton_mrp_production"
+              sequence="20"/>
+
+    <menuitem id="beton_menu_matieres"
+              name="Matières Premières"
+              parent="beton_menu_production"
+              action="action_beton_matieres"
+              sequence="30"/>
+
+    <!-- Sous-menu Finance -->
+    <menuitem id="beton_menu_finance"
+              name="Finance"
+              parent="beton_menu_root"
+              sequence="15"/>
+
+    <menuitem id="beton_menu_cout_revient"
+              name="Coûts de Revient"
+              parent="beton_menu_finance"
+              action="action_beton_cout"
+              sequence="10"/>
+
+    <!-- Sous-menu Rapports -->
+    <menuitem id="beton_menu_rapports"
+              name="Rapports"
+              parent="beton_menu_root"
+              sequence="20"/>
+
+    <menuitem id="beton_menu_rapport_produits"
+              name="Analyse Produits"
+              parent="beton_menu_rapports"
+              action="action_product_report_wizard"
+              sequence="10"/>
+
+    <menuitem id="beton_menu_rapport_formules"
+              name="Analyse Formules"
+              parent="beton_menu_rapports"
+              action="action_bom_report_wizard"
+              sequence="20"/>
+
+    <menuitem id="beton_menu_rapport_fabrication"
+              name="Analyse Fabrication"
+              parent="beton_menu_rapports"
+              action="action_production_report_wizard"
+              sequence="30"/>
+
+    <menuitem id="beton_menu_rapport_livraisons"
+              name="Analyse Livraisons"
+              parent="beton_menu_rapports"
+              action="action_picking_report_wizard"
+              sequence="40"/>
+
+    <menuitem id="beton_menu_rapport_couts"
+              name="Analyse Coûts de Revient"
+              parent="beton_menu_rapports"
+              action="action_cout_report_wizard"
+              sequence="50"/>
+
+    <menuitem id="beton_menu_rapport_stock"
+              name="Analyse Mouvements Stock"
+              parent="beton_menu_rapports"
+              action="action_stock_move_report_wizard"
+              sequence="60"/>
+
+    <!-- Sous-menu Configuration -->
+    <menuitem id="beton_menu_config"
+              name="Configuration"
+              parent="beton_menu_root"
+              sequence="100"/>
+
+    <menuitem id="beton_menu_centrales"
+              name="Centrales"
+              parent="beton_menu_config"
+              action="action_beton_centrale"
+              sequence="10"/>
+</odoo>

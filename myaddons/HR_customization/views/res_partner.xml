@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Versement Entrant Views -->
+    <record id="versement_in_form_view" model="ir.ui.view">
+        <field name="name">versement.in.form.view</field>
+        <field name="model">versement.in</field>
+        <field name="arch" type="xml">
+            <form string="Versement Entrant">
+                <sheet>
+                    <header>
+                        <button string="Valider" type="object" name="action_validate" class="btn-primary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
+                    </header>
+
+                    <group class="col-12">
+                        <field name="name"/>
+                        <field name="partner_id" domain="[('contact_type', '=', 'CLIENT')]"/>
+                        <field name="date" widget="date"/>
+                        <field name="amount"/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="versement_in_tree_view" model="ir.ui.view">
+        <field name="name">versement.in.tree.view</field>
+        <field name="model">versement.in</field>
+        <field name="arch" type="xml">
+            <tree string="Versements Entrants">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_open_versement_in" model="ir.actions.act_window">
+        <field name="name">Versements Entrants</field>
+        <field name="res_model">versement.in</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+        <field name="context">{'default_partner_id': active_id}</field>
+    </record>
+
+    <!-- Héritage de la vue formulaire des contacts -->
+    <record id="view_partner_form_inherited" model="ir.ui.view">
+        <field name="name">res.partner.form_inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_type']" position="after">
+                <field name="contact_type" widget="radio"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="information_fiscale" string="Coordonées fiscales">
+                    <group name="misc" string="Misc" class="col-6">
+                        <field name="vat" string='N.I.F' placeholder="e.g: 0016854585" readonly="parent_id"/>
+                        <field name="nis" placeholder="e.g: 0 016 236 753"/>
+                        <field name="ai"/>
+                        <field name="company_registry" string='R.C'/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="credit" invisible="contact_type != 'CLIENT'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(HR_customization.action_open_versement_in)d"
+                        string="Versements"
+                        type="action"
+                        icon="fa-check"
+                        invisible="contact_type != 'CLIENT'"
+                        context="{'default_partner_id': active_id}"
+                        groups="base.group_user"/>
+            </xpath>
+        </field>
+    </record><record id="view_partner_form_inherited" model="ir.ui.view">
+        <field name="name">res.partner.form_inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_type']" position="after">
+                <field name="contact_type" widget="radio"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="information_fiscale" string="Coordonées fiscales">
+                    <group name="misc" string="Misc" class="col-6">
+                        <field name="vat" string='N.I.F' placeholder="e.g: 0016854585" readonly="parent_id"/>
+                        <field name="nis" placeholder="e.g: 0 016 236 753"/>
+                        <field name="ai"/>
+                        <field name="company_registry" string='R.C'/>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="credit" invisible="contact_type != 'CLIENT'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(HR_customization.action_open_versement_in)d"
+                        string="Versements"
+                        type="action"
+                        icon="fa-check"
+                        invisible="contact_type != 'CLIENT'"
+                        context="{'default_partner_id': active_id}"
+                        groups="base.group_user"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Héritage de la vue de recherche des contacts -->
+    <record id="view_partner_filter_inherit" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <!-- Ajouter un filtre pour le type de contact -->
+            <xpath expr="//group[@name='group_by']" position="inside">
+                <filter name="contact_type" string="type de contact" context="{'group_by':'contact_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_company_form_inherit" model="ir.ui.view">
+        <field name="name">res.company.form.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_info']" position="after">
+                <page name="information_fiscale" string="Coordonées fiscales">
+                    <group name="misco" string="Misc">
+                        <field name="vat" string='N.I.F' placeholder="e.g: 0016854585" readonly="parent_id"/>
+                        <field name="nis" placeholder="e.g: 0 016 236 753"/>
+                        <field name="ai"/>
+                        <field name="company_registry" string='R.C'/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>
+
+
+
+

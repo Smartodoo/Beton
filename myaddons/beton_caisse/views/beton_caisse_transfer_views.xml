@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form -->
+    <record id="view_beton_caisse_transfer_form" model="ir.ui.view">
+        <field name="name">beton.caisse.transfer.form</field>
+        <field name="model">beton.caisse.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Transfert">
+                <header>
+                    <button name="action_confirm" type="object"
+                            string="Confirmer" class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="beton_caisse.group_beton_caisse_comptable"/>
+                    <button name="action_cancel" type="object"
+                            string="Annuler" class="btn-danger"
+                            invisible="state != 'confirmed'"
+                            groups="beton_caisse.group_beton_caisse_comptable"/>
+                    <button name="action_to_draft" type="object"
+                            string="Remettre en brouillon" class="btn-secondary"
+                            invisible="state not in ('confirmed', 'cancel')"
+                            groups="beton_caisse.group_beton_caisse_comptable"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_preview_report" type="object"
+                                class="oe_stat_button" icon="fa-eye">
+                            <span class="o_stat_text">Aperçu</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Transféré"
+                            bg_color="text-bg-success"
+                            invisible="state != 'confirmed'"/>
+                    <widget name="web_ribbon" title="Annulé"
+                            bg_color="text-bg-danger"
+                            invisible="state != 'cancel'"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Caisses">
+                            <field name="source_cashbox_id"
+                                   options="{'no_create':True,'no_create_edit':True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="total_amount_source" widget="monetary"/>
+                            <field name="destination_cashbox_id"
+                                   options="{'no_create':True,'no_create_edit':True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="total_amount_destination" widget="monetary"/>
+                            <field name="amount" widget="monetary"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Détails">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="description" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Autres informations">
+                            <group>
+                                <field name="user_id"/>
+                                <field name="company_id" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" nolabel="1"
+                                   readonly="state != 'draft'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree -->
+    <record id="view_beton_caisse_transfer_tree" model="ir.ui.view">
+        <field name="name">beton.caisse.transfer.tree</field>
+        <field name="model">beton.caisse.transfer</field>
+        <field name="arch" type="xml">
+            <tree string="Transferts">
+                <field name="name"/>
+                <field name="source_cashbox_id"/>
+                <field name="destination_cashbox_id"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="amount" widget="monetary"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"
+                       decoration-danger="state == 'cancel'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_beton_caisse_transfer_search" model="ir.ui.view">
+        <field name="name">beton.caisse.transfer.search</field>
+        <field name="model">beton.caisse.transfer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="source_cashbox_id"/>
+                <field name="destination_cashbox_id"/>
+                <separator/>
+                <filter string="Brouillon" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmé" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Source" name="source" context="{'group_by':'source_cashbox_id'}"/>
+                    <filter string="Destination" name="destination" context="{'group_by':'destination_cashbox_id'}"/>
+                    <filter string="Utilisateur" name="user" context="{'group_by':'user_id'}"/>
+                    <filter string="État" name="state" context="{'group_by':'state'}"/>
+                    <filter string="Société" name="company" context="{'group_by':'company_id'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_beton_caisse_transfer" model="ir.actions.act_window">
+        <field name="name">Transferts</field>
+        <field name="res_model">beton.caisse.transfer</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire mrp.bom -->
+    <record id="view_mrp_bom_form_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit.beton</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Domaine sur le produit principal : uniquement produits fabriqués -->
+            <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
+                <attribute name="domain">[('detailed_type', '=', 'fabrique')]</attribute>
+            </xpath>
+
+            <!-- Filtrer les composants sur matières premières dans l'onglet Composants standard -->
+            <xpath expr="//page[@name='components']//field[@name='bom_line_ids']//field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('product_tmpl_id.classification_produit', '=', 'matiere_premiere')]</attribute>
+            </xpath>
+
+            <!-- Ajouter un onglet Formule Béton -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Pièces jointes" name="documents_beton">
+                    <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+                </page>
+                <page string="Formule Béton" name="formule_beton">
+                    <group>
+                        <group string="Identification">
+                            <field name="code_formule"/>
+                            <field name="classe_resistance"/>
+                            <field name="type_beton"/>
+                            <field name="statut_formule"/>
+                        </group>
+                        <group string="Performance">
+                            <field name="rendement_theorique"/>
+                            <field name="tolerance_dosage"/>
+                            <field name="cout_theorique_m3"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Héritage vue tree mrp.bom -->
+    <record id="view_mrp_bom_tree_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.bom.tree.inherit.beton</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="code_formule" optional="show"/>
+                <field name="classe_resistance" optional="show"/>
+                <field name="type_beton" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Héritage vue recherche mrp.bom -->
+    <record id="view_mrp_bom_search_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.bom.search.inherit.beton</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.view_mrp_bom_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_bom_produit_fabrique"
+                        string="Produits fabriqués"
+                        domain="[('product_tmpl_id.detailed_type', '=', 'fabrique')]"/>
+                <separator/>
+                <filter name="filter_bom_classe_b15" string="B15"
+                        domain="[('classe_resistance', '=', 'b15')]"/>
+                <filter name="filter_bom_classe_b20" string="B20"
+                        domain="[('classe_resistance', '=', 'b20')]"/>
+                <filter name="filter_bom_classe_b25" string="B25"
+                        domain="[('classe_resistance', '=', 'b25')]"/>
+                <filter name="filter_bom_classe_b30" string="B30"
+                        domain="[('classe_resistance', '=', 'b30')]"/>
+                <filter name="filter_bom_classe_b35" string="B35"
+                        domain="[('classe_resistance', '=', 'b35')]"/>
+                <filter name="filter_bom_classe_b40" string="B40"
+                        domain="[('classe_resistance', '=', 'b40')]"/>
+                <separator/>
+                <filter name="filter_bom_statut_actif" string="Formule active"
+                        domain="[('statut_formule', '=', 'actif')]"/>
+                <filter name="filter_bom_statut_archive" string="Formule archivée"
+                        domain="[('statut_formule', '=', 'archive')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="groupby_classe_resistance" string="Classe de résistance"
+                            context="{'group_by': 'classe_resistance'}"/>
+                    <filter name="groupby_type_beton" string="Type de béton"
+                            context="{'group_by': 'type_beton'}"/>
+                    <filter name="groupby_statut_formule" string="Statut formule"
+                            context="{'group_by': 'statut_formule'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action pour les nomenclatures béton (Formules) -->
+    <record id="action_beton_mrp_bom" model="ir.actions.act_window">
+        <field name="name">Formules Béton</field>
+        <field name="res_model">mrp.bom</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre première formule béton (nomenclature)
+            </p>
+        </field>
+    </record>
+</odoo>

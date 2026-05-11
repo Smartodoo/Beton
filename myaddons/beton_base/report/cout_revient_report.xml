@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_cout_revient" model="ir.actions.report">
+        <field name="name">Rapport Coût de Revient</field>
+        <field name="model">beton.cout.revient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_cout_revient</field>
+        <field name="report_file">beton_base.report_cout_revient</field>
+        <field name="binding_model_id" ref="model_beton_cout_revient"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_cout_revient">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">RAPPORT DE COÛT DE REVIENT</h2>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>Référence :</strong> <span t-field="o.name"/><br/>
+                                <strong>Formule béton :</strong> <span t-field="o.formule_beton_id.display_name"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Période :</strong> <span t-field="o.periode"/><br/>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4">Coûts Matières Premières</h4>
+                        <table class="table table-bordered" t-if="o.matiere_ligne_ids">
+                            <thead>
+                                <tr>
+                                    <th>Matière première</th>
+                                    <th class="text-end">Quantité / m³</th>
+                                    <th class="text-end">Coût unitaire</th>
+                                    <th class="text-end">Sous-total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.matiere_ligne_ids" t-as="l">
+                                    <tr>
+                                        <td><span t-field="l.product_id.name"/></td>
+                                        <td class="text-end"><span t-field="l.quantite"/></td>
+                                        <td class="text-end"><span t-field="l.cout_unitaire"/></td>
+                                        <td class="text-end"><span t-field="l.sous_total"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="3" class="text-end">Total matières premières</td>
+                                    <td class="text-end"><span t-field="o.cout_matieres"/></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <h4 class="mt-4">Autres Coûts</h4>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Coût transport</strong></td>
+                                    <td class="text-end"><span t-field="o.cout_transport"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Coût maintenance</strong></td>
+                                    <td class="text-end"><span t-field="o.cout_maintenance"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Coût énergie</strong></td>
+                                    <td class="text-end"><span t-field="o.cout_energie"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Coût main d'oeuvre</strong></td>
+                                    <td class="text-end"><span t-field="o.cout_main_oeuvre"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 class="mt-4">Synthèse</h4>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr class="table-primary fw-bold">
+                                    <td>Coût total / m³</td>
+                                    <td class="text-end"><span t-field="o.cout_total_m3"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Prix de vente / m³</strong></td>
+                                    <td class="text-end"><span t-field="o.prix_vente_m3"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Marge brute</strong></td>
+                                    <td class="text-end">
+                                        <span t-if="o.marge_brute > 0" style="color: green; font-weight: bold;">
+                                            <span t-field="o.marge_brute"/> %
+                                        </span>
+                                        <span t-if="o.marge_brute &lt;= 0" style="color: red; font-weight: bold;">
+                                            <span t-field="o.marge_brute"/> %
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <strong>Signature Responsable</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Comptable</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Directeur</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

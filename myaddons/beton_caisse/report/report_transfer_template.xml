@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_beton_transfer_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif;">
+                        <div class="text-center" style="margin-bottom: 20px;">
+                            <h2>Reçu de Transfert</h2>
+                            <h4 style="color: #fd7e14;"><t t-esc="doc.name"/></h4>
+                        </div>
+                        <table class="table table-bordered" style="margin-bottom: 20px;">
+                            <tr>
+                                <td style="width: 30%; font-weight: bold; background: #f8f9fa;">Date</td>
+                                <td><t t-esc="doc.date" t-options="{'widget': 'datetime'}"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8f9fa;">Caisse Source</td>
+                                <td><t t-esc="doc.source_cashbox_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8f9fa;">Caisse Destination</td>
+                                <td><t t-esc="doc.destination_cashbox_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8f9fa;">Description</td>
+                                <td><t t-esc="doc.description"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8f9fa;">État</td>
+                                <td><t t-esc="{'draft': 'Brouillon', 'approuve': 'Approuvé'}.get(doc.state, '-')"/></td>
+                            </tr>
+                        </table>
+                        <div class="text-center" style="margin: 30px 0; padding: 20px; background: #fff3cd; border-radius: 8px;">
+                            <h3 style="margin: 0;">Montant transféré</h3>
+                            <h1 style="margin: 10px 0; color: #fd7e14;">
+                                <t t-esc="doc.amount" t-options="{'widget': 'monetary', 'display_currency': doc.company_currency_id}"/>
+                            </h1>
+                        </div>
+                        <div style="margin-top: 40px;">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <p>Comptable : <t t-esc="doc.user_id.name"/></p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <p>Signature :</p>
+                                    <br/><br/>
+                                    <p>_______________________</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

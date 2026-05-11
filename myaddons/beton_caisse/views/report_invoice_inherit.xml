@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Affiche les infos chèque (n°, date, domiciliation) sur le rapport PDF
+         de facture, après le bloc des totaux. Apparaît uniquement si au moins
+         un paiement réconcilié a des infos chèque renseignées. -->
+    <template id="report_invoice_document_inherit_cheque_block"
+              inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='total']" position="after">
+            <t t-set="cheque_payments" t-value="o._get_cheque_payments()"/>
+            <div t-if="cheque_payments" class="mt-3" style="border-top: 1px solid #dee2e6; padding-top: 8px;">
+                <strong>Paiement par chèque :</strong>
+                <table style="width: 100%; margin-top: 4px; font-size: 11px; border-collapse: collapse;">
+                    <thead style="background: #f0f0f0;">
+                        <tr>
+                            <th style="border: 1px solid #ccc; padding: 4px;">N° de chèque</th>
+                            <th style="border: 1px solid #ccc; padding: 4px;">Date du chèque</th>
+                            <th style="border: 1px solid #ccc; padding: 4px;">Domiciliation bancaire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="cheque_payments" t-as="cp">
+                            <tr>
+                                <td style="border: 1px solid #ccc; padding: 4px;">
+                                    <span t-esc="cp.cheque_reference or '—'"/>
+                                </td>
+                                <td style="border: 1px solid #ccc; padding: 4px;">
+                                    <t t-if="cp.cheque_date" t-esc="cp.cheque_date.strftime('%d/%m/%Y')"/>
+                                    <t t-if="not cp.cheque_date">—</t>
+                                </td>
+                                <td style="border: 1px solid #ccc; padding: 4px;">
+                                    <span t-esc="cp.cheque_domiciliation or '—'"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </xpath>
+    </template>
+</odoo>

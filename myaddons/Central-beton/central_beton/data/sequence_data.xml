@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequence: Livraison -->
+        <record id="seq_livraison" model="ir.sequence">
+            <field name="name">Bon de Livraison Beton</field>
+            <field name="code">central.beton.livraison</field>
+            <field name="prefix">BL/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence: Essai -->
+        <record id="seq_essai" model="ir.sequence">
+            <field name="name">Essai Beton</field>
+            <field name="code">central.beton.essai</field>
+            <field name="prefix">ESS/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence: Non-Conformite -->
+        <record id="seq_non_conformite" model="ir.sequence">
+            <field name="name">Non-Conformite</field>
+            <field name="code">central.beton.non.conformite</field>
+            <field name="prefix">NC/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence: Mouvement Stock -->
+        <record id="seq_mouvement_stock" model="ir.sequence">
+            <field name="name">Mouvement Stock Beton</field>
+            <field name="code">central.beton.mouvement.stock</field>
+            <field name="prefix">MVT/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence: Chantier -->
+        <record id="seq_chantier" model="ir.sequence">
+            <field name="name">Chantier</field>
+            <field name="code">central.beton.chantier</field>
+            <field name="prefix">CHT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence: Cout de Revient -->
+        <record id="seq_cout_revient" model="ir.sequence">
+            <field name="name">Cout de Revient</field>
+            <field name="code">central.beton.cout.revient</field>
+            <field name="prefix">CDR/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

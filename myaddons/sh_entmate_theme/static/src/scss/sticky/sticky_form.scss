@@ -1,0 +1,51 @@
+@if $is_sticky_form ==True {
+    @media only screen and (max-width: 1420px) {
+        .o_form_view .o_form_sheet_bg {display: inline;}
+    }
+
+    .modal.o_technical_modal {
+        .modal-content {
+            .modal-body.o_act_window {
+                padding-top: 0px;
+            }
+        }
+    }
+    .o_content {
+        max-width: 100%;
+        .o_form_sheet {
+            overflow-x: auto;
+            .oe_button_box {
+                .o_dropdown_more {
+                    padding: 0.1em;
+                    width: min-content;
+                }
+            }
+        }
+        .o_form_statusbar {
+            position: sticky !important;
+            top: 0;
+            z-index: 2;
+            @if $body_background_type == 'bg_color'{
+                background-color: $body_background_color!important;
+            }
+        }
+        .oe_title {
+            span.o_field_widget {
+                max-width: 100%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: initial;
+            }
+            span {
+                &:active {
+                    white-space: normal;
+                }
+            }
+        }
+    }
+    .modal-content {
+        max-width: 100%;
+    }
+    
+}

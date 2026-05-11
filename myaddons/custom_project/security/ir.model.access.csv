@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_custom_project,access_custom_project,model_custom_project,base.group_user,1,1,1,1
+access_custom_task,access_custom_task,model_custom_task,base.group_user,1,1,1,1
+access_partner_task_line,access_partner_task_line,model_partner_task_line,base.group_user,1,1,1,1
+access_projects_associated,access_projects_associated,model_projects_associated,base.group_user,1,1,1,1
+access_situation_s_t,access_situation_s_t,model_situation_sous_traitants,base.group_user,1,1,1,1
+access_situation_final,access_situation_final,model_situation_final,base.group_user,1,1,1,1
+access_situation,access_situation,model_situation,base.group_user,1,1,1,1
+access_custom_stock,access_custom_stock,model_custom_stock,base.group_user,1,1,1,1
+access_custom_bons,access_custom_bons,model_custom_bons,base.group_user,1,1,1,1
+access_custom_article,access_custom_article,model_custom_article,base.group_user,1,1,1,1
+access_custom_task_lots,access_custom_task_lots,model_custom_task_lots,base.group_user,1,1,1,1
+access_cunsomation_stock,access_cunsomation_stock,model_cunsomation_stock,base.group_user,1,1,1,1
+access_project_observation_user,access.project.observation.user,model_project_observation,base.group_user,1,1,1,1

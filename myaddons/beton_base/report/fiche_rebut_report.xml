@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_fiche_rebut" model="ir.actions.report">
+        <field name="name">Fiche de Rebut</field>
+        <field name="model">stock.scrap</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_fiche_rebut</field>
+        <field name="report_file">beton_base.report_fiche_rebut</field>
+        <field name="binding_model_id" ref="stock.model_stock_scrap"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_fiche_rebut">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">FICHE DE REBUT</h2>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>Référence :</strong> <span t-field="o.name"/><br/>
+                                <strong>Date :</strong> <span t-field="o.date_done"/><br/>
+                                <strong>Société :</strong> <span t-field="o.company_id.name"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Statut :</strong>
+                                <span t-if="o.state == 'draft'" style="color: #6c757d; font-weight: bold;">Brouillon</span>
+                                <span t-if="o.state == 'done'" style="color: green; font-weight: bold;">Validé</span>
+                                <br/>
+                                <t t-if="o.origin">
+                                    <strong>Origine :</strong> <span t-field="o.origin"/><br/>
+                                </t>
+                                <t t-if="o.picking_id">
+                                    <strong>Opération de stock :</strong> <span t-field="o.picking_id.name"/><br/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4">Détails du Rebut</h4>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Produit</strong></td>
+                                    <td><span t-field="o.product_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Quantité rebutée</strong></td>
+                                    <td><span t-field="o.scrap_qty"/> <span t-field="o.product_uom_id"/></td>
+                                </tr>
+                                <tr t-if="o.lot_id">
+                                    <td><strong>Lot / N° série</strong></td>
+                                    <td><span t-field="o.lot_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Emplacement source</strong></td>
+                                    <td><span t-field="o.location_id.complete_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Emplacement rebut</strong></td>
+                                    <td><span t-field="o.scrap_location_id.complete_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Réapprovisionner</strong></td>
+                                    <td>
+                                        <span t-if="o.should_replenish">Oui</span>
+                                        <span t-else="">Non</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <strong>Signature Opérateur</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Responsable</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Directeur</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="central_beton.Dashboard">
+        <div class="o_action central_beton_dashboard">
+            <div class="container-fluid py-4">
+                <h2 class="mb-4">Tableau de Bord - Central Beton</h2>
+
+                <div class="row g-3">
+                    <!-- Fabrications Today -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card cb-card cb-card-production h-100"
+                             t-on-click="onClickFabrications" role="button">
+                            <div class="card-body text-center">
+                                <div class="cb-icon mb-2">
+                                    <i class="fa fa-industry fa-2x text-primary"/>
+                                </div>
+                                <h5 class="card-title">Fabrications du Jour</h5>
+                                <p class="cb-kpi-value display-4">
+                                    <t t-esc="state.fabricationsToday"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Volume Today -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card cb-card cb-card-volume h-100"
+                             t-on-click="onClickFabrications" role="button">
+                            <div class="card-body text-center">
+                                <div class="cb-icon mb-2">
+                                    <i class="fa fa-cube fa-2x text-success"/>
+                                </div>
+                                <h5 class="card-title">Volume Produit (m3)</h5>
+                                <p class="cb-kpi-value display-4">
+                                    <t t-esc="state.volumeToday.toFixed(1)"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Livraisons en cours -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card cb-card cb-card-livraison h-100"
+                             t-on-click="onClickLivraisons" role="button">
+                            <div class="card-body text-center">
+                                <div class="cb-icon mb-2">
+                                    <i class="fa fa-truck fa-2x text-warning"/>
+                                </div>
+                                <h5 class="card-title">Livraisons en Cours</h5>
+                                <p class="cb-kpi-value display-4">
+                                    <t t-esc="state.livraisonsEnCours"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Camions disponibles -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card cb-card cb-card-camion h-100"
+                             t-on-click="onClickCamions" role="button">
+                            <div class="card-body text-center">
+                                <div class="cb-icon mb-2">
+                                    <i class="fa fa-truck fa-2x text-info"/>
+                                </div>
+                                <h5 class="card-title">Camions Disponibles</h5>
+                                <p class="cb-kpi-value display-4">
+                                    <t t-esc="state.camionsDisponibles"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NC ouvertes -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card cb-card cb-card-nc h-100"
+                             t-on-click="onClickNC" role="button">
+                            <div class="card-body text-center">
+                                <div class="cb-icon mb-2">
+                                    <i class="fa fa-exclamation-triangle fa-2x text-danger"/>
+                                </div>
+                                <h5 class="card-title">Non-Conformites Ouvertes</h5>
+                                <p class="cb-kpi-value display-4">
+                                    <t t-esc="state.ncOuvertes"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Essais en attente -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card cb-card cb-card-essai h-100"
+                             t-on-click="onClickEssais" role="button">
+                            <div class="card-body text-center">
+                                <div class="cb-icon mb-2">
+                                    <i class="fa fa-flask fa-2x text-secondary"/>
+                                </div>
+                                <h5 class="card-title">Essais en Attente</h5>
+                                <p class="cb-kpi-value display-4">
+                                    <t t-esc="state.essaisEnAttente"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

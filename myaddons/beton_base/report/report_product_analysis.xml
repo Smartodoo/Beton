@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_product_analysis_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="company" t-value="env.company"/>
+                <div class="page" style="font-family: Arial, sans-serif;">
+
+                    <!-- Titre -->
+                    <div style="text-align: center; margin: 20px 0;">
+                        <div style="display: inline-block; background-color: #1a5ba8; padding: 12px 50px; border-radius: 3px;">
+                            <span style="font-size: 20px; font-weight: bold; color: #ffffff;">
+                                RAPPORT ANALYTIQUE DES PRODUITS
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Infos generales -->
+                    <div style="margin-bottom: 20px;">
+                        <table style="width: 100%; border: none;">
+                            <tr>
+                                <td style="width: 50%; border: none; padding: 5px;">
+                                    <strong>Date d'impression :</strong>
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                                </td>
+                                <td style="width: 50%; border: none; padding: 5px;">
+                                    <strong>Nombre de produits :</strong>
+                                    <span t-esc="len(docs)"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Societe :</strong>
+                                    <span t-esc="company.name"/>
+                                </td>
+                                <td style="border: none; padding: 5px;">
+                                    <strong>Genere par :</strong>
+                                    <span t-esc="user.name"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="border-bottom: 2px solid #1a5ba8; margin-bottom: 20px;"></div>
+
+                    <!-- Boucle sur chaque produit -->
+                    <t t-foreach="docs" t-as="product">
+                        <t t-set="variants" t-value="product.product_variant_ids"/>
+
+                        <!-- En-tete produit -->
+                        <div style="background-color: #1a5ba8; color: white; padding: 10px; margin-top: 20px; border-radius: 3px 3px 0 0;">
+                            <span style="font-size: 16px; font-weight: bold;">
+                                <t t-esc="product.name"/>
+                            </span>
+                            <span style="float: right; font-size: 12px;">
+                                [<t t-esc="product.default_code or '-'"/>]
+                            </span>
+                        </div>
+
+                        <!-- Fiche produit -->
+                        <table class="table table-bordered table-sm" style="margin-bottom: 15px;">
+                            <tr>
+                                <td style="width: 20%; background-color: #ecf0f1;"><strong>Type</strong></td>
+                                <td style="width: 30%;">
+                                    <t t-esc="dict(product._fields['detailed_type'].selection).get(product.detailed_type, product.detailed_type)"/>
+                                </td>
+                                <td style="width: 20%; background-color: #ecf0f1;"><strong>UdM</strong></td>
+                                <td style="width: 30%;"><t t-esc="product.uom_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #ecf0f1;"><strong>Cout</strong></td>
+                                <td>
+                                    <span t-field="product.standard_price" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                                </td>
+                                <td style="background-color: #ecf0f1;"><strong>Prix de vente</strong></td>
+                                <td>
+                                    <span t-field="product.list_price" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                                </td>
+                            </tr>
+                            <t t-if="product.classification_produit == 'matiere_premiere'">
+                                <tr>
+                                    <td style="background-color: #ecf0f1;"><strong>Type matiere</strong></td>
+                                    <td><t t-esc="dict(product._fields['type_matiere'].selection).get(product.type_matiere, '-') if product.type_matiere else '-'"/></td>
+                                    <td style="background-color: #ecf0f1;"><strong>Emplacement</strong></td>
+                                    <td><t t-esc="dict(product._fields['emplacement_beton'].selection).get(product.emplacement_beton, '-') if product.emplacement_beton else '-'"/></td>
+                                </tr>
+                            </t>
+                        </table>
+
+                        <!-- Resume chiffres -->
+                        <t t-set="po_lines" t-value="env['purchase.order.line'].search([('product_id', 'in', variants.ids), ('order_id.state', 'in', ('purchase', 'done'))])"/>
+                        <t t-set="so_lines" t-value="env['sale.order.line'].search([('product_id', 'in', variants.ids), ('order_id.state', 'in', ('sale', 'done'))])"/>
+                        <t t-set="total_achete_qty" t-value="sum(po_lines.mapped('qty_received'))"/>
+                        <t t-set="total_achete_montant" t-value="sum(po_lines.mapped('price_subtotal'))"/>
+                        <t t-set="total_vendu_qty" t-value="sum(so_lines.mapped('qty_delivered'))"/>
+                        <t t-set="total_vendu_montant" t-value="sum(so_lines.mapped('price_subtotal'))"/>
+                        <t t-set="qty_available" t-value="sum(variants.mapped('qty_available'))"/>
+
+                        <table class="table table-bordered" style="margin-bottom: 10px;">
+                            <thead>
+                                <tr style="background-color: #343a40; color: white;">
+                                    <th class="text-center">Stock actuel</th>
+                                    <th class="text-center">Qte achetee</th>
+                                    <th class="text-center">Montant achats</th>
+                                    <th class="text-center">Qte vendue</th>
+                                    <th class="text-center">Montant ventes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center" style="font-weight: bold;">
+                                    <td style="font-size: 14px;">
+                                        <span t-esc="'%.2f' % qty_available"/>
+                                        <span t-esc="product.uom_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'%.2f' % total_achete_qty"/>
+                                        <span t-esc="product.uom_id.name"/>
+                                    </td>
+                                    <td style="color: #e74c3c;">
+                                        <span t-esc="'%.2f' % total_achete_montant"/>
+                                        <span t-esc="company.currency_id.symbol"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'%.2f' % total_vendu_qty"/>
+                                        <span t-esc="product.uom_id.name"/>
+                                    </td>
+                                    <td style="color: #27ae60;">
+                                        <span t-esc="'%.2f' % total_vendu_montant"/>
+                                        <span t-esc="company.currency_id.symbol"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Detail achats -->
+                        <t t-if="po_lines">
+                            <h5 style="background-color: #fd7e14; color: white; padding: 6px; margin-bottom: 0;">Achats</h5>
+                            <table class="table table-bordered table-sm" style="font-size: 9px;">
+                                <thead style="background-color: #ecf0f1;">
+                                    <tr>
+                                        <th>Bon de commande</th>
+                                        <th>Date</th>
+                                        <th>Fournisseur</th>
+                                        <th style="text-align: right;">Qte commandee</th>
+                                        <th style="text-align: right;">Qte recue</th>
+                                        <th style="text-align: right;">Prix unitaire</th>
+                                        <th style="text-align: right;">Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="po_lines" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line.order_id.name"/></td>
+                                            <td><span t-field="line.order_id.date_order" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                                            <td><t t-esc="line.order_id.partner_id.name"/></td>
+                                            <td style="text-align: right;"><t t-esc="'%.2f' % line.product_qty"/></td>
+                                            <td style="text-align: right;"><t t-esc="'%.2f' % line.qty_received"/></td>
+                                            <td style="text-align: right;">
+                                                <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot style="background-color: #fd7e14; color: white; font-weight: bold;">
+                                    <tr>
+                                        <td colspan="3" style="text-align: right;">TOTAL :</td>
+                                        <td style="text-align: right;"><t t-esc="'%.2f' % sum(po_lines.mapped('product_qty'))"/></td>
+                                        <td style="text-align: right;"><t t-esc="'%.2f' % total_achete_qty"/></td>
+                                        <td></td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="'%.2f' % total_achete_montant"/>
+                                            <span t-esc="company.currency_id.symbol"/>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+
+                        <!-- Detail ventes -->
+                        <t t-if="so_lines">
+                            <h5 style="background-color: #27ae60; color: white; padding: 6px; margin-bottom: 0;">Ventes</h5>
+                            <table class="table table-bordered table-sm" style="font-size: 9px;">
+                                <thead style="background-color: #ecf0f1;">
+                                    <tr>
+                                        <th>Bon de commande</th>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th style="text-align: right;">Qte commandee</th>
+                                        <th style="text-align: right;">Qte livree</th>
+                                        <th style="text-align: right;">Prix unitaire</th>
+                                        <th style="text-align: right;">Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="so_lines" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line.order_id.name"/></td>
+                                            <td><span t-field="line.order_id.date_order" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                                            <td><t t-esc="line.order_id.partner_id.name"/></td>
+                                            <td style="text-align: right;"><t t-esc="'%.2f' % line.product_uom_qty"/></td>
+                                            <td style="text-align: right;"><t t-esc="'%.2f' % line.qty_delivered"/></td>
+                                            <td style="text-align: right;">
+                                                <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot style="background-color: #27ae60; color: white; font-weight: bold;">
+                                    <tr>
+                                        <td colspan="3" style="text-align: right;">TOTAL :</td>
+                                        <td style="text-align: right;"><t t-esc="'%.2f' % sum(so_lines.mapped('product_uom_qty'))"/></td>
+                                        <td style="text-align: right;"><t t-esc="'%.2f' % total_vendu_qty"/></td>
+                                        <td></td>
+                                        <td style="text-align: right;">
+                                            <t t-esc="'%.2f' % total_vendu_montant"/>
+                                            <span t-esc="company.currency_id.symbol"/>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+
+                        <!-- Derniers mouvements de stock -->
+                        <t t-set="stock_moves" t-value="env['stock.move'].search([('product_id', 'in', variants.ids), ('state', '=', 'done')], order='date desc', limit=20)"/>
+                        <t t-if="stock_moves">
+                            <h5 style="background-color: #17a2b8; color: white; padding: 6px; margin-bottom: 0;">Derniers mouvements de stock (20 derniers)</h5>
+                            <table class="table table-bordered table-sm" style="font-size: 9px;">
+                                <thead style="background-color: #ecf0f1;">
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Date</th>
+                                        <th>Origine</th>
+                                        <th>Destination</th>
+                                        <th style="text-align: right;">Quantite</th>
+                                        <th>UdM</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="stock_moves" t-as="move">
+                                        <tr>
+                                            <td><t t-esc="move.reference or move.name"/></td>
+                                            <td><span t-field="move.date" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                                            <td><t t-esc="move.location_id.complete_name"/></td>
+                                            <td><t t-esc="move.location_dest_id.complete_name"/></td>
+                                            <td style="text-align: right;"><t t-esc="'%.2f' % move.product_uom_qty"/></td>
+                                            <td><t t-esc="move.product_uom.name"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- Historique couts -->
+                        <t t-if="product.cost_history_ids">
+                            <h5 style="background-color: #6c757d; color: white; padding: 6px; margin-bottom: 0;">Historique des couts</h5>
+                            <table class="table table-bordered table-sm" style="font-size: 9px;">
+                                <thead style="background-color: #ecf0f1;">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th style="text-align: right;">Ancien cout</th>
+                                        <th style="text-align: right;">Difference</th>
+                                        <th style="text-align: right;">Nouveau cout</th>
+                                        <th>Utilisateur</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="product.cost_history_ids" t-as="hist">
+                                        <tr>
+                                            <td><span t-field="hist.date" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                                            <td style="text-align: right;">
+                                                <span t-field="hist.ancien_cout" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                                            </td>
+                                            <td t-att-style="'text-align: right; color: %s;' % ('#27ae60' if hist.difference &gt; 0 else '#e74c3c')">
+                                                <span t-field="hist.difference" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <span t-field="hist.nouveau_cout" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                                            </td>
+                                            <td><t t-esc="hist.user_id.name"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <!-- Separateur entre produits -->
+                        <div t-if="not product_last" style="border-bottom: 3px dashed #ccc; margin: 30px 0;"></div>
+                        <div t-if="not product_last" style="page-break-after: always;"></div>
+
+                    </t>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Action Report -->
+    <record id="action_report_product_analysis" model="ir.actions.report">
+        <field name="name">Rapport Analytique Produit</field>
+        <field name="model">product.template</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_product_analysis_template</field>
+        <field name="report_file">beton_base.report_product_analysis_template</field>
+        <field name="print_report_name">'Rapport_Produits_%s' % (time.strftime('%Y%m%d_%H%M%S'))</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Pivot View -->
+    <record id="view_report_livraison_pivot" model="ir.ui.view">
+        <field name="name">central.beton.report.livraison.pivot</field>
+        <field name="model">central.beton.report.livraison</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse Livraisons">
+                <field name="date_chargement" type="row" interval="month"/>
+                <field name="chantier_id" type="col"/>
+                <field name="volume" type="measure"/>
+                <field name="nb_livraisons" type="measure"/>
+                <field name="temps_rotation" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_report_livraison_graph" model="ir.ui.view">
+        <field name="name">central.beton.report.livraison.graph</field>
+        <field name="model">central.beton.report.livraison</field>
+        <field name="arch" type="xml">
+            <graph string="Analyse Livraisons" type="bar">
+                <field name="date_chargement" interval="month"/>
+                <field name="volume" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_report_livraison_tree" model="ir.ui.view">
+        <field name="name">central.beton.report.livraison.tree</field>
+        <field name="model">central.beton.report.livraison</field>
+        <field name="arch" type="xml">
+            <tree string="Analyse Livraisons">
+                <field name="date_chargement"/>
+                <field name="chantier_id"/>
+                <field name="client_id"/>
+                <field name="bom_id"/>
+                <field name="vehicule_id"/>
+                <field name="volume" sum="Total Volume"/>
+                <field name="temps_trajet" avg="Moy. Trajet"/>
+                <field name="temps_rotation" avg="Moy. Rotation"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_report_livraison_search" model="ir.ui.view">
+        <field name="name">central.beton.report.livraison.search</field>
+        <field name="model">central.beton.report.livraison</field>
+        <field name="arch" type="xml">
+            <search string="Analyse Livraisons">
+                <field name="chantier_id"/>
+                <field name="client_id"/>
+                <field name="vehicule_id"/>
+                <filter name="livre" string="Livrees"
+                        domain="[('state', '=', 'livre')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_chantier" string="Chantier"
+                            context="{'group_by': 'chantier_id'}"/>
+                    <filter name="group_client" string="Client"
+                            context="{'group_by': 'client_id'}"/>
+                    <filter name="group_vehicule" string="Vehicule"
+                            context="{'group_by': 'vehicule_id'}"/>
+                    <filter name="group_month" string="Mois"
+                            context="{'group_by': 'date_chargement:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_report_livraison" model="ir.actions.act_window">
+        <field name="name">Analyse Livraisons</field>
+        <field name="res_model">central.beton.report.livraison</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="context">{'search_default_livre': 1}</field>
+    </record>
+
+</odoo>

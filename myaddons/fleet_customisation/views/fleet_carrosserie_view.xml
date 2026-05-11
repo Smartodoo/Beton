@@ -1,0 +1,31 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="view_fleet_carrosserie_form">
+        <field name="name">fleet.carrosserie.form</field>
+        <field name="model">fleet.carrosserie</field>
+        <field name="arch" type="xml">
+            <form string="Fleet Carrosserie">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_fleet_carrosserie">
+        <field name="name">Fleet Carrosseries</field>
+        <field name="res_model">fleet.carrosserie</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="view_fleet_carrosserie_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_fleet_carrosserie"
+              name="Carrosseries"
+              parent="fleet.fleet_models_configuration"
+              action="action_fleet_carrosserie"
+              sequence="60"/>
+
+  </data>
+</odoo>

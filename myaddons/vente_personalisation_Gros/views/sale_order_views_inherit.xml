@@ -1,0 +1,84 @@
+<odoo>
+    <data>
+
+        <record id="view_form_sale_order_line_inherit" model="ir.ui.view">
+            <field name="name">sale.order.line.form.inherit</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.sale_order_line_view_form_readonly"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_unit']" position="before">
+                    <field name="price_type"/>
+                </xpath>
+            </field>
+        </record>
+        <!-- Héritage de la vue du formulaire de la commande de vente -->
+        <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/div[1]" position="before">
+                    <widget name="web_ribbon" title="Payé"
+                            invisible="amount_due > 0 or amount_paid == 0 or state != 'sale'"/>
+                    <!-- Ribbon "Paiement Partiel" (Orange) -->
+                    <widget name="web_ribbon" title="Paiement Partiel"
+                            invisible="amount_paid == 0 or amount_due == 0 or state != 'sale'"/>
+                    <widget name="web_ribbon" title="A terme" invisible="not is_payment_term"/>
+                </xpath>
+                <!-- Ajouter le champ Commercial dans la vue -->
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="commercial_id" options="{'no_create': True, 'no_open': True, 'no_edit':True}"/>
+                    <field name="is_payment_term" invisible="1"/>
+                    <field name="active"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']"
+                       position="before">
+                    <field name="price_type"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']"
+                       position="before">
+                    <field name="price_type"/>
+                </xpath>
+                <xpath expr="//button[@name='action_quotation_send']" position="after">
+                    <button name="action_register_payment"
+                            string="Enregistrer un paiement"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state not in ('sale') or amount_due == 0"/>
+                </xpath>
+
+                <div class="oe_button_box" name="button_box">
+                    <!-- Smart Button Paiements -->
+                    <button type="object" name="action_open_payments"
+                            context="{'create': 0, 'edit': 0}"
+                            class="oe_stat_button"
+                            icon="fa-credit-card">
+                        <div class="o_stat_info">
+                            <field name="payment_count" widget="statinfo" string="Paiements"/>
+                        </div>
+                    </button>
+                </div>
+                <xpath expr="//notebook/page[1]/group/group[2]" position="after">
+                    <group string="Paiements" class="oe_subtotal_footer" colspan="2" name="sale_total">
+                        <field name="amount_paid" colspan="2" readonly="1"/>
+                        <field name="amount_due" colspan="2" readonly="1" invisible="amount_due == 0"
+                               class="text-danger"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="view_tree_sale_order_inherit" model="ir.ui.view">
+            <field name="name">sale.order.tree.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="active"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,85 @@
+// kanban style
+.o_kanban_view{
+    .o_kanban_renderer{
+        .o_kanban_record{
+            -webkit-animation-name: zoomIn;animation-name: zoomIn;animation-duration: 1s;
+            @keyframes zoomIn {
+                0% {opacity: 0;-webkit-transform: scale3d(0.7, 0.7, 0.7);transform: scale3d(0.7, 0.7, 0.7);}
+                50% {opacity: 1;}
+            }
+            .oe_module_vignette{
+                @if $kanban_box_style == "style_1"{
+                    border-radius: 0;
+                }
+                @if $kanban_box_style == "style_2"{
+                    border-radius: 4px;
+                }
+                @if $kanban_box_style == "style_3"{
+                    border-radius:0 15px; 
+                }
+                @if $kanban_box_style == "style_4"{
+                    border-radius:15px; 
+                }
+            }
+            .oe_kanban_global_click{
+                @if $kanban_box_style == "style_1"{
+                    border-radius: 0;
+                }
+                @if $kanban_box_style == "style_2"{
+                    border-radius: 4px;
+                    .o_kanban_image_fill_left{
+                        img{
+                            border-top-left-radius: 4px;border-bottom-left-radius: 4px;
+                        }
+                    }
+                }
+                @if $kanban_box_style == "style_3"{
+                    border-radius: 0 15px;
+                    .o_kanban_image_fill_left{
+                        img{
+                            border-top-left-radius: 0px;border-bottom-left-radius: 15px;
+                        }
+                    }
+                }
+                @if $kanban_box_style == "style_4"{
+                    border-radius: 15px;
+                    .o_kanban_image_fill_left{
+                        img{
+                            border-top-left-radius: 15px;border-bottom-left-radius: 15px;
+                        }
+                    }
+                }
+            }
+            .d-flex{
+                .o_kanban_content{
+                    @if $kanban_box_style == "style_1"{
+                        border-radius: 0;
+                    }
+                    @if $kanban_box_style == "style_2"{
+                        border-radius: 4px;
+                    }
+                    @if $kanban_box_style == "style_3"{
+                        border-radius:0 15px; 
+                    }
+                    @if $kanban_box_style == "style_4"{
+                        border-radius:15px; 
+                    }
+                     div{
+                        @if $kanban_box_style == "style_1"{
+                            border-radius: 0;
+                        }
+                        @if $kanban_box_style == "style_2"{
+                            border-radius: 4px;
+                        }
+                        @if $kanban_box_style == "style_3"{
+                            border-radius:0 15px; 
+                        }
+                        @if $kanban_box_style == "style_4"{
+                            border-radius:15px; 
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,259 @@
+<odoo>
+    <data>
+        <!--    list view definition -->
+
+        <record model="ir.ui.view" id="sinistre.list">
+            <field name="name">Sinistre list</field>
+            <field name="model">sinistre</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="model_id"/>
+                    <field name="license_plate"/>
+                    <field name="driver_id"/>
+                    <field name="date_accident"/>
+                    <field name="payment_state"
+                           widget="badge"
+                           decoration-danger="payment_state == 'pas_payé'"
+                           decoration-success="payment_state == 'payé' "
+                           optional="show"/>
+                    <field name="state"
+                           widget="badge"
+                           decoration-danger="state == 'draft'"
+                           decoration-warning="state == 'en_cours'"
+                           decoration-success="state == 'termine'"
+                           optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--  form view definition -->
+        <record model="ir.ui.view" id="view_form_sinistre">
+            <field name="name">Sinistre form</field>
+            <field name="model">sinistre</field>
+            <field name="arch" type="xml">
+                <form string="Sinistre">
+                    <header>
+                        <field name="state" widget="statusbar" options="{'clickable': True}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="Champs vehicule">
+
+                                <field name="model_id" readonly="state == 'termine'"/>
+                                <field name="license_plate" required="1" readonly="state == 'termine'"/>
+                                <field name="numero_serie" readonly="state == 'termine'"/>
+                                <field name="driver_id" string="Conducteur" required="1" readonly="state == 'termine'"/>
+                                <field name="date_accident" string="Date d'accident" required="1"
+                                       readonly="state == 'termine'"/>
+                                <field name="degat_sur_vehicule1" readonly="state == 'termine'" invisible="1"/>
+                                <field name="degat_sur_vehicule_html" required="1" readonly="state == 'termine'"/>
+                            </group>
+                            <group string="Assurance">
+                                <field name="assurence2" required="1" readonly="state == 'termine'"/>
+                                <field name="agence_assurance1" string="Agence d'assurance" required="1"
+                                       widget='many2one_tags' readonly="state == 'termine'"/>
+                                <field name="numero_police" string="Numéro de police" readonly="state == 'termine'"/>
+                                <field name="date_effet" string="Date d'effet" readonly="state == 'termine'"/>
+                                <field name="date_expertation" string="Date d'expertation"
+                                       readonly="state == 'termine'"/>
+                            </group>
+
+                            <!-- Champs liés au tiers -->
+                            <group string=" Champs liés au tiers">
+                                <field name="accident_type" widget="radio" readonly="state == 'termine'"/>
+
+                                <field name="nom_tiers" required="1" invisible="accident_type =='sans'"
+                                       readonly="state == 'termine'"/>
+                                <field name="prenom_tiers" required="1" invisible="accident_type =='sans'"
+                                       readonly="state == 'termine'"/>
+                                <field name="assurence" required="1" invisible="accident_type =='sans'"
+                                       readonly="state == 'termine'"/>
+                                <field name="agence_assurance2" string="Agence d'assurance" required="1"
+                                       invisible="accident_type =='sans'" readonly="state == 'termine'"/>
+                                <field name="numero_police2" readonly="state == 'termine'"
+                                       invisible="accident_type =='sans'"/>
+                                <field name="degat_sur_vehicule" string=" Dégat sur vehicule" required="1"
+                                       readonly="state == 'termine'" invisible="1"/>
+                                <field name="date_effet_1" string="Date d'effet" readonly="state == 'termine'"
+                                       invisible="accident_type =='sans'"/>
+                                <field name="date_expertation_1" string="Date d'expertation"
+                                       readonly="state == 'termine'" invisible="accident_type =='sans'"/>
+                                <field name="degat_sur_vehicule2" string=" Dégat sur vehicule" required="1"
+                                       invisible="accident_type =='sans'" readonly="state == 'termine'"/>
+                                <field name="technical_file" filename="technical_file_name"
+                                       widget="many2many_binary"
+                                       options="{'no_create': True}" readonly="state == 'termine'"/>
+                                <field name="technical_file_name" invisible="1" readonly="state == 'termine'"/>
+                            </group>
+
+                            <!-- Champs d'expertise et réparation -->
+                            <group string="Expertise et réglement">
+                                <field name="numero_pv" readonly="state == 'termine'"/>
+                                <field name="date_expertise" string="Date d'expertise"
+                                       readonly="state == 'termine'"/>
+                                <field name="nom_expert" string="Nom de l'expert"
+                                       readonly="state == 'termine'"/>
+                                <field name="numero_sinistre" readonly="state == 'termine'"/>
+                                <field name="numero_cloque" string="Numéro de chéque" required="1"
+                                       readonly="state == 'termine'"/>
+                                <field name="date_reparation" string="Date de payment" readonly="state == 'termine'"/>
+
+                                <field name="montant_reparation" string="montant"
+                                       widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"
+                                       placeholder="Montant" required="1" readonly="state == 'termine'"/>
+
+                                <field name="currency_id" invisible="1" readonly="state == 'termine'"/>
+                                <field name="payment_state" string="État du paiement" invisible="1"
+                                       readonly="state == 'termine'"/>
+                            </group>
+
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- search view sinistre -->
+        <record model="ir.ui.view" id="search_view_sinistre">
+            <field name="name">Sinistre search</field>
+            <field name="model">sinistre</field>
+            <field name="arch" type="xml">
+                <search string="Sinistre">
+                    <field name="license_plate"/>
+                    <field name="date_accident"/>
+                    <field name="date_expertise"/>
+                    <field name="date_reparation"/>
+                    <field name="numero_pv"/>
+                    <field name="payment_state"/>
+                    <field name="numero_police"/>
+                    <field name="numero_sinistre"/>
+                    <field name="numero_serie"/>
+                    <field name="state"/>
+                    <filter name="state"
+                            string="État"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="accident_type"
+                            string="Type d'accident"
+                            context="{'group_by': 'accident_type'}"/>
+                </search>
+            </field>
+        </record>
+        <!-- actions opening views  -->
+
+        <record model="ir.actions.act_window" id="sinistre.action_window">
+            <field name="name">Sinistre window</field>
+            <field name="res_model">sinistre</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+
+        <!-- server action -->
+
+        <record model="ir.actions.server" id="sinistre.action_server">
+            <field name="name">Sinistre server</field>
+            <field name="model_id" ref="model_sinistre"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = {
+                "type": "ir.actions.act_window",
+                "view_mode": "tree,form",
+                "res_model": model._name,
+                }
+            </field>
+        </record>
+        <!-- fleet.fleet_vehicle_model_view_form inherit-->
+        <record id="fleet_fleet_vehicle_model_view_form_inherit" model="ir.ui.view">
+            <field name="name">fleet.fleet.vehicle.model.form.inherit</field>
+            <field name="model">fleet.vehicle.model</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_model_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group[1]/field[@name='vehicle_type']" position="after">
+                    <field name="vehicle_type_1" string="Genre de véhicule"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
+                </xpath>
+                <xpath expr="//sheet/group/group[1]/field[@name='vehicle_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- form view vehicle type-->
+        <record id="vehicle_type_view_form" model="ir.ui.view">
+            <field name="name">vehicle.type.form</field>
+            <field name="model">vehicle.type</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle Type">
+                    <sheet>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- list view vehicle type-->
+        <record id="vehicle_type_view_list" model="ir.ui.view">
+            <field name="name">vehicle.type.list</field>
+            <field name="model">vehicle.type</field>
+            <field name="arch" type="xml">
+                <tree string="Vehicle Type">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <!-- action vehicle type -->
+        <record id="vehicle_type_action" model="ir.actions.act_window">
+            <field name="name">Genre de véhicule</field>
+            <field name="res_model">vehicle.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Sinistre" id="sinistre.menu_root" web_icon="sinistre,static/description/icon.png"
+                  sequence="35"/>
+        <menuitem name="Sinitre" id="sinistre.menu" parent="sinistre.menu_root"
+                  sequence="1"/>
+        <menuitem name="Sinitre" id="sinistre.menu1" parent="sinistre.menu" action="sinistre.action_window"
+                  sequence="1"/>
+         <menuitem name="Imprimer sinistres par mois" id="sinistre.menu2" parent="sinistre.menu" action="sinistre.action_sinistre_print_wizard"
+                  sequence="2"/>
+
+         <menuitem name="Imprimer sinistres par année"
+          id="sinistre.menu3"
+          parent="sinistre.menu"
+          action="sinistre.action_sinistre_print_year_wizard"
+          sequence="3"/>
+         <menuitem name="Imprimer sinistres par état"
+          id="sinistre.menu4"
+          parent="sinistre.menu"
+          action="sinistre.action_sinistre_print_state_wizard"
+          sequence="4"/>
+        <menuitem name="Imprimer sinistres par état de règlement"
+          id="sinistre.menu5"
+          parent="sinistre.menu"
+          action="sinistre.action_sinistre_print_state_reglement_wizard"
+          sequence="5"/>
+        <menuitem name="Imprimer sinistres par conducteur"
+          id="sinistre.menu6"
+          parent="sinistre.menu"
+          action="sinistre.action_sinistre_print_driver_wizard"
+          sequence="6"/>
+                <menuitem name="Imprimer sinistres par plaque d'immatriculation"
+          id="sinistre.menu7"
+          parent="sinistre.menu"
+          action="sinistre.action_open_sinistre_print_plate_wizard"
+          sequence="7"/>
+
+
+        <!-- menu vehicle type -->
+        <menuitem id="config_sinistre_menu" name="Configuration" parent="sinistre.menu_root"
+                  sequence="2"/>
+        <menuitem id="vehicle_type_menu" name="Genre de véhicule" parent="sinistre.config_sinistre_menu"
+                  action="vehicle_type_action" sequence="2"/>
+    </data>
+</odoo>

@@ -1,0 +1,32 @@
+/*
+=======================================================================
+				List Sticky Start
+=======================================================================
+*/
+@if $is_sticky_list ==True {
+    .o_list_view{
+        .table-responsive {
+            overflow-x: initial !important;
+        }
+        .o_list_table{
+            thead{
+                position: sticky;top: 0;background-color: #ffffff;
+                tr:nth-child(1) th{
+                    position: sticky;top: 0;background-color: #ffffff;
+                }
+            }
+            tfoot{
+                position: sticky;bottom: 0;background-color: #ffffff;
+                tr:nth-child(1) td{
+                    position: sticky;bottom: 0;background-color: #ffffff;
+                }
+            }
+        }
+    } 
+}
+
+/*
+=======================================================================
+				List Sticky End
+=======================================================================
+*/

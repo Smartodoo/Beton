@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wizard Form View -->
+    <record id="view_wizard_production_report_form" model="ir.ui.view">
+        <field name="name">central.beton.wizard.production.report.form</field>
+        <field name="model">central.beton.wizard.production.report</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Production">
+                <group>
+                    <group>
+                        <field name="date_debut"/>
+                        <field name="date_fin"/>
+                    </group>
+                    <group>
+                        <field name="centrale_id"/>
+                        <field name="bom_id"/>
+                        <field name="state"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_view_report" string="Voir le Rapport"
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_wizard_production_report" model="ir.actions.act_window">
+        <field name="name">Rapport Production</field>
+        <field name="res_model">central.beton.wizard.production.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

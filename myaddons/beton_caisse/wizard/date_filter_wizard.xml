@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Vue formulaire -->
+    <record id="view_beton_date_filter_wizard_form" model="ir.ui.view">
+        <field name="name">beton.date.filter.wizard.form</field>
+        <field name="model">beton.date.filter.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Filtrer par Période">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                    </group>
+                    <group>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Appliquer" name="action_apply_filter"
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Binding : Encaissements -->
+    <record id="action_beton_date_filter_entry" model="ir.actions.act_window">
+        <field name="name">Filtrer par période</field>
+        <field name="res_model">beton.date.filter.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_model_name': 'beton.caisse.entry',
+            'default_date_field': 'date'
+        }</field>
+        <field name="binding_model_id" ref="model_beton_caisse_entry"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <!-- Binding : Décaissements -->
+    <record id="action_beton_date_filter_expense" model="ir.actions.act_window">
+        <field name="name">Filtrer par période</field>
+        <field name="res_model">beton.date.filter.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_model_name': 'beton.caisse.expense',
+            'default_date_field': 'date'
+        }</field>
+        <field name="binding_model_id" ref="model_beton_caisse_expense"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <!-- Binding : Dépenses Globales -->
+    <record id="action_beton_date_filter_globale" model="ir.actions.act_window">
+        <field name="name">Filtrer par période</field>
+        <field name="res_model">beton.date.filter.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_model_name': 'beton.caisse.globale',
+            'default_date_field': 'date_from'
+        }</field>
+        <field name="binding_model_id" ref="model_beton_caisse_globale"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

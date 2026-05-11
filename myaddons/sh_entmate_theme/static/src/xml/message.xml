@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+
+    <!--<t t-name="mail.Message" t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_Message')]" position="attributes">
+            <attribute name="t-att-class">
+            {
+                'o_Message_active': messageView.isActive,
+                'sh_right_chat':isLoginUser,
+                'sh_left_chat':!isLoginUser,
+                'o-clicked': messageView.messagingAsClickedMessageView,
+                'o-discussion': messageView.message.isDiscussionOrNotification,
+                'o-has-message-selection': messageView.messageListViewItemOwner and messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView,
+                'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
+                'o-isReplyHighlighted bg-view shadow-lg': messageView.isHighlighted,
+                'o-isDeviceSmall': messaging.device.isSmall,
+                'o-not-discussion': !messageView.message.isDiscussionOrNotification,
+                'o-notification': messageView.message.message_type === 'notification',
+                'o-selected': messageView.isSelected,
+                'o-squashed pt-1': messageView.isSquashed,
+                'o-starred': messageView.message.isStarred,
+                'o-currentAuthor': messageView.message.isCurrentUserOrGuestAuthor,
+                'mt-1': !messageView.isSquashed and messageView.messageListViewItemOwner,
+                'px-3': !messageView.isInChatWindow,
+                'px-1': messageView.isInChatWindow,
+                'opacity-50': (messageView.messageListViewItemOwner and messageView.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView) and !messageView.isSelected,
+            }
+            </attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_Message_core')]" position="attributes">
+            <attribute name="t-att-class">
+            {
+                'sh_message_attchment':messageView and messageView.attachmentList,
+            
+            }
+            </attribute>
+        </xpath>
+        <xpath expr="//MessageInReplyToView" position="replace"></xpath>
+        <xpath expr="//div[@t-if='messageView.messageActionList and !messageView.composerViewInEditing']" position="replace"></xpath>
+        <xpath expr="//div[hasclass('o_Message_core')]/t[@t-if='!messageView.isSquashed']" position="before">
+            <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView" className="'mb-1'" classNameObj="{ 'me-5': messageView.isInChatWindowAndIsAlignedLeft, 'ms-5': messageView.isInChatWindowAndIsAlignedRight }" />
+            <div
+                t-if="messageView.messageActionList and !messageView.composerViewInEditing"
+                class="o_Message_actionListContainer"
+                t-att-class="{
+                                    'o-squashed': messageView.isSquashed,
+                                    'position-absolute top-0': !messageView.isInDiscuss,
+                                    'start-0 ms-3': messageView.isInChatWindowAndIsAlignedRight,
+                                    'end-0 me-3': messageView.isInChatWindowAndIsAlignedLeft || messageView.isInChatter,
+                                    'mt-n4': messageView.isInChatter and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
+                                    'mt-n5': messageView.isInChatter and !(messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
+                                    'mt-2': messageView.isInDiscuss and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
+                                    'mt-n3': messageView.isInChatWindow,
+                                    'ms-2': messageView.isInDiscuss,
+                                }"
+                t-attf-class="{{ messageView.isActive ? 'visible' : 'invisible' }}"
+            >
+                <MessageActionList record="messageView.messageActionList" classNameObj="{ 'mt-3': messageView.isInChatter and !(messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms') }" />
+            </div>
+        </xpath>
+
+
+    </t>-->
+
+    <t t-inherit="mail.AttachmentList" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-AttachmentList')]" position="attributes">
+            <attribute name="t-att-class">
+                {
+                'o-inComposer': env.inComposer,
+                'o-inChatWindow': env.inChatWindow,
+                'me-2 pe-4': isInChatWindowAndIsAlignedLeft and !env.inComposer,
+                'ms-2 ps-4': isInChatWindowAndIsAlignedRight and !env.inComposer,
+                'sh_message_attchment': true,
+                }
+            </attribute>
+        </xpath>
+    </t>
+
+</templates>

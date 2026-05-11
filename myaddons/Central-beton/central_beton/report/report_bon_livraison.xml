@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_bon_livraison" model="ir.actions.report">
+        <field name="name">Bon de Livraison</field>
+        <field name="model">central.beton.livraison</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">central_beton.report_bon_livraison_document</field>
+        <field name="report_file">central_beton.report_bon_livraison_document</field>
+        <field name="print_report_name">'BL_%s' % object.name</field>
+        <field name="binding_model_id" ref="model_central_beton_livraison"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_bon_livraison_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">Bon de Livraison</h2>
+                        <h3 class="text-center"><t t-esc="doc.name"/></h3>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Client:</strong>
+                                <div t-field="doc.client_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"]}'/>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Date:</strong></td>
+                                        <td><t t-esc="doc.date_chargement" t-options='{"widget": "datetime"}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Chantier:</strong></td>
+                                        <td><t t-esc="doc.chantier_id.designation"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Vehicule:</strong></td>
+                                        <td><t t-esc="doc.vehicule_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Chauffeur:</strong></td>
+                                        <td><t t-esc="doc.chauffeur_id.name"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Formule</th>
+                                    <th class="text-end">Volume (m3)</th>
+                                    <th>Pompe</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><t t-esc="doc.bom_id.display_name"/></td>
+                                    <td class="text-end"><t t-esc="doc.volume"/></td>
+                                    <td><t t-if="doc.pompe">Oui</t><t t-else="">Non</t></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Heure Chargement:</strong></td>
+                                        <td><t t-esc="doc.date_chargement" t-options='{"widget": "datetime"}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Heure Depart:</strong></td>
+                                        <td><t t-esc="doc.date_depart" t-options='{"widget": "datetime"}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Heure Arrivee:</strong></td>
+                                        <td><t t-esc="doc.date_arrivee" t-options='{"widget": "datetime"}'/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Affaissement:</strong></td>
+                                        <td><t t-esc="doc.affaissement"/> cm</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Temperature:</strong></td>
+                                        <td><t t-esc="doc.temperature"/> C</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ticket Pesee:</strong></td>
+                                        <td><t t-esc="doc.ticket_pesee"/> kg</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4" t-if="doc.notes">
+                            <div class="col-12">
+                                <strong>Notes:</strong>
+                                <p><t t-esc="doc.notes"/></p>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <p>Signature Chauffeur</p>
+                                <br/><br/>
+                                <p>___________________________</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>Signature Client</p>
+                                <br/><br/>
+                                <p>___________________________</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

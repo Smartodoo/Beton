@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Comptable : accès total -->
+    <record id="rule_beton_cashbox_comptable" model="ir.rule">
+        <field name="name">Caisse Béton : Comptable - Accès total</field>
+        <field name="model_id" ref="model_beton_cashbox"/>
+        <field name="groups" eval="[(4, ref('group_beton_caisse_comptable'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <!-- Caissier : uniquement ses caisses -->
+    <record id="rule_beton_cashbox_caissier" model="ir.rule">
+        <field name="name">Caisse Béton : Caissier - Ses caisses</field>
+        <field name="model_id" ref="model_beton_cashbox"/>
+        <field name="groups" eval="[(4, ref('group_beton_caisse_caissier'))]"/>
+        <field name="domain_force">[('responsible_ids', 'in', user.id)]</field>
+    </record>
+
+    <!-- Caissier : encaissements de ses caisses -->
+    <record id="rule_beton_entry_caissier" model="ir.rule">
+        <field name="name">Caisse Béton : Caissier - Ses encaissements</field>
+        <field name="model_id" ref="model_beton_caisse_entry"/>
+        <field name="groups" eval="[(4, ref('group_beton_caisse_caissier'))]"/>
+        <field name="domain_force">[('cashbox_id.responsible_ids', 'in', user.id)]</field>
+    </record>
+
+    <!-- Caissier : décaissements de ses caisses -->
+    <record id="rule_beton_expense_caissier" model="ir.rule">
+        <field name="name">Caisse Béton : Caissier - Ses décaissements</field>
+        <field name="model_id" ref="model_beton_caisse_expense"/>
+        <field name="groups" eval="[(4, ref('group_beton_caisse_caissier'))]"/>
+        <field name="domain_force">[('cashbox_id.responsible_ids', 'in', user.id)]</field>
+    </record>
+</odoo>

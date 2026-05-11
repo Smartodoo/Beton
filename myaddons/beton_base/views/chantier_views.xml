@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Ancien modèle beton.chantier remplacé par res.partner avec is_chantier_beton -->
+
+    <record id="view_beton_chantier_form" model="ir.ui.view">
+        <field name="name">beton.chantier.form</field>
+        <field name="model">beton.chantier</field>
+        <field name="arch" type="xml">
+            <form string="Chantier (ancien)">
+                <sheet>
+                    <div class="alert alert-warning">
+                        <strong>Ce modèle est obsolète.</strong> Les chantiers sont maintenant gérés comme des contacts (res.partner).
+                    </div>
+                    <group>
+                        <field name="code_chantier" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="client_id" readonly="1"/>
+                        <field name="statut" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_chantier_tree" model="ir.ui.view">
+        <field name="name">beton.chantier.tree</field>
+        <field name="model">beton.chantier</field>
+        <field name="arch" type="xml">
+            <tree string="Chantiers (ancien)">
+                <field name="code_chantier"/>
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="statut"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_beton_chantier_search" model="ir.ui.view">
+        <field name="name">beton.chantier.search</field>
+        <field name="model">beton.chantier</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_beton_chantier" model="ir.actions.act_window">
+        <field name="name">Chantiers (ancien)</field>
+        <field name="res_model">beton.chantier</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

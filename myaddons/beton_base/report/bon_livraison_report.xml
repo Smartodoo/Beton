@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_bon_livraison" model="ir.actions.report">
+        <field name="name">Bon de Livraison Béton</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_bon_livraison</field>
+        <field name="report_file">beton_base.report_bon_livraison</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_bon_livraison">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">BON DE LIVRAISON BÉTON</h2>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>N° BL :</strong> <span t-field="o.name"/><br/>
+                                <strong>Date :</strong> <span t-field="o.scheduled_date"/><br/>
+                                <strong>Origine :</strong> <span t-field="o.origin"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Client :</strong> <span t-field="o.partner_id.name"/><br/>
+                                <strong>Chantier :</strong> <span t-field="o.chantier"/><br/>
+                                <strong>Formule :</strong> <span t-field="o.formule_beton_id.name"/><br/>
+                                <t t-if="o.partner_id.rc or o.partner_id.nis or o.partner_id.nif or o.partner_id.ai">
+                                    <strong>RC :</strong> <span t-field="o.partner_id.rc"/>
+                                    <strong> NIS :</strong> <span t-field="o.partner_id.nis"/><br/>
+                                    <strong>NIF :</strong> <span t-field="o.partner_id.nif"/>
+                                    <strong> AI :</strong> <span t-field="o.partner_id.ai"/><br/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Lignes de produits -->
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité demandée</th>
+                                    <th>Quantité livrée</th>
+                                    <th>UdM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.move_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.product_id.name"/></td>
+                                        <td><span t-field="line.product_uom_qty"/></td>
+                                        <td><span t-field="line.quantity"/></td>
+                                        <td><span t-field="line.product_uom"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Infos transport -->
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>Camion :</strong> <span t-field="o.vehicle_id.name"/><br/>
+                                <strong>Chauffeur :</strong> <span t-field="o.chauffeur_id.name"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Heure départ :</strong> <span t-field="o.heure_depart" t-options='{"widget": "datetime"}'/><br/>
+                                <strong>Heure arrivée :</strong> <span t-field="o.heure_arrivee" t-options='{"widget": "datetime"}'/><br/>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <strong>Temps d'attente :</strong> <span t-field="o.temps_attente"/> min
+                            </div>
+                            <div class="col-4">
+                                <strong>Temps trajet :</strong> <span t-field="o.temps_trajet"/> min
+                            </div>
+                            <div class="col-4">
+                                <strong>Distance :</strong> <span t-field="o.distance"/> km
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <strong>Signature Chauffeur</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Client</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <strong>Signature Responsable</strong>
+                                <br/><br/><br/>
+                                <p>____________________</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

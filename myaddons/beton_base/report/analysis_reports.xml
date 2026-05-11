@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- STYLES PARTAGÉS POUR TOUS LES RAPPORTS D'ANALYSE -->
+    <!-- ============================================================ -->
+    <template id="beton_analysis_styles">
+        <style>
+            .beton-title { color:#1F4E79; text-align:center; letter-spacing:2px;
+                           border-bottom:3px solid #1F4E79; padding-bottom:8px;
+                           margin-bottom:18px; font-weight:700; }
+            .beton-filter-panel { background:#f7fafc; border:1px solid #d0dde9;
+                                  border-left:4px solid #1F4E79; padding:10px 14px;
+                                  border-radius:3px; margin-bottom:14px; font-size:12px; }
+            .beton-filter-panel strong { color:#1F4E79; }
+            .beton-stats-panel { background:#1F4E79; color:#fff; padding:10px 14px;
+                                 border-radius:3px; margin-bottom:14px; font-size:13px; }
+            .beton-stats-panel strong { color:#cfe2f3; font-weight:600; }
+            .beton-analysis-table { width:100%; border-collapse:collapse;
+                                    border:1px solid #d0dde9; font-size:11px; }
+            .beton-analysis-table thead { background:#1F4E79; color:#fff; }
+            .beton-analysis-table th { padding:8px; font-weight:600; text-align:left; }
+            .beton-analysis-table td { padding:6px 8px; border-bottom:1px solid #e6edf3; }
+            .beton-analysis-table tbody tr:nth-child(even) { background:#f7fafc; }
+            .beton-analysis-table tfoot { background:#e8f0f7; font-weight:700;
+                                          border-top:2px solid #1F4E79; }
+            .beton-analysis-table tfoot td { padding:8px; }
+        </style>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- 1. RAPPORT PRODUITS -->
+    <!-- ============================================================ -->
+    <record id="action_report_product_analysis" model="ir.actions.report">
+        <field name="name">Analyse Produits</field>
+        <field name="model">product.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_product_analysis</field>
+        <field name="report_file">beton_base.report_product_analysis</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_product_analysis">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-call="beton_base.beton_analysis_styles"/>
+                    <h2 class="beton-title">RAPPORT D'ANALYSE — PRODUITS</h2>
+
+                    <div class="row beton-filter-panel">
+                        <div class="col-6">
+                            <strong>Période du :</strong> <span t-esc="data.get('filters', {}).get('date_from', 'Tous')"/>
+                            <strong> au :</strong> <span t-esc="data.get('filters', {}).get('date_to', 'Tous')"/><br/>
+                            <strong>Classification :</strong> <span t-esc="data.get('filters', {}).get('classification', 'Tous')"/><br/>
+                            <strong>Type matière :</strong> <span t-esc="data.get('filters', {}).get('type_matiere', 'Tous')"/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Fournisseur :</strong> <span t-esc="data.get('filters', {}).get('fournisseur', 'Tous')"/><br/>
+                            <strong>Statut :</strong> <span t-esc="data.get('filters', {}).get('statut', 'Tous')"/><br/>
+                            <strong>Emplacement :</strong> <span t-esc="data.get('filters', {}).get('emplacement', 'Tous')"/>
+                        </div>
+                    </div>
+
+                    <div class="row beton-stats-panel">
+                        <div class="col-4"><strong>Total produits :</strong> <span t-esc="data.get('total', 0)"/></div>
+                        <div class="col-4"><strong>Coût moyen :</strong> <span t-esc="'%.2f' % data.get('cout_moyen', 0)"/></div>
+                    </div>
+
+                    <table class="beton-analysis-table">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Désignation</th>
+                                <th>Classification</th>
+                                <th>Type matière</th>
+                                <th>Fournisseur</th>
+                                <th class="text-end">Coût</th>
+                                <th>Statut</th>
+                                <th>Emplacement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td t-esc="doc.default_code or ''"/>
+                                    <td t-esc="doc.name"/>
+                                    <td t-esc="dict(doc._fields['classification_produit'].selection).get(doc.classification_produit, '') if doc.classification_produit else ''"/>
+                                    <td t-esc="dict(doc._fields['type_matiere'].selection).get(doc.type_matiere, '') if doc.type_matiere else ''"/>
+                                    <td t-esc="', '.join(doc.seller_ids.mapped('partner_id.name'))"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.standard_price"/>
+                                    <td t-esc="dict(doc._fields['statut_matiere'].selection).get(doc.statut_matiere, '') if doc.statut_matiere else ''"/>
+                                    <td t-esc="dict(doc._fields['emplacement_beton'].selection).get(doc.emplacement_beton, '') if doc.emplacement_beton else ''"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5">Total</td>
+                                <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('standard_price'))"/>
+                                <td colspan="2"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- 2. RAPPORT FORMULES / BOM -->
+    <!-- ============================================================ -->
+    <record id="action_report_bom_analysis" model="ir.actions.report">
+        <field name="name">Analyse Formules Béton</field>
+        <field name="model">bom.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_bom_analysis</field>
+        <field name="report_file">beton_base.report_bom_analysis</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_bom_analysis">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-call="beton_base.beton_analysis_styles"/>
+                    <h2 class="beton-title">RAPPORT D'ANALYSE — FORMULES BÉTON</h2>
+
+                    <div class="row beton-filter-panel">
+                        <div class="col-6">
+                            <strong>Période du :</strong> <span t-esc="data.get('filters', {}).get('date_from', 'Tous')"/>
+                            <strong> au :</strong> <span t-esc="data.get('filters', {}).get('date_to', 'Tous')"/><br/>
+                            <strong>Produit :</strong> <span t-esc="data.get('filters', {}).get('produit', 'Tous')"/><br/>
+                            <strong>Classe résistance :</strong> <span t-esc="data.get('filters', {}).get('classe', 'Tous')"/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Type béton :</strong> <span t-esc="data.get('filters', {}).get('type_beton', 'Tous')"/><br/>
+                            <strong>Statut :</strong> <span t-esc="data.get('filters', {}).get('statut', 'Tous')"/>
+                        </div>
+                    </div>
+
+                    <div class="row beton-stats-panel">
+                        <div class="col-4"><strong>Total formules :</strong> <span t-esc="data.get('total', 0)"/></div>
+                        <div class="col-4"><strong>Coût composants moyen :</strong> <span t-esc="'%.2f' % data.get('cout_moyen', 0)"/></div>
+                        <div class="col-4"><strong>Coût produit moyen :</strong> <span t-esc="'%.2f' % data.get('cout_produit_moyen', 0)"/></div>
+                    </div>
+
+                    <table class="beton-analysis-table">
+                        <thead>
+                            <tr>
+                                <th>Code formule</th>
+                                <th>Produit</th>
+                                <th>Classe</th>
+                                <th>Type béton</th>
+                                <th class="text-end">Coût composants/m³</th>
+                                <th class="text-end">Coût produit</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td t-esc="doc.code_formule or ''"/>
+                                    <td t-esc="doc.product_tmpl_id.name"/>
+                                    <td t-esc="doc.classe_resistance or ''"/>
+                                    <td t-esc="dict(doc._fields['type_beton'].selection).get(doc.type_beton, '') if doc.type_beton else ''"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_theorique_m3"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.product_tmpl_id.standard_price"/>
+                                    <td t-esc="dict(doc._fields['statut_formule'].selection).get(doc.statut_formule, '') if doc.statut_formule else ''"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">Moyenne</td>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('cout_theorique_m3')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('product_tmpl_id.standard_price')) / len(docs) if docs else 0)"/>
+                                <td/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- 3. RAPPORT FABRICATION -->
+    <!-- ============================================================ -->
+    <record id="action_report_production_analysis" model="ir.actions.report">
+        <field name="name">Analyse Fabrication</field>
+        <field name="model">production.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_production_analysis</field>
+        <field name="report_file">beton_base.report_production_analysis</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_production_analysis">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-call="beton_base.beton_analysis_styles"/>
+                    <h2 class="beton-title">RAPPORT D'ANALYSE — FABRICATION</h2>
+
+                    <div class="row beton-filter-panel">
+                        <div class="col-4">
+                            <strong>Du :</strong> <span t-esc="data.get('filters', {}).get('date_from', 'Tous')"/><br/>
+                            <strong>Au :</strong> <span t-esc="data.get('filters', {}).get('date_to', 'Tous')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Centrale :</strong> <span t-esc="data.get('filters', {}).get('centrale', 'Toutes')"/><br/>
+                            <strong>Client :</strong> <span t-esc="data.get('filters', {}).get('client', 'Tous')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Produit :</strong> <span t-esc="data.get('filters', {}).get('produit', 'Tous')"/><br/>
+                            <strong>Statut :</strong> <span t-esc="data.get('filters', {}).get('statut', 'Tous')"/>
+                        </div>
+                    </div>
+
+                    <div class="row beton-stats-panel">
+                        <div class="col-3"><strong>Total ordres :</strong> <span t-esc="data.get('total', 0)"/></div>
+                        <div class="col-3"><strong>Qté demandée :</strong> <span t-esc="'%.2f' % data.get('qte_totale', 0)"/> m³</div>
+                        <div class="col-3"><strong>Qté produite :</strong> <span t-esc="'%.2f' % data.get('qte_produite', 0)"/> m³</div>
+                        <div class="col-3"><strong>Coût total :</strong> <span t-esc="'%.2f' % data.get('cout_total', 0)"/></div>
+                    </div>
+
+                    <table class="beton-analysis-table">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Date</th>
+                                <th>Produit</th>
+                                <th>Centrale</th>
+                                <th>Client</th>
+                                <th class="text-end">Qté demandée</th>
+                                <th class="text-end">Qté produite</th>
+                                <th class="text-end">Coût</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td t-esc="doc.name"/>
+                                    <td t-esc="doc.date_start" t-options='{"widget": "date"}'/>
+                                    <td t-esc="doc.product_id.name"/>
+                                    <td t-esc="doc.centrale_id.name or ''"/>
+                                    <td t-esc="doc.client_id.name or ''"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.product_qty"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.qty_produced"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_total"/>
+                                    <td t-esc="doc.state"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5">Total</td>
+                                <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('product_qty'))"/>
+                                <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('qty_produced'))"/>
+                                <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('cout_total'))"/>
+                                <td/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- 4. RAPPORT LIVRAISONS -->
+    <!-- ============================================================ -->
+    <record id="action_report_picking_analysis" model="ir.actions.report">
+        <field name="name">Analyse Livraisons</field>
+        <field name="model">picking.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_picking_analysis</field>
+        <field name="report_file">beton_base.report_picking_analysis</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_picking_analysis">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-call="beton_base.beton_analysis_styles"/>
+                    <h2 class="beton-title">RAPPORT D'ANALYSE — LIVRAISONS</h2>
+
+                    <div class="row beton-filter-panel">
+                        <div class="col-4">
+                            <strong>Du :</strong> <span t-esc="data.get('filters', {}).get('date_from', 'Tous')"/><br/>
+                            <strong>Au :</strong> <span t-esc="data.get('filters', {}).get('date_to', 'Tous')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Client :</strong> <span t-esc="data.get('filters', {}).get('client', 'Tous')"/><br/>
+                            <strong>Chantier :</strong> <span t-esc="data.get('filters', {}).get('chantier', 'Tous')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Camion :</strong> <span t-esc="data.get('filters', {}).get('camion', 'Tous')"/><br/>
+                            <strong>Chauffeur :</strong> <span t-esc="data.get('filters', {}).get('chauffeur', 'Tous')"/>
+                        </div>
+                    </div>
+
+                    <div class="row beton-stats-panel">
+                        <div class="col-4"><strong>Total livraisons :</strong> <span t-esc="data.get('total', 0)"/></div>
+                        <div class="col-4"><strong>Distance totale :</strong> <span t-esc="'%.2f' % data.get('distance_totale', 0)"/> km</div>
+                    </div>
+
+                    <table class="beton-analysis-table">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Date</th>
+                                <th>Client</th>
+                                <th>Chantier</th>
+                                <th>Camion</th>
+                                <th>Chauffeur</th>
+                                <th>Départ</th>
+                                <th>Arrivée</th>
+                                <th class="text-end">Distance</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td t-esc="doc.name"/>
+                                    <td t-esc="doc.scheduled_date" t-options='{"widget": "date"}'/>
+                                    <td t-esc="doc.partner_id.name or ''"/>
+                                    <td t-esc="doc.chantier or ''"/>
+                                    <td t-esc="doc.vehicle_id.name or ''"/>
+                                    <td t-esc="doc.chauffeur_id.name or ''"/>
+                                    <td t-esc="doc.heure_depart" t-options='{"widget": "datetime"}'/>
+                                    <td t-esc="doc.heure_arrivee" t-options='{"widget": "datetime"}'/>
+                                    <td class="text-end" t-esc="'%.1f' % doc.distance"/>
+                                    <td t-esc="doc.state"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="8">Total</td>
+                                <td class="text-end" t-esc="'%.1f' % sum(docs.mapped('distance'))"/>
+                                <td/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- 5. RAPPORT COÛTS DE REVIENT -->
+    <!-- ============================================================ -->
+    <record id="action_report_cout_analysis" model="ir.actions.report">
+        <field name="name">Analyse Coûts de Revient</field>
+        <field name="model">cout.revient.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_cout_analysis</field>
+        <field name="report_file">beton_base.report_cout_analysis</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_cout_analysis">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-call="beton_base.beton_analysis_styles"/>
+                    <h2 class="beton-title">RAPPORT D'ANALYSE — COÛTS DE REVIENT</h2>
+
+                    <div class="row beton-filter-panel">
+                        <div class="col-4">
+                            <strong>Période du :</strong> <span t-esc="data.get('filters', {}).get('date_from', 'Tous')"/><br/>
+                            <strong>Période au :</strong> <span t-esc="data.get('filters', {}).get('date_to', 'Tous')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Formule :</strong> <span t-esc="data.get('filters', {}).get('formule', 'Toutes')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Marge :</strong> <span t-esc="data.get('filters', {}).get('marge', 'Tous')"/>
+                        </div>
+                    </div>
+
+                    <div class="row beton-stats-panel">
+                        <div class="col-3"><strong>Total fiches :</strong> <span t-esc="data.get('total', 0)"/></div>
+                        <div class="col-3"><strong>Coût moyen/m³ :</strong> <span t-esc="'%.2f' % data.get('cout_moyen', 0)"/></div>
+                        <div class="col-3"><strong>Marge moyenne :</strong> <span t-esc="'%.2f' % data.get('marge_moyenne', 0)"/> %</div>
+                    </div>
+
+                    <table class="beton-analysis-table">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Formule</th>
+                                <th>Période</th>
+                                <th class="text-end">Matières</th>
+                                <th class="text-end">Transport</th>
+                                <th class="text-end">Maintenance</th>
+                                <th class="text-end">Énergie</th>
+                                <th class="text-end">Main d'œuvre</th>
+                                <th class="text-end">Coût total/m³</th>
+                                <th class="text-end">Prix vente/m³</th>
+                                <th class="text-end">Marge %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td t-esc="doc.name"/>
+                                    <td t-esc="doc.formule_beton_id.display_name or ''"/>
+                                    <td t-esc="doc.periode" t-options='{"widget": "date"}'/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_matieres"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_transport"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_maintenance"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_energie"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_main_oeuvre"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_total_m3" style="font-weight: bold;"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.prix_vente_m3"/>
+                                    <td class="text-end" t-att-style="'color: green;' if doc.marge_brute > 0 else 'color: red;'" t-esc="'%.2f' % doc.marge_brute"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">Moyenne</td>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('cout_matieres')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('cout_transport')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('cout_maintenance')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('cout_energie')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('cout_main_oeuvre')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('cout_total_m3')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('prix_vente_m3')) / len(docs) if docs else 0)"/>
+                                <td class="text-end" t-esc="'%.2f' % (sum(docs.mapped('marge_brute')) / len(docs) if docs else 0)"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- 6. RAPPORT MOUVEMENTS DE STOCK -->
+    <!-- ============================================================ -->
+    <record id="action_report_stock_move_analysis" model="ir.actions.report">
+        <field name="name">Analyse Mouvements de Stock</field>
+        <field name="model">stock.move.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_stock_move_analysis</field>
+        <field name="report_file">beton_base.report_stock_move_analysis</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_stock_move_analysis">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-call="beton_base.beton_analysis_styles"/>
+                    <h2 class="beton-title">RAPPORT D'ANALYSE — MOUVEMENTS DE STOCK</h2>
+
+                    <div class="row beton-filter-panel">
+                        <div class="col-4">
+                            <strong>Du :</strong> <span t-esc="data.get('filters', {}).get('date_from', 'Tous')"/><br/>
+                            <strong>Au :</strong> <span t-esc="data.get('filters', {}).get('date_to', 'Tous')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Produit :</strong> <span t-esc="data.get('filters', {}).get('produit', 'Tous')"/><br/>
+                            <strong>Statut :</strong> <span t-esc="data.get('filters', {}).get('statut', 'Tous')"/>
+                        </div>
+                        <div class="col-4">
+                            <strong>Source :</strong> <span t-esc="data.get('filters', {}).get('emplacement_source', 'Tous')"/><br/>
+                            <strong>Destination :</strong> <span t-esc="data.get('filters', {}).get('emplacement_dest', 'Tous')"/>
+                        </div>
+                    </div>
+
+                    <div class="row beton-stats-panel">
+                        <div class="col-3"><strong>Total mouvements :</strong> <span t-esc="data.get('total', 0)"/></div>
+                        <div class="col-3"><strong>Quantité totale :</strong> <span t-esc="'%.2f' % data.get('qte_totale', 0)"/></div>
+                        <div class="col-3"><strong>Coût total :</strong> <span t-esc="'%.2f' % data.get('cout_total', 0)"/></div>
+                    </div>
+
+                    <table class="beton-analysis-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Référence</th>
+                                <th>Produit</th>
+                                <th class="text-end">Quantité</th>
+                                <th>UdM</th>
+                                <th class="text-end">Coût unitaire</th>
+                                <th class="text-end">Coût total</th>
+                                <th>De</th>
+                                <th>Vers</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td t-esc="doc.date" t-options='{"widget": "date"}'/>
+                                    <td t-esc="doc.reference or ''"/>
+                                    <td t-esc="doc.product_id.name"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.product_uom_qty"/>
+                                    <td t-esc="doc.product_uom.name"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.price_unit"/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.cout_total"/>
+                                    <td t-esc="doc.location_id.complete_name"/>
+                                    <td t-esc="doc.location_dest_id.complete_name"/>
+                                    <td t-esc="doc.state"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">Total</td>
+                                <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('product_uom_qty'))"/>
+                                <td/>
+                                <td/>
+                                <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('cout_total'))"/>
+                                <td colspan="3"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

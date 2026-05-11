@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire res.partner -->
+    <record id="view_partner_form_inherit_beton" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.beton</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Champ is_client_beton caché (utilisé par le contexte/domaine) -->
+            <xpath expr="//field[@name='company_type']" position="after">
+                <field name="is_client_beton" invisible="1"/>
+                <field name="type_partenaire_beton" widget="radio" options="{'horizontal': true}"/>
+                <field name="type_client_ie" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+
+            <!-- Ribbon statut client -->
+            <xpath expr="//sheet" position="inside">
+                <field name="statut_client_beton" invisible="1"/>
+                <widget name="web_ribbon" title="Bloqué"
+                        bg_color="text-bg-danger"
+                        invisible="statut_client_beton != 'bloque'"/>
+                <widget name="web_ribbon" title="Archivé"
+                        bg_color="text-bg-secondary"
+                        invisible="statut_client_beton != 'archive'"/>
+            </xpath>
+
+            <!-- Onglet Client Béton (toujours visible) -->
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Client Béton" name="client_beton">
+                    <group>
+                        <group string="Identification">
+                            <field name="code_client"
+                                   invisible="type_partenaire_beton != 'client'"/>
+                            <field name="code_fournisseur"
+                                   invisible="type_partenaire_beton != 'fournisseur'"/>
+                            <field name="classification_client"
+                                   invisible="type_partenaire_beton != 'client'"/>
+                            <field name="classification_fournisseur"
+                                   invisible="type_partenaire_beton != 'fournisseur'"/>
+                            <field name="statut_client_beton"/>
+                        </group>
+                        <group string="Conditions commerciales">
+                            <field name="mode_paiement_beton"/>
+                            <field name="plafond_credit"
+                                   invisible="type_partenaire_beton != 'client'"/>
+                        </group>
+                    </group>
+                    <group string="Coordonnées supplémentaires">
+                        <group>
+                            <field name="fax"/>
+                        </group>
+                        <group>
+                            <field name="rib" placeholder="Ex: 00 12345 6789012345 67"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- Onglet Coordonnées Fiscales -->
+                <page string="Coordonnées Fiscales" name="coordonnees_fiscales">
+                    <group>
+                        <group>
+                            <field name="rc" placeholder="Ex: 16/00-0012345B00"/>
+                            <field name="nif" placeholder="Ex: 000016012345678"/>
+                        </group>
+                        <group>
+                            <field name="nis" placeholder="Ex: 000016012345678"/>
+                            <field name="ai" placeholder="Ex: 16123456789"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search view héritée -->
+    <record id="view_partner_search_inherit_beton" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.beton</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter string="Client Béton" name="filter_client_beton"
+                        domain="[('type_partenaire_beton', '=', 'client')]"/>
+                <filter string="Fournisseur Béton" name="filter_fournisseur_beton"
+                        domain="[('type_partenaire_beton', '=', 'fournisseur')]"/>
+                <separator/>
+                <filter string="Interne" name="filter_interne"
+                        domain="[('type_client_ie', '=', 'interne')]"/>
+                <filter string="Externe" name="filter_externe"
+                        domain="[('type_client_ie', '=', 'externe')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action pour voir les clients béton -->
+    <record id="action_beton_clients" model="ir.actions.act_window">
+        <field name="name">Clients Béton</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('type_partenaire_beton', '=', 'client')]</field>
+        <field name="context">{'default_is_client_beton': True, 'default_is_company': True, 'default_type_partenaire_beton': 'client'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre premier client béton
+            </p>
+        </field>
+    </record>
+
+    <!-- Action pour voir les fournisseurs béton -->
+    <record id="action_beton_fournisseurs" model="ir.actions.act_window">
+        <field name="name">Fournisseurs Béton</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('type_partenaire_beton', '=', 'fournisseur')]</field>
+        <field name="context">{'default_is_client_beton': True, 'default_is_company': True, 'default_type_partenaire_beton': 'fournisseur'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer votre premier fournisseur béton
+            </p>
+        </field>
+    </record>
+
+</odoo>

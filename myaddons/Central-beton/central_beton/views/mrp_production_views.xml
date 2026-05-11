@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Production Form View -->
+    <record id="view_mrp_production_form_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.central.beton</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Add beton fields in extra info group -->
+            <xpath expr="//group[@name='group_extra_info']" position="inside">
+                <field name="is_beton_production" invisible="1"/>
+                <field name="centrale_id" invisible="not is_beton_production"/>
+                <field name="chantier_id" invisible="not is_beton_production"/>
+                <field name="commande_id" invisible="not is_beton_production"/>
+                <field name="bon_livraison_id" invisible="not is_beton_production"/>
+                <field name="numero_gachee" invisible="not is_beton_production"/>
+            </xpath>
+            <!-- Add beton-specific page -->
+            <xpath expr="//page[@name='miscellaneous']" position="after">
+                <page string="Donnees Beton" name="beton_data"
+                      invisible="not is_beton_production">
+                    <group>
+                        <group>
+                            <field name="temperature_beton"/>
+                            <field name="affaissement"/>
+                            <field name="volume_produit"/>
+                        </group>
+                        <group>
+                            <field name="cout_total"/>
+                            <field name="cout_m3"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Production Tree View -->
+    <record id="view_mrp_production_tree_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.production.tree.inherit.central.beton</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="is_beton_production" column_invisible="1"/>
+                <field name="centrale_id" optional="hide"/>
+                <field name="chantier_id" optional="hide"/>
+                <field name="volume_produit" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Production Search View -->
+    <record id="view_mrp_production_search_inherit_beton" model="ir.ui.view">
+        <field name="name">mrp.production.search.inherit.central.beton</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[1]" position="before">
+                <filter name="beton_production" string="Production Beton"
+                        domain="[('is_beton_production', '=', True)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Beton Productions only -->
+    <record id="action_beton_production" model="ir.actions.act_window">
+        <field name="name">Fabrications Beton</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="domain">[('is_beton_production', '=', True)]</field>
+        <field name="context">{'search_default_beton_production': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Creer un ordre de fabrication
+            </p>
+        </field>
+    </record>
+
+</odoo>

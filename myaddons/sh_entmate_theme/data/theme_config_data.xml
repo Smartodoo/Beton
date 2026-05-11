@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!-- TODO: no update 1 when done -->
+    <data noupdate="1">
+
+        <!--
+        
+        	 one attachment for scss variable settings 
+        	Write this file each time when we change theme settings.
+        	include this file in assets file by url.
+        	
+         -->
+        <record id="sh_entmate_theme_settings_attachment_scss_file" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">Back Theme Settings scss File</field>
+        	<field name="datas" type="base64" file="sh_entmate_theme/data/back_theme_config_main_scss.scss"></field>            
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">binary</field>
+            <field name="mimetype">text/scss</field>
+            
+            <field name="url">/sh_entmate_theme/static/src/scss/back_theme_config_main_scss.scss</field>
+        </record>   
+                
+        
+        <!-- Create back theme setting record at install time -->
+        <record id="sh_entmate_theme_rec" model="sh.ent.theme.config.settings">
+            <field name="name">Theme Setting</field> 
+            <field name="primary_color">#714B67</field>
+            <field name="extra_color">#017e84</field>
+            <field name="kanban_box_style">style_1</field>
+            <field name="login_page_style">style_3</field> 
+            <field name="login_page_background_type">bg_color</field>      
+            <field name="login_page_box_color">#FFFFFF</field> 
+            <field name="header_background_color">#FFFFFF</field>
+            <field name="horizontal_tab_style">style_7</field>  
+            <field name="form_element_style">style_1</field> 
+            <field name="checkbox_style">default</field> 
+            <field name="radio_style">default</field>
+            <field name="scrollbar_style">style_1</field> 
+            <field name="button_style">style_2</field>
+            <field name="separator_style">style_6</field>
+            <field name="sidebar_color">#D9D7E7</field>
+            <field name="sidebar_font_color">#374151</field>
+            <field name="sidebar_img">style_1</field>
+            <field name="theme_style">style_1</field>
+            <field name="progress_style">style_1</field>
+            <field name="progress_height">4px</field>
+            <field name="progress_color">#ad86a3</field>
+  			
+  			<field name="login_page_background_image" type="base64" file="sh_entmate_theme/static/src/img/login/login_bg.jpg"/> 
+  			<field name="login_page_banner_image" type="base64" file="sh_entmate_theme/static/src/img/login/login_banner_img.png"/>   			  			         
+
+  			<field name="body_background_image" type="base64" file="sh_entmate_theme/static/src/img/background/body_bg.jpg"/> 
+            <field name="breadcrumb_style">style_7</field>
+            <field name="app_icon_style">style_1</field>
+            <field name="backend_all_icon_style">backend_fontawesome_icon</field>
+        </record>        
+        
+        
+      
+
+             
+        
+	</data>
+		
+	
+</odoo>

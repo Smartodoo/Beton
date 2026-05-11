@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form -->
+    <record id="view_beton_versement_form" model="ir.ui.view">
+        <field name="name">beton.versement.form</field>
+        <field name="model">beton.versement</field>
+        <field name="arch" type="xml">
+            <form string="Versement">
+                <header>
+                    <button name="action_confirm" type="object"
+                            string="Confirmer Versement" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_to_draft" type="object"
+                            string="Remettre en brouillon" class="btn-secondary"
+                            invisible="state != 'confirmed'"
+                            groups="beton_caisse.group_beton_caisse_comptable"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_preview_report" type="object"
+                                class="oe_stat_button" icon="fa-eye">
+                            <span class="o_stat_text">Aperçu</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Confirmé"
+                            bg_color="text-bg-success"
+                            invisible="state != 'confirmed'"/>
+                    <group>
+                        <field name="name" readonly="1"/>
+                    </group>
+                    <group>
+                        <group string="Partenaire">
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="partner_type"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="montant" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="description" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Situation financière">
+                            <field name="cashbox_id"
+                                   options="{'no_create':True,'no_create_edit':True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="sale_order_id"
+                                   invisible="partner_type != 'client'"
+                                   readonly="state != 'draft'"/>
+                            <field name="purchase_order_id"
+                                   invisible="partner_type != 'fournisseur'"
+                                   readonly="state != 'draft'"/>
+                            <separator/>
+                            <field name="montant_total_partenaire" widget="monetary"/>
+                            <field name="montant_deja_verse" widget="monetary"/>
+                            <label for="montant_credit" string="Crédit restant"/>
+                            <div>
+                                <field name="montant_credit" widget="monetary"
+                                       class="oe_inline"
+                                       style="font-size: 16px; font-weight: bold; color: #dc3545;"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Autres informations">
+                            <group>
+                                <group>
+                                    <field name="user_id"/>
+                                    <field name="company_id" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="entry_id" readonly="1"
+                                           invisible="partner_type != 'client'"/>
+                                    <field name="expense_id" readonly="1"
+                                           invisible="partner_type != 'fournisseur'"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree -->
+    <record id="view_beton_versement_tree" model="ir.ui.view">
+        <field name="name">beton.versement.tree</field>
+        <field name="model">beton.versement</field>
+        <field name="arch" type="xml">
+            <tree string="Versements">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="partner_type"/>
+                <field name="cashbox_id"/>
+                <field name="date"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="montant" widget="monetary"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_beton_versement_search" model="ir.ui.view">
+        <field name="name">beton.versement.search</field>
+        <field name="model">beton.versement</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="cashbox_id"/>
+                <separator/>
+                <filter string="Client" name="client" domain="[('partner_type','=','client')]"/>
+                <filter string="Fournisseur" name="fournisseur" domain="[('partner_type','=','fournisseur')]"/>
+                <separator/>
+                <filter string="Brouillon" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmé" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Partenaire" name="partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Caisse" name="cashbox" context="{'group_by':'cashbox_id'}"/>
+                    <filter string="Type" name="type" context="{'group_by':'partner_type'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_beton_versement" model="ir.actions.act_window">
+        <field name="name">Versements</field>
+        <field name="res_model">beton.versement</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

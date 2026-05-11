@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[1]" position="before">
+                <widget name="web_ribbon" title="Payé"
+                        invisible="amount_due_purchase > 0 or amount_paid_purchase == 0 or state != 'purchase'"/>
+                <widget name="web_ribbon" title="Paiement Partiel"
+                        invisible="amount_paid_purchase == 0 or amount_due_purchase == 0 or state != 'purchase'"/>
+                <widget name="web_ribbon" title="A terme" invisible="not is_payment_term_purchase"/>
+            </xpath>
+            <xpath expr="//field[@name='date_approve']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+            <!-- Force date_planned invisible -->
+            <xpath expr="//field[@name='date_planned']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_payment_term_purchase" invisible="1"/>
+                <field name="active"/>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="num_bon"/>
+                <field name="date_bon"/>
+                <field name="date_today"/>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_rfq_send']" position="after">
+                <button name="action_register_payment"
+                        string="Enregistrer un paiement"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="state not in ('purchase') or amount_due_purchase == 0"/>
+            </xpath>
+            <div class="oe_button_box" name="button_box">
+                <button type="object" name="action_open_payments"
+                        context="{'create': 0, 'edit': 0}"
+                        class="oe_stat_button"
+                        icon="fa-credit-card">
+                    <div class="o_stat_info">
+                        <field name="payment_count_purchase" widget="statinfo" string="Paiements"/>
+                    </div>
+                </button>
+            </div>
+            <xpath expr="//notebook/page[1]/group/group[2]" position="after">
+                <group string="Paiements" class="oe_subtotal_footer" colspan="2" name="purchase_total">
+                    <field name="amount_paid_purchase" colspan="2" readonly="1" force_save="1"/>
+                    <field name="amount_due_purchase" colspan="2" readonly="1" invisible="amount_due_purchase == 0"
+                           class="text-danger" force_save="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//header//button[@name='action_view_picking']" position="replace">
+                <button name="action_view_picking"
+                        string="Receive Products" class="oe_highlight" type="object"
+                        invisible="is_shipped or state not in ('purchase', 'done') or incoming_picking_count == 0"
+                        data-hotkey="y" groups="stock.group_stock_user"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_tree_purchase_order_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.tree.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="active"/>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="replace">
+                <field name="date_bon"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="num_bon"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Forcer la création du produit en tant que "stockable" sans ouvrir la fiche -->
+    <!-- Forcer le type 'stockable' dans le contexte de création rapide -->
+    <record id="purchase_order_line_product_context_default_type" model="ir.ui.view">
+        <field name="name">purchase.order.line.product.context.default</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//field[@name='product_id']" position="attributes">
+                <attribute name="context">{'default_type': 'product', 'default_detailed_type': 'product', 'no_open':
+                    True}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+     <!--  Action serveur : Créer les paiements automatiquement -->
+    <record id="action_create_auto_payments_purchase" model="ir.actions.server">
+        <field name="name"> Créer des paiements automatiquement</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="code">
+            action = records.action_create_auto_payments()
+        </field>
+    </record>
+
+
+
+
+</odoo>

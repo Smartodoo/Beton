@@ -1,0 +1,130 @@
+<odoo>
+    <template id="report_supplier_products">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+
+                <!-- HEADER (shown only once at the beginning) -->
+                <div class="oe_structure"/>
+                <div>
+                    <h1 class="text-center mb16">
+                        Rapport des achats par fournisseur
+                    </h1>
+
+
+                    <t t-if="docs">
+                        <h3 class="text-center mb32">
+                            Fournisseur :
+                            <t t-esc="docs[0].partner_id.display_name"/>
+                        </h3>
+                    </t>
+                </div>
+
+                <!-- Loop: one page per bon -->
+                <t t-set="counter" t-value="0"/>
+                <t t-foreach="docs" t-as="order">
+                    <t t-set="counter" t-value="counter + 1"/>
+
+                    <div class="page_break_after:always">
+
+                        <!-- En-tête du bon -->
+                        <h4 class="mt32 mb8" style="border-bottom:1px solid #000;">
+                            Bon numéro
+                            <t t-esc="counter"/>
+                        </h4>
+                        <p>
+                            <strong>Date du bon :</strong>
+                            <t t-esc="order.date_bon.date()"/>
+                        </p>
+                        <p>
+                            <strong>Numéro du bon :</strong>
+                            <t t-esc="order.num_bon"/>
+                        </p>
+                        <p>
+                            <strong>Référence commande :</strong>
+                            <t t-esc="order.name"/>
+                        </p>
+
+                        <!-- Tableau des lignes -->
+                        <table class="table table-sm o_main_table mt16"
+                               style="width:100%; border-collapse: collapse;"
+                               border="1">
+                            <thead>
+                                <tr style="background:#f0f0f0;">
+                                    <th style="padding:5px;">Article</th>
+                                    <th style="padding:5px; text-align:center;">Quantité</th>
+                                    <th style="padding:5px; text-align:center;">Prix Unitaire</th>
+                                    <th style="padding:5px; text-align:center;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="order.order_line" t-as="line">
+                                    <td style="padding:5px;">
+                                        <t t-esc="line.product_id.display_name"/>
+                                    </td>
+                                    <td style="padding:5px; text-align:center;">
+                                        <t t-esc="line.product_qty"/>
+                                    </td>
+                                    <td style="padding:5px; text-align:right;">
+                                        <t t-esc="line.price_unit"/>
+                                    </td>
+                                    <td style="padding:5px; text-align:right;">
+                                        <t t-esc="line.price_subtotal"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Totaux -->
+                        <div class="mt16"
+                             style="border-top:2px solid #000; padding-top:10px; text-align:right; width:100%;">
+                            <p>
+                                <strong>Total de ce bon :</strong>
+                                <t t-esc="order.amount_total"/>
+                            </p>
+                            <p>
+                                <strong>Montant payé :</strong>
+                                <t t-esc="order.amount_paid_purchase"/>
+                            </p>
+                            <p>
+                                <strong>Montant dû :</strong>
+                                <t t-esc="order.amount_due_purchase"/>
+                            </p>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- Résumé global (last page) -->
+                <div class="page mt32">
+                    <div class="summary"
+                         style="border-top:2px solid #000; padding-top:10px; text-align:right; width:100%;">
+                        <h2 class="text-right">Résumé général</h2>
+                        <p>
+                            <strong>Total Général :</strong>
+                            <t t-esc="sum(d.amount_total for d in docs)"/>
+                        </p>
+                        <p>
+                            <strong>Total Payé :</strong>
+                            <t t-esc="sum(d.amount_paid_purchase for d in docs)"/>
+                        </p>
+                        <p>
+                            <strong>Total Dû :</strong>
+                            <t t-esc="sum(d.amount_due_purchase for d in docs)"/>
+                        </p>
+                    </div>
+                </div>
+
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_purchase_supplier_document" model="ir.actions.report">
+        <field name="name">Rapport des achats par fournisseur</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">Purchase_custom_Gros.report_supplier_products</field>
+        <field name="report_file">Purchase_custom_Gros.report_supplier_products</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Rapport_Achats_' + (object.partner_id.name or 'Fournisseur')</field>
+    </record>
+</odoo>

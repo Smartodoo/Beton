@@ -1,0 +1,34 @@
+.o_control_panel{
+	.breadcrumb{
+		.breadcrumb-item{
+			+ .breadcrumb-item{
+				&::before{
+					@if $breadcrumb_style == 'style_1'{
+						content: "\f101";font: normal normal normal 14px/1 FontAwesome;font-size: 18px;padding: 0px 8px 0px 5px;
+					}
+					@if $breadcrumb_style == 'style_2'{
+						content: "\f0da";font-size: 18px;padding: 0px 8px 0px 5px; font-family: 'fontAwesome';
+					}
+					@if $breadcrumb_style == 'style_3'{
+						content: "\f111";font-size: 6px;padding: 0px 8px 0px 3px;top: 0px;left: 0;position: relative;font-family: 'fontAwesome';
+					}
+					@if $breadcrumb_style == 'style_4'{
+						content: "\f068";font-size: 8px;padding: 0px 10px 0px 4px;top: 0px;left: 0;position: relative;font-family: 'fontAwesome';
+					}
+					@if $breadcrumb_style == 'style_5'{
+						content: "|";padding: 0px 10px 0px 4px;
+					}
+					@if $breadcrumb_style == 'style_6'{
+						content: "\f105";font-size: 18px;padding: 0px 10px 0px 5px;font-family: 'fontAwesome';
+					}
+					@if $breadcrumb_style == 'style_7'{
+						content: "/";padding: 0px 8px 0px 3px;
+					}
+					@include media-breakpoint-down(md){
+						content: none !important;padding-right: 0px !important;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#28a745"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="128" height="128" rx="20" fill="url(#bg)"/>
+  <!-- Cash register body -->
+  <rect x="28" y="50" width="72" height="45" rx="6" fill="white" opacity="0.95"/>
+  <!-- Screen -->
+  <rect x="38" y="55" width="52" height="16" rx="3" fill="#343a40"/>
+  <text x="64" y="67" text-anchor="middle" fill="#28a745" font-family="Arial" font-weight="bold" font-size="11">0.00 DA</text>
+  <!-- Buttons row -->
+  <rect x="38" y="76" width="10" height="8" rx="2" fill="#667eea"/>
+  <rect x="52" y="76" width="10" height="8" rx="2" fill="#667eea"/>
+  <rect x="66" y="76" width="10" height="8" rx="2" fill="#667eea"/>
+  <rect x="80" y="76" width="10" height="8" rx="2" fill="#28a745"/>
+  <!-- Drawer -->
+  <rect x="34" y="88" width="60" height="4" rx="1" fill="#adb5bd"/>
+  <!-- Coins on top -->
+  <circle cx="45" cy="40" r="10" fill="#ffc107" stroke="white" stroke-width="2"/>
+  <text x="45" y="44" text-anchor="middle" fill="#856404" font-family="Arial" font-weight="bold" font-size="10">B</text>
+  <circle cx="68" cy="34" r="10" fill="#ffc107" stroke="white" stroke-width="2"/>
+  <text x="68" y="38" text-anchor="middle" fill="#856404" font-family="Arial" font-weight="bold" font-size="10">$</text>
+  <!-- Arrow transfer indicator -->
+  <path d="M85 38 L98 38 L94 33 M98 38 L94 43" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Small secondary box -->
+  <rect x="90" y="42" width="20" height="14" rx="3" fill="white" opacity="0.8"/>
+  <rect x="93" y="45" width="14" height="4" rx="1" fill="#28a745"/>
+  <rect x="93" y="51" width="14" height="2" rx="1" fill="#adb5bd"/>
+  <!-- Label -->
+  <text x="64" y="115" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold" font-size="9" opacity="0.9">CAISSE BÉTON</text>
+</svg>

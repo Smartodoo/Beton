@@ -1,0 +1,1086 @@
+// Chat Window //
+.o-mail-ChatWindowContainer {
+    .o-mail-ChatWindow {
+        .o-discuss-ChannelSelector-list {
+            .o-discuss-ChannelSelector-suggestion {
+                >a {
+                    color: $extra_color;
+                }
+            }
+        }
+    }
+}
+
+// Switch button //
+
+.o_control_panel {
+    .o_control_panel_main {
+        .o_control_panel_navigation {
+            .o_cp_switch_buttons.btn-group {
+                .btn.o_switch_view {
+                    +.btn.o_switch_view {
+                        border-top-left-radius: 0px !important;
+                        border-bottom-left-radius: 0px !important;
+                    }
+
+                    &:not(:last-child) {
+                        border-top-right-radius: 0px !important;
+                        border-bottom-right-radius: 0px !important;
+                    }
+                }
+
+                .btn {
+                    margin-right: 1px;
+                }
+            }
+        }
+        // smart button active color 
+        .o_control_panel_actions{
+            .o-form-buttonbox{
+                .btn{
+                    &:active{
+                        border-color: $extra_color !important;
+                        background-color: rgba($extra_color , $alpha : 0.2) !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// kanban badge design // 
+.o_kanban_view {
+    .o_kanban_record {
+        .oe_kanban_details {
+            .o_kanban_record_bottom {
+                .oe_kanban_action {
+                    color: $extra_color;
+
+                    &:hover {
+                        .badge {
+                            background-color: $primaryColor;
+                            color: #ffffff;
+                        }
+                    }
+                }
+            }
+        }
+        .o_kanban_card_content{
+            [name="kanban_dashboard_graph"].o_field_dashboard_graph{
+                .o_dashboard_graph{
+                    canvas{
+                        height: 75px !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .oe_kanban_global_click {
+        .o_kanban_content {
+            .text-bg-primary {
+                background-color: $primaryColor !important;
+            }
+        }
+    }
+}
+
+// calendar
+
+.o_datetime_picker {
+
+    .o_select_start,
+    .o_select_end {
+        &::before {
+            background: rgba($primaryColor , $alpha: 0.2);
+            box-shadow: inset 0 0 0 1px $primaryColor;
+        }
+    }
+
+    .o_current,
+    .o_highlight_start:not(.o_selected),
+    .o_highlight_end:not(.o_selected) {
+        &::before {
+            box-shadow: inset 0 0 0 1px $primaryColor;
+        }
+    }
+}
+
+.o_calendar_renderer {
+    .o_calendar_widget {
+        .fc-timeGridWeek-view {
+            .fc-day-header.fc-today {
+                color: $primaryColor;
+
+                .o_cw_day_number {
+                    &::before {
+                        background: $primaryColor;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ui-widget.ui-autocomplete {
+    .ui-menu-item.o_m2o_dropdown_option {
+        >a {
+            color: $extra_color;
+        }
+    }
+}
+
+.dropdown-menu{
+    box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
+}
+.o_form_view,
+.o_list_view,
+.o_kanban_view {
+
+    .btn.btn-link,
+    .o_form_uri,.o_field_phone_sms,
+    a.o_employee_redirect {
+        color: $extra_color;
+    }
+
+
+    .oe_stat_button.dropdown.show {
+        .o_button_more {
+            background: rgba($extra_color , $alpha: 0.2);
+            border-color: $extra_color;
+            color: #374151;
+        }
+    }
+
+    .o_list_table {
+        --table-bg: transparent;
+        .o_field_x2many_list_row_add {
+            a {
+                color: $primaryColor;
+
+                &:hover,
+                &:focus {
+                    color: darken($primaryColor, 10%);
+                }
+            }
+        }
+    }
+}
+
+.o_activity_view {
+    .o_activity_view_table {
+        .btn.btn-link {
+            color: $primaryColor;
+        }
+    }
+}
+
+
+.o_web_client {
+    .o_action_manager{
+        .o_action{
+            .o_control_panel{
+                .o_control_panel_main{
+                    .o_control_panel_breadcrumbs{
+                        .o_breadcrumb{
+                            ol{
+                                li{
+                                    a{
+                                        color: $extra_color;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .o_content{
+                .o_expense_container{
+                    .o_expense_card{
+                        i{
+                            font-size: 40px !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .o-overlay-container{
+        .o_popover{
+            .o_avatar_card{
+                .card-body{
+                    div{
+                        .o_card_user_infos{
+                            a{
+                                color: $primaryColor !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .o_list_view {
+        .o_content {
+            .o_list_renderer {
+                table {
+                    tr {
+                        td {
+                            .btn.open_record_new_tab {
+                                background: $primaryColor !important;
+                                border-color: $primaryColor !important;
+                                color: white !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .o_control_panel {
+        .o_control_panel_main {
+            .o_control_panel_actions {
+                .o_cp_searchview {
+                    .o-dropdown--menu.dropdown-menu {
+                        .dropdown-item.o_menu_item {
+                            &.selected {
+                                &::before {
+                                    color: $extra_color;
+                                }
+                            }
+                        }
+                    }
+
+                    .o_searchview {
+                        .o_searchview_input_container {
+                            .o_searchview_facet {
+                                height: max-content;
+
+                                .o_searchview_facet_label {
+                                    background-color: $primaryColor !important;
+                                    border-top-right-radius: 0 !important ;
+                                    border-bottom-right-radius: 0 !important ;
+                                    &.text-bg-action{
+                                        background-color: $extra_color !important;
+                                    }
+                                }
+                            }
+
+                            input {
+                                padding: 0 !important;
+                                margin: 0 !important;
+                                border: none !important;
+                                background-image: none !important;
+                            }
+                        }
+
+                        &:focus-within {
+                            border-color: $extra_color;
+
+                            + {
+                                .o-dropdown {
+                                    .o_searchview_dropdown_toggler {
+                                        border-top-color: $extra_color;
+                                        border-right-color: $extra_color;
+                                        border-bottom-color: $extra_color;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .o-dropdown {
+                        &.show {
+                            .dropdown-toggle {
+                                background-color: rgba($extra_color , $alpha : 0.2) !important;
+                                border-color: $extra_color;
+                                color: #212529 !important;
+
+                                &:focus {
+                                    background-color: rgba($extra_color , $alpha : 0.2) !important;
+                                    border-color: $extra_color;
+                                    color: #212529 !important;
+                                }
+                            }
+                        }
+
+                        .dropdown-toggle {
+                            border-top-right-radius: 4px !important;border-bottom-right-radius: 4px !important;border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;
+
+                            &:focus {
+                                background-color: rgba($extra_color , $alpha : 0.2) !important;
+                                border-color: $extra_color;
+                                color: #212529 !important;
+                            }
+                        }
+
+                        .o-dropdown--menu {
+                            .o_dropdown_container {
+                                div {
+                                    i {
+                                        color: unset !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .o_content {
+        .oe_chatter {
+            .o-mail-Chatter {
+                .o-mail-Chatter-top {
+                    .o-mail-Chatter-topbar {
+                        .btn {
+                            border: 1px solid transparent;
+
+                            &.active {
+                                background-color: rgba($primaryColor , $alpha : 0.2);
+                                border-color: $primaryColor ;
+                                color: $primaryColor;
+
+                                &:active {
+                                    background-color: rgba($primaryColor , $alpha : 0.2);
+                                    border-color: $primaryColor ;
+                                }
+                            }
+
+                            &:active {
+                                background-color: rgba($extra_color , $alpha : 0.2);
+                                border-color: $extra_color ;
+                            }
+                        }
+
+                        a.o-mail-Follower-details {
+                            color: $primaryColor;
+
+                            &:hover {
+                                color: darken($primaryColor, 10%);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.o_field_CopyClipboardText,
+.o_field_CopyClipboardURL,
+.o_field_CopyClipboardChar {
+    >div {
+        border: 1px solid $primaryColor;
+        color: $primaryColor;
+    }
+}
+
+// Full screen //
+:not(:root):fullscreen::backdrop {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: transparent !important;
+}
+
+.o_loading_indicator,
+.bg-primary {
+    background-color: $primaryColor !important;
+}
+
+body .text-odoo,
+body .text-primary {
+    color: $primaryColor !important;
+}
+
+.oe_kanban_action.oe_kanban_action_a {
+    color: $primaryColor;
+}
+
+h1{font-size:28px !important;}
+h2{font-size:17px !important;}
+h3{font-size:18px !important;}
+h4{font-size:13px !important;}
+h5{font-size:13px !important;}
+h6{font-size:12px !important;}
+p{font-size:13px !important;}
+@if $is_used_google_font == "True"{
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 ,a ,label , b ,p ,div,span, body{font-family: $body_google_font_family;}
+    @import url("https://fonts.googleapis.com/css?family=#{unquote($body_google_font_family)}");
+	$body_font_family: $body_google_font_family;
+}
+@if $is_used_google_font == "False"{
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 ,a ,label , b ,p ,div,span, body{font-family: $body_font_family;}
+}
+ .fa{
+     font: normal normal normal 14px/1 FontAwesome !important;
+ }
+
+.o_form_view{
+    .o_field_widget.oe_inline{
+        > *{
+            width: 100% !important;
+        }
+    }
+}
+
+//  o_control_panel_navigation btn scss code 
+.o_web_client {
+    &.sh_sidebar_background_enterprise {
+        .o_navbar {
+            background: transparent !important;
+
+            .o_main_navbar {
+                background: transparent !important;
+            }
+        }
+.multi_tab_section{
+            display: none !important;
+        }
+    }
+
+    .o_navbar {
+        .o_main_navbar {
+            .o_menu_systray {
+                .theme_settings {
+                    .theme_configuration {
+                        color: unset;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_action_manager {
+        .o_control_panel {
+            .o_control_panel_main {
+                .o_control_panel_navigation {
+                    .o_cp_switch_buttons {
+                        .o_switch_view {
+                            &.active {
+                                background: rgba($extra_color , $alpha: 0.2);
+                                border-color: $extra_color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .o_list_view {
+            .o_control_panel {
+                .o_control_panel_main {
+                    .o_control_panel_breadcrumbs {
+                        .o_control_panel_main_buttons {
+                            >div {
+                                button {
+                                    width: max-content;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // check button 
+            .o_content {
+                .o_list_renderer {
+                    table {
+                        tr {
+
+                            td,
+                            th {
+                                .o-checkbox {
+                                    input {
+                                        &:checked {
+                                            background-color: $extra_color !important;
+                                            border-color: $extra_color !important;
+                                            color: white;
+                                        }
+
+                                        &:hover {
+                                            border-color: $extra_color !important;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // check button in calander view 
+        .o_calendar_view {
+            .o_content {
+                .o_calendar_container {
+                    .o_calendar_sidebar_container {
+                        .o_calendar_sidebar {
+                            .o_calendar_filter {
+                                .o_calendar_filter_items_checkall {
+                                    input {
+                                        &:checked {
+                                            background-color: $extra_color;
+                                            border-color: $extra_color;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // SETTING RADIO AND CHECKBOX START 
+
+        .o-settings-form-view {
+            .o_form_view_container {
+                .o_content {
+                    .o_form_renderer {
+                        .o_setting_container {
+                            .settings {
+                                .app_settings_block {
+                                    #invite_users {
+                                        .o_settings_container {
+                                            .o_searchable_setting {
+                                                .o_setting_right_pane {
+                                                    div {
+                                                        .o_doc_link {
+                                                            color: $extra_color !important;
+                                                        }
+
+                                                        .o_web_settings_access_rights {
+                                                            color: $extra_color !important;
+                                                        }
+                                                    }
+
+                                                    .o_widget_res_config_invite_users {
+                                                        a {
+                                                            color: $primaryColor !important;
+                                                        }
+                                                    }
+
+                                                    .o_web_settings_invite {
+                                                        color: white !important;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    #languages {
+                                        .o_settings_container {
+                                            .o_searchable_setting {
+                                                .o_setting_right_pane {
+                                                    div {
+                                                        .btn.btn-link {
+                                                            color: $extra_color !important;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    #companies {
+                                        .o_searchable_setting {
+                                            .btn {
+                                                color: $extra_color !important;
+                                            }
+
+                                            input {
+                                                &:checked {
+                                                    background-color: $extra_color !important;
+                                                }
+
+                                                &:hover {
+                                                    border-color: $extra_color !important;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    .o_settings_container {
+                                        .o_searchable_setting {
+                                            .o_setting_right_pane {
+                                                div {
+                                                    input {
+                                                        &:checked {
+                                                            +label {
+                                                                &:after {
+                                                                    border-color: $extra_color;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    #web_push_notification {
+                                        .o_settings_container {
+                                            #firebase_setting {
+                                                .o_setting_left_pane {
+                                                    input {
+                                                        &:checked {
+                                                            background-color: $extra_color !important;
+                                                        }
+
+                                                        &:hover {
+                                                            border-color: $extra_color !important;
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            #firebase_other_setting {
+                                                .o_setting_right_pane {
+
+                                                    i,
+                                                    a {
+                                                        color: $extra_color !important;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    .o_settings_container {
+                                        .o_searchable_setting {
+                                            .content-group {
+                                                .btn.btn-link {
+                                                    color: $extra_color !important;
+                                                }
+                                            }
+
+                                            a {
+                                                color: $extra_color !important;
+                                            }
+
+                                            input {
+                                                &:checked {
+                                                    background-color: $extra_color !important;
+                                                }
+
+                                                &:hover {
+                                                    border-color: $extra_color !important;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    #contacts_settings {
+                                        div {
+
+                                            .buy_credits,
+                                            .btn {
+                                                color: $extra_color !important;
+                                            }
+                                        }
+                                    }
+
+                                    .o_settings_container {
+                                        .o_setting_box {
+                                            .o_setting_right_pane {
+                                                div {
+                                                    .btn.btn-link {
+                                                        color: $extra_color !important;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .o_enterprise_label {
+                            background-color: $primaryColor !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        // SETTING RADIO AND CHECKBOX END 
+
+        .o_form_view_container {
+            .o_control_panel {
+                .o_control_panel_main {
+                    .o_control_panel_actions {
+                        .o-form-buttonbox {
+                            .oe_stat_button {
+                                .o_readonly_modifier {
+                                    .rounded-circle {
+                                        background: conic-gradient($primaryColor 0% 42.86%, #ddd 0% 100%) !important;
+
+                                    }
+
+                                    .o_pie_info {
+                                        .o_pie_value {
+                                            color: $primaryColor;
+                                        }
+                                    }
+
+                                    .o_stat_value {
+                                        .o_field_widget {
+                                            span {
+                                                color: $primaryColor ;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                .o_stat_value {
+                                    color: $primaryColor;
+                                }
+
+                                .o-dropdown--menu {
+                                    .dropdown-item {
+                                        .oe_stat_button {
+                                            .o_field_widget {
+                                                figure {
+                                                    background: conic-gradient($primaryColor 0% 42.86%, #ddd 0% 100%) !important;
+                                                }
+
+                                                .o_pie_info {
+                                                    .o_pie_value {
+                                                        color: $primaryColor;
+                                                    }
+                                                }
+
+                                                .o_stat_value {
+                                                    .o_field_widget {
+                                                        span {
+                                                            color: $primaryColor ;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .o_content {
+                .o_form_renderer {
+                    .o_form_sheet_bg {
+                        .o_form_sheet {
+                            .o_notebook {
+                                .o_notebook_content {
+                                    .tab-pane {
+                                        .o_group {
+                                            .o_inner_group {
+                                                .o_wrap_field {
+                                                    .o_cell {
+                                                        .o_field_widget {
+                                                            .o_form_uri {
+                                                                span {
+                                                                    color: $primaryColor;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .o_group{
+                                .o_inner_group{
+                                    .o_wrap_field{
+                                        .o_cell{
+                                            .o_row{
+                                                .o_field_widget{
+                                                    .o_phone_content{
+                                                        a{
+                                                            color: red !important;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // check button 
+    .o_list_view {
+        table {
+            tr {
+
+                td,
+                th {
+                    .o-checkbox.form-check:not(.form-switch) {
+                        input {
+                            &:checked {
+                                background-color: $extra_color !important;
+                                border-color: $extra_color !important;
+                                color: white;
+                            }
+
+                            &:hover {
+                                border-color: $extra_color !important;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    .form-check-input[type="checkbox"]:not([role="switch"]):not(.form-check-input),
+    .form-check-input:not([role="switch"]):not(.form-check-input) {
+        box-shadow: none;
+        @if $checkbox_style =='default' {
+            border-radius: 0px;
+        }
+
+        &:checked {
+            background-color: $extra_color !important;
+            border-color: $extra_color !important;
+        }
+    }
+}
+
+// form change stage 
+
+.o_form_view {
+    .o_form_view_container {
+        .o_control_panel {
+            .o_control_panel_main {
+                .o_control_panel_breadcrumbs {
+                    .o_control_panel_main_buttons {
+                        >div {
+                            .btn {
+                                border-color: $primaryColor;
+                                color: $primaryColor;
+
+                                &:hover {
+                                    background: $primaryColor;
+                                    color: white;
+                                }
+                            }
+                        }
+                    }
+
+                    .o_breadcrumb {
+                        .breadcrumb {
+                            >li {
+                                a {
+                                    color: $extra_color ;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .o_control_panel_actions {
+                    .o-form-buttonbox {
+                        .oe_stat_button {
+                            .o_button_icon {
+                                color: $primaryColor !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .o_content {
+            .o_form_renderer {
+                .o_form_sheet_bg {
+
+                    .o_form_sheet {
+                        .oe_title {
+                            h1 {
+                                div {
+                                    height: auto !important;
+
+                                    textarea {
+                                        font-size: 36px !important;
+                                        border-bottom: 1px solid transparent !important;
+                                        height: auto !important;
+
+                                        &:hover {
+                                            border-bottom-color: black !important;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .o-form-buttonbox {
+                            display: none !important;
+                        }
+
+                        .o_notebook {
+                            .o_notebook_headers {
+                                .nav-tabs {
+                                    .nav-item {
+                                        .nav-link {
+                                            text-transform: capitalize;
+
+                                            &.active {
+                                                color: $o-main-text-color !important;
+                                            }
+
+                                            &:hover {
+                                                color: $extra_color;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .o_group {
+                            .o_inner_group {
+                                .o_wrap_field {
+                                    .o_cell {
+                                        .o_lead_opportunity_form_inline_fields {
+                                            display: flex;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .o-mail-Form-chatter {
+                    .o-mail-Chatter {
+                        .o-mail-Chatter-top {
+                            .o-mail-Chatter-topbar {
+                                >.btn {
+                                    box-shadow: none;
+
+                                    &.active {
+                                        background: rgba($primaryColor , $alpha: 0.2);
+                                        border-color: $primaryColor;
+                                        color: $primaryColor;
+
+                                        &:hover {
+                                            background: rgba($primaryColor , $alpha: 0.2) !important;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .o-mail-Chatter-content {
+                            .o-mail-Chatter-search {
+                                .o-mail-ActionPanel {
+                                    div {
+                                        .input-group {
+                                            .o_searchview {
+                                                &:focus-within {
+                                                    border-color: $primaryColor !important;
+                                                }
+                                            }
+
+                                            .btn {
+                                                border-color: $primaryColor;
+
+                                                i {
+                                                    color: $primaryColor;
+                                                }
+
+                                                &:hover {
+                                                    background: $primaryColor;
+
+                                                    i {
+                                                        color: white;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // this change is in invoice change also check this change may affect the all theme 
+
+    .o_form_uri {
+        >span:first-child {
+            color: $primaryColor;
+        }
+    }
+}
+
+@include media-breakpoint-only(sm) {
+    .o_web_client {
+        .o_action_manager {
+            .o-mail-Discuss {
+                div {
+                    .btn-group {
+                        .btn {
+                            &.active {
+                                background-color: rgba($extra_color , $alpha : 0.2) !important;
+                                border-color: $extra_color !important;
+                                color: #212529 !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// dicuss scss end 
+
+// setting > setting button start 
+
+.o_web_client {
+    .o_action_manager {
+        .o-settings-form-view {
+            .o_form_view_container {
+                .o_content {
+                    .o_form_renderer {
+                        .o_setting_container {
+                            div {
+                                .settings_tab {
+                                    .tab {
+                                        &.selected {
+                                            background-color: rgba($extra_color , $alpha : 0.2) !important;
+                                            box-shadow: inset 2px 0 0 $extra_color;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

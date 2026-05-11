@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--situation s-t views-->
+    <record id="view_tree_situation_S_T" model="ir.ui.view">
+        <field name="name">Situation.S.T.tree</field>
+        <field name="model">situation.sous.traitants</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="project_id" column_invisible="True"/>
+                <field name="original_subcontractor_id" column_invisible="True"/>
+                <field name="no"/>
+
+                <field name="article1"/>
+                <!--                <field name="quantity_given"/>-->
+                <field name="supply_quantity" sum="1"/>
+                <field name="product_stock"/>
+                <field name="price_unit_sale"/>
+                <field name="done_quantity" sum="1"/>
+                <field name="done_quantity_current" sum="1"/>
+                <field name="total_done_quantity" sum="1"/>
+                <field name="price_unit_convention"/>
+                <!--                <field name="difference1"/>-->
+                <field name="difference2" sum="1"/>
+                <field name="supply_amount" sum="1"/>
+                <field name="done_amount" sum="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_form_situation_S_T" model="ir.ui.view">
+        <field name="name">Situation.S.T.form</field>
+        <field name="model">situation.sous.traitants</field>
+        <field name="arch" type="xml">
+            <form string="Situation S-T">
+                <sheet>
+                    <group>
+                        <group class="col-6">
+                            <field name="project_id" invisible="1"/>
+                            <field name="original_subcontractor_id" invisible="1"/>
+                            <field name="no"/>
+                            <field name="article1"/>
+                        </group>
+                        <group class="col-6">
+                            <!--                            <field name="quantity_given"/>-->
+                            <field name="supply_quantity"/>
+                            <field name="price_unit_sale"/>
+                            <field name="done_quantity"/>
+                            <field name="done_quantity_current"/>
+                            <field name="total_done_quantity"/>
+                            <field name="price_unit_convention"/>
+                            <!--                            <field name="difference1"/>-->
+                            <field name="difference2"/>
+                            <field name="supply_amount"/>
+                            <field name="done_amount"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_view_situation_S_T" model="ir.actions.act_window">
+        <field name="name">Situation S-T</field>
+        <field name="res_model">situation.sous.traitants</field>
+        <field name="domain">
+            [
+            ('project_id', '=', context.get('default_project_id')),
+            ('original_subcontractor_id', '=', context.get('default_original_subcontractor_id'))
+            ]
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--situation finale views-->
+    <record id="view_situation_final_form" model="ir.ui.view">
+    <field name="name">situation.final.form</field>
+    <field name="model">situation.final</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+<!--                <button name="export_final_situation_xlsx" type="object" string="Exporter Situation Finale XLSX" class="btn-primary"/>-->
+            </header>
+            <sheet>
+                <group>
+                    <field name="no"/>
+                    <field name="article2"/>
+                    <field name="quantity_chantier"/>
+                    <field name="supply_quantity"/>
+                    <field name="done_quantity"/>
+                    <field name="difference2" readonly="1"/>
+                    <field name="difference3" readonly="1"/>
+                    <field name="project_id"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+    <record id="view_tree_situation_final" model="ir.ui.view">
+        <field name="name">Situation.final.view.tree</field>
+        <field name="model">situation.final</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!--                <field name="project_id" invisible="1"/>-->
+                <field name="no"/>
+                <field name="article2"/>
+                <field name="quantity_chantier"/>
+                <!--                <field name="quantity_given"/>-->
+                <field name="supply_quantity"/>
+                <field name="done_quantity"/>
+                <!--                <field name="difference1"/>-->
+                <field name="difference2"/>
+                <field name="difference3"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_open_view_situation_final" model="ir.actions.act_window">
+        <field name="name">Situation Final</field>
+        <field name="res_model">situation.final</field>
+        <field name="domain">[('project_id', '=', context.get('default_project_id'))]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!--situation views-->
+    <record id="view_form_situation" model="ir.ui.view">
+        <field name="name">Situation.view.form</field>
+        <field name="model">situation</field>
+        <field name="arch" type="xml">
+            <form string="Situation">
+                <sheet>
+                    <header>
+                        <button name="export_situation_xlsx" type="object" string="Exporter (XLSX)" class="btn-primary"
+                                icon="fa-download"/>
+                        <button name="export_situation_pdf" type="object" string="Export PDF" class="oe_highlight"/>
+                    </header>
+                    <group>
+
+                        <group class="col-6">
+                            <field name="name"/>
+                            <field name="date"/>
+                        </group>
+                        <group class="col-6">
+                            <field name="project_id" domain="[('state', '!=', 'draft')]"/>
+                            <field name="original_subcontractor_id"
+                                   domain="[('contact_type', '=', 'SUBCONTRACTOR')]"/>
+                            <field name="previous_existing" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="lot_ids" widget="many2many_tags" readonly="1"/>
+                        </group>
+                    </group>
+                    <div class="mt-3"/>
+                    <field name="situation_sous_traitant_ids" nolabel="1"/>
+                    <div class="text-end" invisible="not previous_existing">
+                        <span class="o_form_label" style="color: gray;">Montant de la STP :</span>
+                        <field name="situation_amount_previous" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </div>
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">Montant T.R :</span>
+                        <field name="total_done_amount" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </div>
+                    <div class="text-end" invisible="not previous_existing">
+                        <span class="o_form_label" style="color: gray;">Montant R.Actuel :</span>
+                        <field name="situation_amount_difference" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </div>
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">Montant T.Brut de ST :</span>
+                        <field name="situation_amount" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </div>
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">TVA :</span>
+                        <field name="tva" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                    </div>
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">TTC :</span>
+                        <field name="ttc_amount" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                    </div>
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">R.G.S :</span>
+                        <field name="guarantee_retained" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                    </div>
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: gray;">Net à payer:</span>
+                        <field name="net_amount" readonly="1"
+                               class="text-end"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                    </div>
+                    <div class="text-end">
+                        <span class="o_form_label" style="color: red;">R.G.C :</span>
+                        <field name="total_R_G_C" readonly="1"
+                               class="text-end text-danger"
+                               nolabel="1"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_tree_situation" model="ir.ui.view">
+        <field name="name">Situation.view.tree</field>
+        <field name="model">situation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="net_amount" string="Total à payer"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_open_view_situation" model="ir.actions.act_window">
+        <field name="name">Situation</field>
+        <field name="res_model">situation</field>
+        <field name="domain">
+            [
+            ('project_id', '=', context.get('default_project_id')),
+            ('original_subcontractor_id', '=', context.get('default_original_subcontractor_id'))
+            ]
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
