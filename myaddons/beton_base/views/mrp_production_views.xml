@@ -27,6 +27,9 @@
                 <button name="action_creer_confirmer_vente" type="object"
                         string="Créer et confirmer la vente" class="btn-primary"
                         icon="fa-check"/>
+                <button name="action_reset_to_draft" type="object"
+                        string="Remettre en brouillon" class="btn-secondary"
+                        invisible="state != 'cancel'"/>
             </xpath>
 
             <!-- Ajouter les onglets béton dans le notebook -->

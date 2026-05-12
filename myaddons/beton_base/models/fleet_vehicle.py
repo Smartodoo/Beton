@@ -18,6 +18,40 @@ class FleetVehicle(models.Model):
         'vehicle_id', 'attachment_id',
         string="Pièces jointes")
 
+    # === Traçabilité & affectation ===
+    ancien_matricule = fields.Char(string="Ancien Matricule")
+    societe_appartenance_id = fields.Many2one(
+        'fleet.societe.appartenance',
+        string="Société d'Appartenance",
+    )
+
+    # === Conducteur - Permis de conduire ===
+    numero_permis = fields.Char(string="Numéro de permis de conduire")
+    date_delivrance_permis = fields.Date(string="Date de délivrance")
+    date_expiration_permis = fields.Date(string="Date d'expiration")
+    categorie_permis_id = fields.Many2one(
+        'fleet.vehicle.model.category',
+        string="Catégorie de permis",
+    )
+
+    @api.onchange('model_id')
+    def _onchange_model_id_categorie(self):
+        if self.model_id and self.model_id.category_id:
+            self.categorie_permis_id = self.model_id.category_id
+
+    @api.onchange('driver_id')
+    def _onchange_driver_id_permis(self):
+        """Auto-remplir les champs permis depuis la fiche employé chauffeur."""
+        if not self.driver_id:
+            return
+        employee = self.env['hr.employee'].sudo().search([
+            ('work_contact_id', '=', self.driver_id.id),
+            ('role_employe', '=', 'chauffeur'),
+        ], limit=1)
+        if employee:
+            self.numero_permis = employee.numero_permis
+            self.date_expiration_permis = employee.date_expiration_permis
+
 
 class FleetVehicleLogContract(models.Model):
     _inherit = 'fleet.vehicle.log.contract'

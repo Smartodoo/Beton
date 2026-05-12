@@ -12,14 +12,36 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Chauffeur" name="chauffeur_info" invisible="role_employe != 'chauffeur'">
                     <group>
-                        <group string="Permis de conduire">
-                            <field name="categorie_permis"/>
-                            <field name="numero_permis"/>
-                            <field name="date_expiration_permis"/>
+                        <group>
+                            <group string="Informations d'identité">
+                                <field name="date_naissance"/>
+                                <field name="lieu_naissance"/>
+                                <field name="date_recrutement"/>
+                                <field name="poste_occupe"/>
+                                <field name="formation_suivie"/>
+                                <field name="telephone_chauffeur"/>
+                            </group>
+
+                            <group string="Informations Médicales">
+                                <field name="groupe_sanguin"/>
+                                <field name="aptitude_medicale"/>
+                                <field name="date_validite_aptitude"/>
+                                <field name="etablissement_sante"/>
+                            </group>
                         </group>
-                        <group string="Brevet">
-                            <field name="brevet"/>
-                            <field name="date_expiration_brevet"/>
+                        <group>
+                            <group string="Permis de conduire">
+                                <field name="numero_permis"/>
+                                <field name="date_delivrance_permis"/>
+                                <field name="date_expiration_permis"/>
+                                <field name="categorie_permis"/>
+                            </group>
+
+                            <group string="Brevet de conduite">
+                                <field name="brevet"/>
+                                <field name="date_validite_brevet"/>
+                                <field name="date_expiration_brevet"/>
+                            </group>
                         </group>
                     </group>
                 </page>

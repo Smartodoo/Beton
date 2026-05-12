@@ -37,3 +37,6 @@ access_stock_move_report_wizard,stock.move.report.wizard,model_stock_move_report
 access_cout_revient_period_filter_wizard,cout.revient.period.filter.wizard,model_cout_revient_period_filter_wizard,base.group_user,1,1,1,1
 access_beton_bon_sortie_user,beton.bon.sortie.user,model_beton_bon_sortie,base.group_user,1,1,1,1
 access_beton_bon_sortie_responsable,beton.bon.sortie.responsable,model_beton_bon_sortie,beton_base.group_beton_responsable,1,1,1,1
+access_fleet_societe_appartenance_user,fleet.societe.appartenance.user,model_fleet_societe_appartenance,fleet.fleet_group_user,1,0,0,0
+access_fleet_societe_appartenance_manager,fleet.societe.appartenance.manager,model_fleet_societe_appartenance,fleet.fleet_group_manager,1,1,1,1
+access_fleet_infraction,fleet.infraction,model_fleet_infraction,base.group_user,1,1,1,1

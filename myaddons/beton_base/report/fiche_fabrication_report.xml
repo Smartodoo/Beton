@@ -86,9 +86,10 @@
                             </div>
                             <div class="col-4">
                                 <div class="beton-info-card">
-                                    <span class="label">Date début</span>
+                                    <span class="label">Date de fabrication</span>
                                     <span class="value">
-                                        <t t-esc="o.date_start.strftime('%d/%m/%Y %H:%M') if o.date_start else '—'"/>
+                                        <t t-set="date_fab" t-value="o.date_finished or o.date_start"/>
+                                        <t t-esc="date_fab.strftime('%d/%m/%Y %H:%M') if date_fab else '—'"/>
                                     </span>
                                 </div>
                             </div>
@@ -102,6 +103,12 @@
                                 <div class="beton-info-card">
                                     <span class="label">Opérateur</span>
                                     <span class="value" t-esc="o.operateur_id.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="beton-info-card">
+                                    <span class="label">Chantier</span>
+                                    <span class="value" t-esc="o.chantier or '—'"/>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -126,22 +133,10 @@
                             <t t-set="client" t-value="o.client_id"/>
                             <t t-set="addr_parts" t-value="[p for p in [client.street, client.street2, client.zip, client.city, (client.state_id.name if client.state_id else False), (client.country_id.name if client.country_id else False)] if p]"/>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <div class="beton-info-card">
                                         <span class="label">Raison sociale</span>
                                         <span class="value" t-esc="client.name or '—'"/>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="beton-info-card">
-                                        <span class="label">Téléphone</span>
-                                        <span class="value" t-esc="client.phone or client.mobile or '—'"/>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="beton-info-card">
-                                        <span class="label">Email</span>
-                                        <span class="value" t-esc="client.email or '—'"/>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -186,7 +181,7 @@
                             </div>
                         </t>
 
-                        <div class="beton-section-title">Produit &amp; Chantier</div>
+                        <div class="beton-section-title">Produit</div>
                         <div class="row">
                             <div class="col-6">
                                 <div class="beton-info-card">
@@ -198,12 +193,6 @@
                                 <div class="beton-info-card">
                                     <span class="label">Nomenclature</span>
                                     <span class="value" t-esc="o.bom_id.display_name or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="beton-info-card">
-                                    <span class="label">Chantier</span>
-                                    <span class="value" t-esc="o.chantier or '—'"/>
                                 </div>
                             </div>
                         </div>
@@ -277,6 +266,13 @@
                                 </t>
                             </tbody>
                         </table>
+
+                        <div class="beton-section-title">Observation</div>
+                        <div class="beton-observation-box"
+                             style="border:1px solid #d0dde9; border-left:5px solid #1F4E79;
+                                    border-radius:3px; background:#f7fafc; min-height:90pt;
+                                    padding:10pt 14pt; margin-bottom:20pt;">
+                        </div>
 
                         <div class="row mt-5">
                             <div class="col-4">

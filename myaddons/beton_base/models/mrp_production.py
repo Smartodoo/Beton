@@ -149,6 +149,15 @@ class MrpProduction(models.Model):
         order = self._creer_vente()
         order.action_confirm()
 
+    def action_reset_to_draft(self):
+        """Remettre un ordre de fabrication annulé en brouillon."""
+        for rec in self:
+            if rec.state != 'cancel':
+                raise UserError("Seuls les ordres annulés peuvent être remis en brouillon.")
+            moves = rec.move_raw_ids | rec.move_finished_ids
+            moves.filtered(lambda m: m.state == 'cancel').write({'state': 'draft'})
+            rec.state = 'draft'
+
     def action_voir_vente(self):
         """Ouvre la vente liée."""
         self.ensure_one()

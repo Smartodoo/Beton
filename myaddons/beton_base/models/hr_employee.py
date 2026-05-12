@@ -5,6 +5,17 @@ from odoo import api, fields, models
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    # =============================================
+    # INFORMATIONS D'IDENTITÉ (chauffeur)
+    # =============================================
+    date_naissance = fields.Date(string="Date de Naissance")
+    lieu_naissance = fields.Char(string="Lieu de Naissance")
+    date_recrutement = fields.Date(string="Date de Recrutement")
+    poste_occupe = fields.Char(string="Poste Occupé")
+    formation_suivie = fields.Text(string="Formation Suivie")
+    telephone_chauffeur = fields.Char(string="N° Téléphone")
+
+    # Rôle de l'employé
     role_employe = fields.Selection([
         ('chauffeur', 'Chauffeur'),
         ('operateur', 'Opérateur'),
@@ -24,11 +35,54 @@ class HrEmployee(models.Model):
         ('ec', 'EC - Poids lourd + Remorque'),
     ], string="Catégorie de permis")
     numero_permis = fields.Char(string="N° Permis")
+    date_delivrance_permis = fields.Date(string="Date de délivrance du permis")
     date_expiration_permis = fields.Date(string="Date d'expiration du permis")
 
     # Brevet (visible si rôle = chauffeur)
     brevet = fields.Char(string="Brevet")
+    date_validite_brevet = fields.Date(string="Date de validité du brevet")
     date_expiration_brevet = fields.Date(string="Date d'expiration du brevet")
+
+    # =============================================
+    # INFORMATIONS MÉDICALES
+    # =============================================
+    groupe_sanguin = fields.Selection([
+        ('a+', 'A+'), ('a-', 'A-'),
+        ('b+', 'B+'), ('b-', 'B-'),
+        ('ab+', 'AB+'), ('ab-', 'AB-'),
+        ('o+', 'O+'), ('o-', 'O-'),
+    ], string="Groupe Sanguin")
+    aptitude_medicale = fields.Selection([
+        ('apte', 'Apte'),
+        ('apte_restriction', 'Apte avec restrictions'),
+        ('inapte', 'Inapte'),
+    ], string="Aptitude Médicale")
+    date_validite_aptitude = fields.Date(string="Date de validité de l'aptitude")
+    etablissement_sante = fields.Char(string="Établissement de Santé")
+
+    # =============================================
+    # INFRACTIONS (smart button)
+    # =============================================
+    infraction_ids = fields.One2many(
+        'fleet.infraction', 'conducteur_id', string="Infractions")
+    infraction_count = fields.Integer(
+        string="Nombre d'infractions", compute='_compute_infraction_count')
+
+    @api.depends('infraction_ids')
+    def _compute_infraction_count(self):
+        for emp in self:
+            emp.infraction_count = len(emp.infraction_ids)
+
+    def action_view_infractions(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Infractions',
+            'res_model': 'fleet.infraction',
+            'view_mode': 'tree,form',
+            'domain': [('conducteur_id', '=', self.id)],
+            'context': {'default_conducteur_id': self.id},
+        }
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -52,7 +106,6 @@ class HrEmployee(models.Model):
         if self.work_contact_id:
             self.work_contact_id.sudo().write({'is_chauffeur': is_chauffeur})
         elif is_chauffeur:
-            # Créer le contact si inexistant
             partner = self.env['res.partner'].sudo().create({
                 'name': self.name,
                 'is_chauffeur': True,
@@ -76,35 +129,28 @@ class HrEmployee(models.Model):
             messages = []
             if emp.date_expiration_permis and today <= emp.date_expiration_permis <= limit:
                 jours = (emp.date_expiration_permis - today).days
-                messages.append(f"Le permis de conduire de {emp.name} expire dans {jours} jour(s) ({emp.date_expiration_permis})")
+                messages.append(
+                    f"Le permis de conduire de {emp.name} expire dans {jours} jour(s) ({emp.date_expiration_permis})")
             if emp.date_expiration_brevet and today <= emp.date_expiration_brevet <= limit:
                 jours = (emp.date_expiration_brevet - today).days
-                messages.append(f"Le brevet de {emp.name} expire dans {jours} jour(s) ({emp.date_expiration_brevet})")
+                messages.append(
+                    f"Le brevet de {emp.name} expire dans {jours} jour(s) ({emp.date_expiration_brevet})")
             if not messages:
                 continue
             body = "<br/>".join(messages)
-            # Notification dans le chatter de l'employé
             emp.message_post(
                 body=f"<strong>Alerte expiration chauffeur</strong><br/>{body}",
                 message_type='notification',
                 subtype_xmlid='mail.mt_note',
             )
-            # Notification via Discuss au responsable (ou à l'utilisateur courant)
             notify_partner = (
                 emp.parent_id.work_contact_id
                 or emp.department_id.manager_id.work_contact_id
                 or self.env.user.partner_id
             )
             if notify_partner:
-                self.env['mail.message'].create({
-                    'message_type': 'notification',
-                    'subtype_id': self.env.ref('mail.mt_note').id,
-                    'body': f"<strong>Alerte expiration chauffeur</strong><br/>{body}",
-                    'partner_ids': [notify_partner.id],
-                    'model': 'hr.employee',
-                    'res_id': emp.id,
-                    'notification_ids': [(0, 0, {
-                        'res_partner_id': notify_partner.id,
-                        'notification_type': 'inbox',
-                    })],
-                })
+                emp.message_notify(
+                    partner_ids=notify_partner.ids,
+                    body=f"<strong>Alerte expiration chauffeur</strong><br/>{body}",
+                    subject="Alerte expiration chauffeur",
+                )

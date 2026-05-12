@@ -13,6 +13,18 @@
                 <field name="cout_km"/>
                 <field name="etat_camion"/>
             </xpath>
+            <!-- Champs Permis du conducteur (après driver_id) -->
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="numero_permis"/>
+                <field name="date_delivrance_permis"/>
+                <field name="date_expiration_permis"/>
+                <field name="categorie_permis_id"/>
+            </xpath>
+            <!-- Traçabilité & affectation (après vin_sn) -->
+            <xpath expr="//field[@name='vin_sn']" position="after">
+                <field name="ancien_matricule"/>
+                <field name="societe_appartenance_id"/>
+            </xpath>
             <!-- Onglet Pièces jointes sur le véhicule -->
             <xpath expr="//notebook" position="inside">
                 <page string="Pièces jointes" name="documents_vehicle">
