@@ -25,7 +25,7 @@
                             <div class="col-6">
                                 <strong>Client :</strong> <span t-field="o.partner_id.name"/><br/>
                                 <strong>Chantier :</strong> <span t-field="o.chantier"/><br/>
-                                <strong>Formule :</strong> <span t-field="o.formule_beton_id.name"/><br/>
+                                <strong>Formule :</strong> <span t-field="o.formule_beton_id.display_name"/><br/>
                                 <t t-if="o.partner_id.rc or o.partner_id.nis or o.partner_id.nif or o.partner_id.ai">
                                     <strong>RC :</strong> <span t-field="o.partner_id.rc"/>
                                     <strong> NIS :</strong> <span t-field="o.partner_id.nis"/><br/>

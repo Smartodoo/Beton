@@ -15,6 +15,31 @@ class ProductTemplate(models.Model):
         mapping['fabrique'] = 'product'
         return mapping
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for rec in records:
+            rec._notify_prix_vente_reminder()
+        return records
+
+    def _notify_prix_vente_reminder(self):
+        """Envoie un rappel non-bloquant à l'utilisateur courant pour vérifier
+        le prix de vente du produit nouvellement créé."""
+        self.ensure_one()
+        self.env['bus.bus']._sendone(
+            self.env.user.partner_id,
+            'simple_notification',
+            {
+                'type': 'warning',
+                'title': _("Rappel - Prix de vente"),
+                'message': _(
+                    "N'oubliez pas de saisir une valeur convenable pour le prix "
+                    "de vente du produit '%s'."
+                ) % (self.name or ''),
+                'sticky': True,
+            },
+        )
+
     def write(self, vals):
         recalc_cout = (
             ('prix_achat' in vals or 'cout_divers' in vals)

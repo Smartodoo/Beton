@@ -11,4 +11,5 @@ from . import res_partner
 from . import beton_versement
 from . import sale_order
 from . import purchase_order
+from . import mrp_production
 from . import hr_expense_sheet

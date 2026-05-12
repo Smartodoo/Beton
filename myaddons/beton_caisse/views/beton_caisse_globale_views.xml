@@ -130,5 +130,7 @@
         <field name="name">Dépenses Globales</field>
         <field name="res_model">beton.caisse.globale</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('partner_type', '=', 'fournisseur')]</field>
+        <field name="context">{'default_partner_type': 'fournisseur', 'search_default_fournisseur': 1}</field>
     </record>
 </odoo>

@@ -1,4 +1,5 @@
 from . import centrale
+from . import societe_appartenance
 from . import res_partner
 from . import chantier
 from . import formule
@@ -18,6 +19,7 @@ from . import mrp_production
 from . import mrp_scrap
 from . import bon_sortie
 from . import hr_employee
+from . import infraction
 from . import stock_move
 from . import sale_order
 from . import purchase_order
