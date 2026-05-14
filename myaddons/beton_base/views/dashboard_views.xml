@@ -70,4 +70,62 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('close_date', '=', False)]</field>
     </record>
+
+    <!-- ====== Achats ====== -->
+    <record id="action_dashboard_achats_mois" model="ir.actions.act_window">
+        <field name="name">Achats du mois</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph</field>
+        <field name="domain">[('date_order', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d 00:00:00')), ('state', 'in', ('purchase', 'done'))]</field>
+    </record>
+
+    <record id="action_dashboard_achats_draft" model="ir.actions.act_window">
+        <field name="name">Demandes de prix</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('state', 'in', ('draft', 'sent', 'to approve'))]</field>
+    </record>
+
+    <record id="action_dashboard_achats_a_facturer" model="ir.actions.act_window">
+        <field name="name">Achats à facturer</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('state', 'in', ('purchase', 'done')), ('invoice_status', '=', 'to invoice')]</field>
+    </record>
+
+    <record id="action_dashboard_achats_a_recevoir" model="ir.actions.act_window">
+        <field name="name">Achats à recevoir</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('state', '=', 'purchase')]</field>
+    </record>
+
+    <!-- ====== Ventes ====== -->
+    <record id="action_dashboard_ventes_mois" model="ir.actions.act_window">
+        <field name="name">Ventes du mois</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,pivot,graph</field>
+        <field name="domain">[('date_order', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d 00:00:00')), ('state', 'in', ('sale', 'done'))]</field>
+    </record>
+
+    <record id="action_dashboard_devis_en_cours" model="ir.actions.act_window">
+        <field name="name">Devis en cours</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('state', 'in', ('draft', 'sent'))]</field>
+    </record>
+
+    <record id="action_dashboard_ventes_a_facturer" model="ir.actions.act_window">
+        <field name="name">Ventes à facturer</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('state', 'in', ('sale', 'done')), ('invoice_status', '=', 'to invoice')]</field>
+    </record>
+
+    <record id="action_dashboard_ventes_a_livrer" model="ir.actions.act_window">
+        <field name="name">Ventes à livrer</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('state', '=', 'sale')]</field>
+    </record>
 </odoo>
