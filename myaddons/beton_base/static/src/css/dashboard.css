@@ -111,6 +111,8 @@
 .beton_dashboard .section-icon.bg-logistique { background: linear-gradient(135deg, #2e7d32, #43a047); }
 .beton_dashboard .section-icon.bg-qualite { background: linear-gradient(135deg, #e65100, #f57c00); }
 .beton_dashboard .section-icon.bg-finance { background: linear-gradient(135deg, #6a1b9a, #8e24aa); }
+.beton_dashboard .section-icon.bg-achats { background: linear-gradient(135deg, #c2185b, #ec407a); }
+.beton_dashboard .section-icon.bg-ventes { background: linear-gradient(135deg, #00838f, #26c6da); }
 
 /* KPI Cards */
 .beton_dashboard .kpi-card {
@@ -154,6 +156,8 @@
 .beton_dashboard .kpi-icon.icon-teal { background: linear-gradient(135deg, #00695c, #26a69a); }
 .beton_dashboard .kpi-icon.icon-indigo { background: linear-gradient(135deg, #283593, #5c6bc0); }
 .beton_dashboard .kpi-icon.icon-amber { background: linear-gradient(135deg, #ff6f00, #ffca28); }
+.beton_dashboard .kpi-icon.icon-pink { background: linear-gradient(135deg, #c2185b, #ec407a); }
+.beton_dashboard .kpi-icon.icon-cyan { background: linear-gradient(135deg, #00838f, #26c6da); }
 
 .beton_dashboard .kpi-label {
     font-size: 0.8rem;

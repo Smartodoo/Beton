@@ -518,6 +518,391 @@ class BetonDashboard(models.Model):
             values.append(count)
         return {'labels': labels, 'values': values}
 
+    # ===== Achats =====
+    @api.model
+    def _get_period_purchases(self, date=None, states=('purchase', 'done')):
+        """Retourne le recordset des bons d'achat confirmés sur la période (mois courant -> date)."""
+        debut_mois, date = self._get_period(date)
+        return self.env['purchase.order'].search([
+            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('state', 'in', list(states)),
+        ])
+
+    @api.model
+    def get_achats_mois(self, date=None):
+        """Montant total des achats confirmés du mois."""
+        orders = self._get_period_purchases(date)
+        return sum(orders.mapped('amount_total'))
+
+    @api.model
+    def get_achats_mois_precedent(self, date=None):
+        debut, fin = self._get_previous_period(date)
+        orders = self.env['purchase.order'].search([
+            ('date_order', '>=', str(debut) + ' 00:00:00'),
+            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('state', 'in', ('purchase', 'done')),
+        ])
+        return sum(orders.mapped('amount_total'))
+
+    @api.model
+    def get_achats_count(self, date=None):
+        """Nombre de bons d'achat confirmés du mois."""
+        return len(self._get_period_purchases(date))
+
+    @api.model
+    def get_achats_count_precedent(self, date=None):
+        debut, fin = self._get_previous_period(date)
+        return self.env['purchase.order'].search_count([
+            ('date_order', '>=', str(debut) + ' 00:00:00'),
+            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('state', 'in', ('purchase', 'done')),
+        ])
+
+    @api.model
+    def get_achats_draft_count(self):
+        """Demandes de prix / brouillons en cours (toutes périodes)."""
+        return self.env['purchase.order'].search_count([
+            ('state', 'in', ('draft', 'sent', 'to approve')),
+        ])
+
+    @api.model
+    def get_achats_a_facturer(self):
+        """Achats confirmés à facturer (invoice_status='to invoice')."""
+        return self.env['purchase.order'].search_count([
+            ('state', 'in', ('purchase', 'done')),
+            ('invoice_status', '=', 'to invoice'),
+        ])
+
+    @api.model
+    def get_achats_a_recevoir(self):
+        """Achats confirmés non encore totalement réceptionnés."""
+        orders = self.env['purchase.order'].search([
+            ('state', '=', 'purchase'),
+        ])
+        count = 0
+        for po in orders:
+            pickings = po.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+            if pickings:
+                count += 1
+        return count
+
+    @api.model
+    def get_panier_moyen_achat(self, date=None):
+        """Montant moyen par bon d'achat (mois courant)."""
+        orders = self._get_period_purchases(date)
+        if not orders:
+            return 0.0
+        return round(sum(orders.mapped('amount_total')) / len(orders), 2)
+
+    @api.model
+    def get_top_fournisseurs(self, date=None, limit=5):
+        """Top fournisseurs par montant d'achat du mois."""
+        orders = self._get_period_purchases(date)
+        totals = {}
+        for po in orders:
+            name = po.partner_id.name or 'N/D'
+            totals[name] = totals.get(name, 0.0) + po.amount_total
+        sorted_items = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:limit]
+        return [{'name': it[0], 'amount': round(it[1], 2)} for it in sorted_items]
+
+    @api.model
+    def get_top_produits_achetes(self, date=None, limit=5):
+        """Top produits achetés par montant (mois courant)."""
+        orders = self._get_period_purchases(date)
+        totals = {}
+        qties = {}
+        for po in orders:
+            for line in po.order_line:
+                if not line.product_id:
+                    continue
+                name = line.product_id.display_name
+                totals[name] = totals.get(name, 0.0) + line.price_subtotal
+                qties[name] = qties.get(name, 0.0) + line.product_qty
+        sorted_items = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:limit]
+        return [{
+            'name': it[0],
+            'amount': round(it[1], 2),
+            'qty': round(qties.get(it[0], 0.0), 2),
+        } for it in sorted_items]
+
+    @api.model
+    def get_chart_achats_par_etat(self, date=None):
+        """Répartition des bons d'achat par état (mois courant)."""
+        debut_mois, date = self._get_period(date)
+        states = ['draft', 'sent', 'to approve', 'purchase', 'done', 'cancel']
+        labels_map = {
+            'draft': 'Brouillon',
+            'sent': 'Envoyé',
+            'to approve': 'À approuver',
+            'purchase': 'Confirmé',
+            'done': 'Verrouillé',
+            'cancel': 'Annulé',
+        }
+        labels = []
+        values = []
+        for st in states:
+            cnt = self.env['purchase.order'].search_count([
+                ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+                ('date_order', '<=', str(date) + ' 23:59:59'),
+                ('state', '=', st),
+            ])
+            if cnt:
+                labels.append(labels_map[st])
+                values.append(cnt)
+        return {'labels': labels, 'values': values}
+
+    @api.model
+    def get_chart_achats_mensuels(self, date=None):
+        """Montant des achats sur les 6 derniers mois."""
+        today = date or fields.Date.today()
+        labels = []
+        values = []
+        mois_names = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin',
+                      'Juil', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec']
+        for i in range(5, -1, -1):
+            mois = today.month - i
+            annee = today.year
+            while mois <= 0:
+                mois += 12
+                annee -= 1
+            debut = today.replace(year=annee, month=mois, day=1)
+            if mois == 12:
+                fin = today.replace(year=annee + 1, month=1, day=1) - timedelta(days=1)
+            else:
+                fin = today.replace(year=annee, month=mois + 1, day=1) - timedelta(days=1)
+            if i == 0:
+                fin = today
+            orders = self.env['purchase.order'].search([
+                ('date_order', '>=', str(debut) + ' 00:00:00'),
+                ('date_order', '<=', str(fin) + ' 23:59:59'),
+                ('state', 'in', ('purchase', 'done')),
+            ])
+            labels.append(mois_names[mois - 1])
+            values.append(round(sum(orders.mapped('amount_total')), 2))
+        return {'labels': labels, 'values': values}
+
+    @api.model
+    def get_achats_recents(self, date=None, limit=7):
+        """Derniers bons d'achat du mois sélectionné."""
+        debut_mois, date = self._get_period(date)
+        orders = self.env['purchase.order'].search([
+            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('state', 'in', ('purchase', 'done', 'sent', 'to approve')),
+        ], order='date_order desc', limit=limit)
+        result = []
+        for po in orders:
+            result.append({
+                'id': po.id,
+                'name': po.name,
+                'partner': po.partner_id.name if po.partner_id else '',
+                'amount': round(po.amount_total, 2),
+                'date': str(po.date_order.date()) if po.date_order else '',
+                'state': po.state,
+                'state_label': dict(po._fields['state'].selection).get(po.state, po.state),
+            })
+        return result
+
+    # ===== Ventes =====
+    @api.model
+    def _get_period_sales(self, date=None, states=('sale', 'done')):
+        """Retourne le recordset des ventes confirmées sur la période (mois courant -> date)."""
+        debut_mois, date = self._get_period(date)
+        return self.env['sale.order'].search([
+            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('state', 'in', list(states)),
+        ])
+
+    @api.model
+    def get_ventes_mois(self, date=None):
+        orders = self._get_period_sales(date)
+        return sum(orders.mapped('amount_total'))
+
+    @api.model
+    def get_ventes_mois_precedent(self, date=None):
+        debut, fin = self._get_previous_period(date)
+        orders = self.env['sale.order'].search([
+            ('date_order', '>=', str(debut) + ' 00:00:00'),
+            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('state', 'in', ('sale', 'done')),
+        ])
+        return sum(orders.mapped('amount_total'))
+
+    @api.model
+    def get_ventes_count(self, date=None):
+        return len(self._get_period_sales(date))
+
+    @api.model
+    def get_ventes_count_precedent(self, date=None):
+        debut, fin = self._get_previous_period(date)
+        return self.env['sale.order'].search_count([
+            ('date_order', '>=', str(debut) + ' 00:00:00'),
+            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('state', 'in', ('sale', 'done')),
+        ])
+
+    @api.model
+    def get_devis_en_cours(self):
+        """Devis ouverts (draft/sent)."""
+        return self.env['sale.order'].search_count([
+            ('state', 'in', ('draft', 'sent')),
+        ])
+
+    @api.model
+    def get_ventes_a_facturer(self):
+        """Ventes confirmées à facturer."""
+        return self.env['sale.order'].search_count([
+            ('state', 'in', ('sale', 'done')),
+            ('invoice_status', '=', 'to invoice'),
+        ])
+
+    @api.model
+    def get_ventes_a_livrer(self):
+        """Ventes confirmées non encore totalement livrées."""
+        orders = self.env['sale.order'].search([
+            ('state', '=', 'sale'),
+        ])
+        count = 0
+        for so in orders:
+            pickings = so.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+            if pickings:
+                count += 1
+        return count
+
+    @api.model
+    def get_panier_moyen_vente(self, date=None):
+        orders = self._get_period_sales(date)
+        if not orders:
+            return 0.0
+        return round(sum(orders.mapped('amount_total')) / len(orders), 2)
+
+    @api.model
+    def get_taux_conversion_devis(self, date=None):
+        """Taux de conversion = ventes confirmées / total devis créés ce mois."""
+        debut_mois, date = self._get_period(date)
+        total = self.env['sale.order'].search_count([
+            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('state', '!=', 'cancel'),
+        ])
+        confirmes = self.env['sale.order'].search_count([
+            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('state', 'in', ('sale', 'done')),
+        ])
+        if not total:
+            return 0.0
+        return round((confirmes / total) * 100, 1)
+
+    @api.model
+    def get_top_clients_vente(self, date=None, limit=5):
+        """Top clients par CA confirmé du mois."""
+        orders = self._get_period_sales(date)
+        totals = {}
+        for so in orders:
+            name = so.partner_id.name or 'N/D'
+            totals[name] = totals.get(name, 0.0) + so.amount_total
+        sorted_items = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:limit]
+        return [{'name': it[0], 'amount': round(it[1], 2)} for it in sorted_items]
+
+    @api.model
+    def get_top_produits_vendus(self, date=None, limit=5):
+        """Top produits vendus par montant du mois."""
+        orders = self._get_period_sales(date)
+        totals = {}
+        qties = {}
+        for so in orders:
+            for line in so.order_line:
+                if not line.product_id:
+                    continue
+                name = line.product_id.display_name
+                totals[name] = totals.get(name, 0.0) + line.price_subtotal
+                qties[name] = qties.get(name, 0.0) + line.product_uom_qty
+        sorted_items = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:limit]
+        return [{
+            'name': it[0],
+            'amount': round(it[1], 2),
+            'qty': round(qties.get(it[0], 0.0), 2),
+        } for it in sorted_items]
+
+    @api.model
+    def get_chart_ventes_par_etat(self, date=None):
+        """Répartition des ventes par état (mois courant)."""
+        debut_mois, date = self._get_period(date)
+        states = ['draft', 'sent', 'sale', 'done', 'cancel']
+        labels_map = {
+            'draft': 'Devis',
+            'sent': 'Devis envoyé',
+            'sale': 'Confirmée',
+            'done': 'Verrouillée',
+            'cancel': 'Annulée',
+        }
+        labels = []
+        values = []
+        for st in states:
+            cnt = self.env['sale.order'].search_count([
+                ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+                ('date_order', '<=', str(date) + ' 23:59:59'),
+                ('state', '=', st),
+            ])
+            if cnt:
+                labels.append(labels_map[st])
+                values.append(cnt)
+        return {'labels': labels, 'values': values}
+
+    @api.model
+    def get_chart_ventes_mensuelles(self, date=None):
+        """Montant des ventes sur les 6 derniers mois."""
+        today = date or fields.Date.today()
+        labels = []
+        values = []
+        mois_names = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin',
+                      'Juil', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec']
+        for i in range(5, -1, -1):
+            mois = today.month - i
+            annee = today.year
+            while mois <= 0:
+                mois += 12
+                annee -= 1
+            debut = today.replace(year=annee, month=mois, day=1)
+            if mois == 12:
+                fin = today.replace(year=annee + 1, month=1, day=1) - timedelta(days=1)
+            else:
+                fin = today.replace(year=annee, month=mois + 1, day=1) - timedelta(days=1)
+            if i == 0:
+                fin = today
+            orders = self.env['sale.order'].search([
+                ('date_order', '>=', str(debut) + ' 00:00:00'),
+                ('date_order', '<=', str(fin) + ' 23:59:59'),
+                ('state', 'in', ('sale', 'done')),
+            ])
+            labels.append(mois_names[mois - 1])
+            values.append(round(sum(orders.mapped('amount_total')), 2))
+        return {'labels': labels, 'values': values}
+
+    @api.model
+    def get_ventes_recentes(self, date=None, limit=7):
+        debut_mois, date = self._get_period(date)
+        orders = self.env['sale.order'].search([
+            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
+            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('state', 'in', ('sale', 'done', 'sent', 'draft')),
+        ], order='date_order desc', limit=limit)
+        result = []
+        for so in orders:
+            result.append({
+                'id': so.id,
+                'name': so.name,
+                'partner': so.partner_id.name if so.partner_id else '',
+                'amount': round(so.amount_total, 2),
+                'date': str(so.date_order.date()) if so.date_order else '',
+                'state': so.state,
+                'state_label': dict(so._fields['state'].selection).get(so.state, so.state),
+            })
+        return result
+
     # ===== Méthode principale =====
     @api.model
     def get_dashboard_data(self, year=None, month=None, date_str=None):
@@ -538,6 +923,16 @@ class BetonDashboard(models.Model):
         prod_mois_prec = self.get_production_mensuelle_precedente(target_date)
         vol_livre_prec = self.get_volume_livre_mois_precedent(target_date)
         ca_mois_prec = self.get_chiffre_affaires_mois_precedent(target_date)
+
+        # Achats / Ventes
+        achats_mois = self.get_achats_mois(target_date)
+        achats_mois_prec = self.get_achats_mois_precedent(target_date)
+        achats_count = self.get_achats_count(target_date)
+        achats_count_prec = self.get_achats_count_precedent(target_date)
+        ventes_mois = self.get_ventes_mois(target_date)
+        ventes_mois_prec = self.get_ventes_mois_precedent(target_date)
+        ventes_count = self.get_ventes_count(target_date)
+        ventes_count_prec = self.get_ventes_count_precedent(target_date)
 
         return {
             # Production
@@ -577,11 +972,40 @@ class BetonDashboard(models.Model):
             'top_chantiers': self.get_top_chantiers(target_date),
             'top_clients': self.get_top_clients(target_date),
             'fabrications_recentes': self.get_fabrications_recentes(target_date),
+            # Achats
+            'achats_mois': achats_mois,
+            'achats_mois_trend': self._compute_trend(achats_mois, achats_mois_prec),
+            'achats_count': achats_count,
+            'achats_count_trend': self._compute_trend(achats_count, achats_count_prec),
+            'achats_draft_count': self.get_achats_draft_count(),
+            'achats_a_facturer': self.get_achats_a_facturer(),
+            'achats_a_recevoir': self.get_achats_a_recevoir(),
+            'panier_moyen_achat': self.get_panier_moyen_achat(target_date),
+            'top_fournisseurs': self.get_top_fournisseurs(target_date),
+            'top_produits_achetes': self.get_top_produits_achetes(target_date),
+            'achats_recents': self.get_achats_recents(target_date),
+            # Ventes
+            'ventes_mois': ventes_mois,
+            'ventes_mois_trend': self._compute_trend(ventes_mois, ventes_mois_prec),
+            'ventes_count': ventes_count,
+            'ventes_count_trend': self._compute_trend(ventes_count, ventes_count_prec),
+            'devis_en_cours': self.get_devis_en_cours(),
+            'ventes_a_facturer': self.get_ventes_a_facturer(),
+            'ventes_a_livrer': self.get_ventes_a_livrer(),
+            'panier_moyen_vente': self.get_panier_moyen_vente(target_date),
+            'taux_conversion_devis': self.get_taux_conversion_devis(target_date),
+            'top_clients_vente': self.get_top_clients_vente(target_date),
+            'top_produits_vendus': self.get_top_produits_vendus(target_date),
+            'ventes_recentes': self.get_ventes_recentes(target_date),
             # Graphiques
             'chart_production': self.get_chart_production_journaliere(target_date),
             'chart_produits': self.get_chart_production_par_produit(target_date),
             'chart_ca': self.get_chart_ca_mensuel(target_date),
             'chart_livraisons': self.get_chart_livraisons_semaine(target_date),
+            'chart_achats_etat': self.get_chart_achats_par_etat(target_date),
+            'chart_achats_mensuels': self.get_chart_achats_mensuels(target_date),
+            'chart_ventes_etat': self.get_chart_ventes_par_etat(target_date),
+            'chart_ventes_mensuelles': self.get_chart_ventes_mensuelles(target_date),
             # Meta
             'currency_symbol': currency.symbol,
             'currency_id': currency.id,

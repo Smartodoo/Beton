@@ -25,6 +25,10 @@ class BetonDashboard extends Component {
         this.chartProduitsRef = useRef("chartProduits");
         this.chartCARef = useRef("chartCA");
         this.chartLivraisonsRef = useRef("chartLivraisons");
+        this.chartAchatsMensuelsRef = useRef("chartAchatsMensuels");
+        this.chartAchatsEtatRef = useRef("chartAchatsEtat");
+        this.chartVentesMensuellesRef = useRef("chartVentesMensuelles");
+        this.chartVentesEtatRef = useRef("chartVentesEtat");
         this.charts = [];
 
         onWillStart(async () => {
@@ -204,6 +208,146 @@ class BetonDashboard extends Component {
             }));
         }
 
+        // Chart 5: Achats mensuels (barres)
+        const ctxAchatsM = this.chartAchatsMensuelsRef.el;
+        if (ctxAchatsM && data.chart_achats_mensuels) {
+            this.charts.push(new Chart(ctxAchatsM, {
+                type: "bar",
+                data: {
+                    labels: data.chart_achats_mensuels.labels,
+                    datasets: [{
+                        label: "Achats (" + (data.currency_symbol || "DA") + ")",
+                        data: data.chart_achats_mensuels.values,
+                        backgroundColor: "rgba(194, 24, 91, 0.7)",
+                        borderColor: "rgba(194, 24, 91, 1)",
+                        borderWidth: 1,
+                        borderRadius: 6,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: 11 },
+                                callback: (val) => {
+                                    if (val >= 1000000) return (val / 1000000).toFixed(1) + "M";
+                                    if (val >= 1000) return (val / 1000).toFixed(0) + "K";
+                                    return val;
+                                },
+                            },
+                            grid: { color: "rgba(0,0,0,0.05)" },
+                        },
+                        x: {
+                            ticks: { font: { size: 11 } },
+                            grid: { display: false },
+                        },
+                    },
+                },
+            }));
+        }
+
+        // Chart 6: Achats par état (doughnut)
+        const ctxAchatsE = this.chartAchatsEtatRef.el;
+        if (ctxAchatsE && data.chart_achats_etat && data.chart_achats_etat.labels.length) {
+            const colors = ["#9e9e9e", "#42a5f5", "#ffb300", "#43a047", "#1b5e20", "#e53935"];
+            this.charts.push(new Chart(ctxAchatsE, {
+                type: "doughnut",
+                data: {
+                    labels: data.chart_achats_etat.labels,
+                    datasets: [{
+                        data: data.chart_achats_etat.values,
+                        backgroundColor: colors.slice(0, data.chart_achats_etat.labels.length),
+                        borderWidth: 2,
+                        borderColor: "#fff",
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: "right", labels: { font: { size: 11 }, padding: 10 } },
+                    },
+                    cutout: "55%",
+                },
+            }));
+        }
+
+        // Chart 7: Ventes mensuelles (ligne)
+        const ctxVentesM = this.chartVentesMensuellesRef.el;
+        if (ctxVentesM && data.chart_ventes_mensuelles) {
+            this.charts.push(new Chart(ctxVentesM, {
+                type: "line",
+                data: {
+                    labels: data.chart_ventes_mensuelles.labels,
+                    datasets: [{
+                        label: "Ventes (" + (data.currency_symbol || "DA") + ")",
+                        data: data.chart_ventes_mensuelles.values,
+                        borderColor: "#00838f",
+                        backgroundColor: "rgba(0, 131, 143, 0.15)",
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: "#00838f",
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: 11 },
+                                callback: (val) => {
+                                    if (val >= 1000000) return (val / 1000000).toFixed(1) + "M";
+                                    if (val >= 1000) return (val / 1000).toFixed(0) + "K";
+                                    return val;
+                                },
+                            },
+                            grid: { color: "rgba(0,0,0,0.05)" },
+                        },
+                        x: {
+                            ticks: { font: { size: 11 } },
+                            grid: { display: false },
+                        },
+                    },
+                },
+            }));
+        }
+
+        // Chart 8: Ventes par état (doughnut)
+        const ctxVentesE = this.chartVentesEtatRef.el;
+        if (ctxVentesE && data.chart_ventes_etat && data.chart_ventes_etat.labels.length) {
+            const colors = ["#9e9e9e", "#42a5f5", "#43a047", "#1b5e20", "#e53935"];
+            this.charts.push(new Chart(ctxVentesE, {
+                type: "doughnut",
+                data: {
+                    labels: data.chart_ventes_etat.labels,
+                    datasets: [{
+                        data: data.chart_ventes_etat.values,
+                        backgroundColor: colors.slice(0, data.chart_ventes_etat.labels.length),
+                        borderWidth: 2,
+                        borderColor: "#fff",
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: "right", labels: { font: { size: 11 }, padding: 10 } },
+                    },
+                    cutout: "55%",
+                },
+            }));
+        }
+
         // Chart 4: Livraisons semaine (ligne)
         const ctxLiv = this.chartLivraisonsRef.el;
         if (ctxLiv) {
@@ -291,6 +435,48 @@ class BetonDashboard extends Component {
         this.action.doAction({
             type: "ir.actions.act_window",
             res_model: "mrp.production",
+            res_id: id,
+            views: [[false, "form"]],
+        });
+    }
+
+    // ===== Achats / Ventes navigation =====
+    openAchatsMois() {
+        this.action.doAction("beton_base.action_dashboard_achats_mois");
+    }
+    openAchatsDraft() {
+        this.action.doAction("beton_base.action_dashboard_achats_draft");
+    }
+    openAchatsAFacturer() {
+        this.action.doAction("beton_base.action_dashboard_achats_a_facturer");
+    }
+    openAchatsARecevoir() {
+        this.action.doAction("beton_base.action_dashboard_achats_a_recevoir");
+    }
+    openVentesMois() {
+        this.action.doAction("beton_base.action_dashboard_ventes_mois");
+    }
+    openDevisEnCours() {
+        this.action.doAction("beton_base.action_dashboard_devis_en_cours");
+    }
+    openVentesAFacturer() {
+        this.action.doAction("beton_base.action_dashboard_ventes_a_facturer");
+    }
+    openVentesALivrer() {
+        this.action.doAction("beton_base.action_dashboard_ventes_a_livrer");
+    }
+    openPurchaseOrder(id) {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "purchase.order",
+            res_id: id,
+            views: [[false, "form"]],
+        });
+    }
+    openSaleOrder(id) {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "sale.order",
             res_id: id,
             views: [[false, "form"]],
         });

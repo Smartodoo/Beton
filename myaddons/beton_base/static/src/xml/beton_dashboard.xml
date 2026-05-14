@@ -465,6 +465,512 @@
                         </div>
                     </div>
 
+                    <!-- ==================== ACHATS ==================== -->
+                    <div class="section-title" style="color: #c2185b;">
+                        <span class="section-icon bg-achats"><i class="fa fa-shopping-cart"/></span>
+                        Achats
+                    </div>
+                    <div class="row mb-4">
+                        <!-- Total achats du mois -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openAchatsMois">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-pink">
+                                        <i class="fa fa-shopping-cart"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Achats du mois</div>
+                                        <div class="kpi-value" style="font-size:1.3rem">
+                                            <t t-esc="formatCurrency(state.data.achats_mois)"/>
+                                        </div>
+                                        <t t-call="beton_base.TrendBadge">
+                                            <t t-set="trend" t-value="state.data.achats_mois_trend"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nombre de BC -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openAchatsMois">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-indigo">
+                                        <i class="fa fa-file-text-o"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Bons d'achat (mois)</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="state.data.achats_count"/>
+                                        </div>
+                                        <t t-call="beton_base.TrendBadge">
+                                            <t t-set="trend" t-value="state.data.achats_count_trend"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panier moyen achat -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-teal">
+                                        <i class="fa fa-balance-scale"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Panier moyen / achat</div>
+                                        <div class="kpi-value" style="font-size:1.3rem">
+                                            <t t-esc="formatCurrency(state.data.panier_moyen_achat)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Demandes de prix -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openAchatsDraft">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.achats_draft_count > 0 ? 'icon-amber' : 'icon-green' }}">
+                                        <i class="fa fa-pencil-square-o"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Demandes de prix</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.achats_draft_count > 0 ? 'badge-warning' : 'badge-success' }}">
+                                                <t t-esc="state.data.achats_draft_count"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Achats à recevoir -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openAchatsARecevoir">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.achats_a_recevoir > 0 ? 'icon-orange' : 'icon-green' }}">
+                                        <i class="fa fa-truck"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Achats à recevoir</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.achats_a_recevoir > 0 ? 'badge-warning' : 'badge-success' }}">
+                                                <t t-esc="state.data.achats_a_recevoir"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Achats à facturer -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openAchatsAFacturer">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.achats_a_facturer > 0 ? 'icon-red' : 'icon-green' }}">
+                                        <i class="fa fa-file-text"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Achats à facturer</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.achats_a_facturer > 0 ? 'badge-danger' : 'badge-success' }}">
+                                                <t t-esc="state.data.achats_a_facturer"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graphiques Achats -->
+                    <div class="row mb-4">
+                        <div class="col-lg-7 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-bar-chart" style="color:#c2185b;"/> Achats mensuels (6 derniers mois)
+                                </div>
+                                <div class="chart-body" style="height: 260px;">
+                                    <canvas t-ref="chartAchatsMensuels"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-pie-chart" style="color:#c2185b;"/> Bons d'achat par état
+                                </div>
+                                <div class="chart-body" style="height: 260px;">
+                                    <canvas t-ref="chartAchatsEtat"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tableaux Achats -->
+                    <div class="row mb-4">
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-trophy text-warning"/> Top Fournisseurs du mois
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.top_fournisseurs and state.data.top_fournisseurs.length">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Fournisseur</th>
+                                            <th class="text-end">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.top_fournisseurs" t-as="frn" t-key="frn_index">
+                                            <tr>
+                                                <td><span class="badge bg-secondary rounded-pill"><t t-esc="frn_index + 1"/></span></td>
+                                                <td><t t-esc="frn.name"/></td>
+                                                <td class="text-end fw-bold">
+                                                    <t t-esc="formatCurrency(frn.amount)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune donnee ce mois
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-cube" style="color:#c2185b;"/> Top Produits achetes
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.top_produits_achetes and state.data.top_produits_achetes.length">
+                                    <thead>
+                                        <tr>
+                                            <th>Produit</th>
+                                            <th class="text-end">Qte</th>
+                                            <th class="text-end">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.top_produits_achetes" t-as="p" t-key="p_index">
+                                            <tr>
+                                                <td><t t-esc="p.name"/></td>
+                                                <td class="text-end"><t t-esc="formatNumber(p.qty, 2)"/></td>
+                                                <td class="text-end fw-bold"><t t-esc="formatCurrency(p.amount)"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune donnee ce mois
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-clock-o" style="color:#c2185b;"/> Achats recents
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.achats_recents and state.data.achats_recents.length">
+                                    <thead>
+                                        <tr>
+                                            <th>Ref</th>
+                                            <th>Fournisseur</th>
+                                            <th class="text-end">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.achats_recents" t-as="po" t-key="po.id">
+                                            <tr class="cursor-pointer" t-on-click="() => this.openPurchaseOrder(po.id)">
+                                                <td>
+                                                    <div class="fw-bold"><t t-esc="po.name"/></div>
+                                                    <small class="text-muted"><t t-esc="po.date"/></small>
+                                                </td>
+                                                <td><t t-esc="po.partner"/></td>
+                                                <td class="text-end fw-bold"><t t-esc="formatCurrency(po.amount)"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucun achat
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== VENTES ==================== -->
+                    <div class="section-title" style="color: #00838f;">
+                        <span class="section-icon bg-ventes"><i class="fa fa-handshake-o"/></span>
+                        Ventes
+                    </div>
+                    <div class="row mb-4">
+                        <!-- Total ventes du mois -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openVentesMois">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-cyan">
+                                        <i class="fa fa-handshake-o"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Ventes du mois</div>
+                                        <div class="kpi-value" style="font-size:1.3rem">
+                                            <t t-esc="formatCurrency(state.data.ventes_mois)"/>
+                                        </div>
+                                        <t t-call="beton_base.TrendBadge">
+                                            <t t-set="trend" t-value="state.data.ventes_mois_trend"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nombre de BV -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openVentesMois">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-indigo">
+                                        <i class="fa fa-file-text-o"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Bons de vente (mois)</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="state.data.ventes_count"/>
+                                        </div>
+                                        <t t-call="beton_base.TrendBadge">
+                                            <t t-set="trend" t-value="state.data.ventes_count_trend"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panier moyen vente -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div class="kpi-icon icon-teal">
+                                        <i class="fa fa-balance-scale"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Panier moyen / vente</div>
+                                        <div class="kpi-value" style="font-size:1.3rem">
+                                            <t t-esc="formatCurrency(state.data.panier_moyen_vente)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Taux de conversion devis -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.taux_conversion_devis >= 70 ? 'icon-green' : state.data.taux_conversion_devis >= 40 ? 'icon-orange' : 'icon-red' }}">
+                                        <i class="fa fa-exchange"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="kpi-label">Taux de conversion devis</div>
+                                        <div class="kpi-value">
+                                            <t t-esc="formatNumber(state.data.taux_conversion_devis, 1)"/>
+                                            <small>%</small>
+                                        </div>
+                                        <div class="kpi-progress">
+                                            <div t-attf-class="kpi-progress-bar {{ state.data.taux_conversion_devis >= 70 ? 'bg-success' : state.data.taux_conversion_devis >= 40 ? 'bg-warning' : 'bg-danger' }}"
+                                                 t-attf-style="width: {{ Math.min(state.data.taux_conversion_devis || 0, 100) }}%"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Devis en cours -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openDevisEnCours">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.devis_en_cours > 0 ? 'icon-amber' : 'icon-green' }}">
+                                        <i class="fa fa-pencil-square-o"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Devis en cours</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.devis_en_cours > 0 ? 'badge-warning' : 'badge-success' }}">
+                                                <t t-esc="state.data.devis_en_cours"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ventes à livrer -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openVentesALivrer">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.ventes_a_livrer > 0 ? 'icon-orange' : 'icon-green' }}">
+                                        <i class="fa fa-truck"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Ventes à livrer</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.ventes_a_livrer > 0 ? 'badge-warning' : 'badge-success' }}">
+                                                <t t-esc="state.data.ventes_a_livrer"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ventes à facturer -->
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="kpi-card clickable" t-on-click="openVentesAFacturer">
+                                <div class="card-body d-flex align-items-start gap-3">
+                                    <div t-attf-class="kpi-icon {{ state.data.ventes_a_facturer > 0 ? 'icon-red' : 'icon-green' }}">
+                                        <i class="fa fa-file-text"/>
+                                    </div>
+                                    <div>
+                                        <div class="kpi-label">Ventes à facturer</div>
+                                        <div class="kpi-value">
+                                            <span t-attf-class="alert-badge {{ state.data.ventes_a_facturer > 0 ? 'badge-danger' : 'badge-success' }}">
+                                                <t t-esc="state.data.ventes_a_facturer"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graphiques Ventes -->
+                    <div class="row mb-4">
+                        <div class="col-lg-7 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-line-chart" style="color:#00838f;"/> Ventes mensuelles (6 derniers mois)
+                                </div>
+                                <div class="chart-body" style="height: 260px;">
+                                    <canvas t-ref="chartVentesMensuelles"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 mb-3">
+                            <div class="chart-container h-100">
+                                <div class="chart-header">
+                                    <i class="fa fa-pie-chart" style="color:#00838f;"/> Ventes par état
+                                </div>
+                                <div class="chart-body" style="height: 260px;">
+                                    <canvas t-ref="chartVentesEtat"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tableaux Ventes -->
+                    <div class="row mb-4">
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-users" style="color:#00838f;"/> Top Clients (montant)
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.top_clients_vente and state.data.top_clients_vente.length">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Client</th>
+                                            <th class="text-end">CA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.top_clients_vente" t-as="cl" t-key="cl_index">
+                                            <tr>
+                                                <td><span class="badge bg-info rounded-pill"><t t-esc="cl_index + 1"/></span></td>
+                                                <td><t t-esc="cl.name"/></td>
+                                                <td class="text-end fw-bold"><t t-esc="formatCurrency(cl.amount)"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune donnee ce mois
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-cube" style="color:#00838f;"/> Top Produits vendus
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.top_produits_vendus and state.data.top_produits_vendus.length">
+                                    <thead>
+                                        <tr>
+                                            <th>Produit</th>
+                                            <th class="text-end">Qte</th>
+                                            <th class="text-end">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.top_produits_vendus" t-as="p" t-key="p_index">
+                                            <tr>
+                                                <td><t t-esc="p.name"/></td>
+                                                <td class="text-end"><t t-esc="formatNumber(p.qty, 2)"/></td>
+                                                <td class="text-end fw-bold"><t t-esc="formatCurrency(p.amount)"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune donnee ce mois
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-3">
+                            <div class="dashboard-table h-100">
+                                <div class="table-header">
+                                    <i class="fa fa-clock-o" style="color:#00838f;"/> Ventes recentes
+                                </div>
+                                <table class="table table-sm mb-0" t-if="state.data.ventes_recentes and state.data.ventes_recentes.length">
+                                    <thead>
+                                        <tr>
+                                            <th>Ref</th>
+                                            <th>Client</th>
+                                            <th class="text-end">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.data.ventes_recentes" t-as="so" t-key="so.id">
+                                            <tr class="cursor-pointer" t-on-click="() => this.openSaleOrder(so.id)">
+                                                <td>
+                                                    <div class="fw-bold"><t t-esc="so.name"/></div>
+                                                    <small class="text-muted"><t t-esc="so.date"/></small>
+                                                </td>
+                                                <td><t t-esc="so.partner"/></td>
+                                                <td class="text-end fw-bold"><t t-esc="formatCurrency(so.amount)"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <div t-else="" class="p-4 text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                                    Aucune vente
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- ==================== GRAPHIQUES ==================== -->
                     <div class="section-title" style="color: #00695c;">
                         <span class="section-icon" style="background: linear-gradient(135deg, #00695c, #26a69a);"><i class="fa fa-area-chart"/></span>
