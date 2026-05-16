@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #    Cybrosys Technologies Pvt. Ltd.
@@ -29,12 +29,18 @@
     'company': 'SmartOdoo',
     'maintainer': 'SmartOdoo',
     'website': '',
-    'depends': ['fleet'],
+    'depends': ['fleet', 'hr', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'views/fleet_carrosserie_view.xml',
+        'views/societe_appartenance_views.xml',
+        'views/fleet_vehicle_extra_views.xml',
         'views/inherited_fleet_vehicle_view_form.xml',
-
+        'views/hr_employee_views.xml',
+        'views/infraction.xml',
+        'wizard/fleet_gazoil_wizard.xml',
+        'report/report_consommation_gazoil.xml',
+        'views/fleet_gazoil.xml',
     ],
     'license': 'AGPL-3',
     'installable': True,

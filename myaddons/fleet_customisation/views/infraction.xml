@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- 1. VUE LISTE (TREE) DES INFRACTIONS -->
+    <record id="view_fleet_infraction_tree" model="ir.ui.view">
+        <field name="name">fleet.infraction.tree</field>
+        <field name="model">fleet.infraction</field>
+        <field name="arch" type="xml">
+            <tree string="Infractions">
+                <field name="date_infraction"/>
+                <field name="conducteur_id"/>
+                <field name="vehicle_id"/>
+                <field name="type_infraction"/>
+                <field name="gravite" widget="badge" decoration-danger="gravite == 'grave'"
+                       decoration-warning="gravite == 'moyenne'" decoration-success="gravite == 'mineure'"/>
+                <field name="sanction"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 2. VUE FORMULAIRE DES INFRACTIONS -->
+    <record id="view_fleet_infraction_form" model="ir.ui.view">
+        <field name="name">fleet.infraction.form</field>
+        <field name="model">fleet.infraction</field>
+        <field name="arch" type="xml">
+            <form string="Infraction">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Détails de l'incident">
+                            <field name="conducteur_id"/>
+                            <field name="date_infraction"/>
+                            <field name="type_infraction"/>
+                            <field name="lieu"/>
+                            <field name="vehicle_id"/>
+                        </group>
+                        <group string="Décision et Gravité">
+                            <field name="gravite"/>
+                            <field name="sanction"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1" placeholder="Décrivez l'incident ici..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 3. ACTION ET MENU DANS L'APPLICATION FLEET -->
+    <record id="action_fleet_infraction" model="ir.actions.act_window">
+        <field name="name">Infractions</field>
+        <field name="res_model">fleet.infraction</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_fleet_infraction"
+              name="Infractions"
+              parent="fleet.fleet_vehicles"
+              action="action_fleet_infraction"
+              sequence="50"/>
+
+    <!-- 4. AJOUT DU SMART BUTTON SUR LA FICHE EMPLOYÉ -->
+    <record id="view_employee_form_inherit_infraction" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.infraction</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_infractions"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-exclamation-triangle"
+                        invisible="role_employe != 'chauffeur'">
+                    <field name="infraction_count" widget="statinfo" string="Infractions"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

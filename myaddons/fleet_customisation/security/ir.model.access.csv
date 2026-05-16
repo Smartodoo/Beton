@@ -1,2 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_fleet_carrosserie,fleet_carrosserie,model_fleet_carrosserie,fleet.fleet_group_manager,1,1,1,1
+access_fleet_societe_appartenance_user,fleet.societe.appartenance.user,model_fleet_societe_appartenance,fleet.fleet_group_user,1,0,0,0
+access_fleet_societe_appartenance_manager,fleet.societe.appartenance.manager,model_fleet_societe_appartenance,fleet.fleet_group_manager,1,1,1,1
+access_fleet_infraction,fleet.infraction,model_fleet_infraction,base.group_user,1,1,1,1
+access_fleet_vehicle_document,fleet.vehicle.document,model_fleet_vehicle_document,base.group_user,1,1,1,1
+access_fleet_vehicle_maintenance,fleet.vehicle.maintenance,model_fleet_vehicle_maintenance,base.group_user,1,1,1,1
+access_fleet_gazoil,fleet.gazoil,model_fleet_gazoil,base.group_user,1,1,1,1
+access_fleet_gazoil_wizard,fleet.gazoil.wizard,model_fleet_gazoil_wizard,base.group_user,1,1,1,1
