@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_fleet_societe_appartenance_tree" model="ir.ui.view">
+        <field name="name">fleet.societe.appartenance.tree</field>
+        <field name="model">fleet.societe.appartenance</field>
+        <field name="arch" type="xml">
+            <tree string="Sociétés d'Appartenance" editable="bottom">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fleet_societe_appartenance_form" model="ir.ui.view">
+        <field name="name">fleet.societe.appartenance.form</field>
+        <field name="model">fleet.societe.appartenance</field>
+        <field name="arch" type="xml">
+            <form string="Société d'Appartenance">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="active"/>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fleet_societe_appartenance" model="ir.actions.act_window">
+        <field name="name">Sociétés d'Appartenance</field>
+        <field name="res_model">fleet.societe.appartenance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_fleet_societe_appartenance"
+              name="Sociétés d'Appartenance"
+              parent="fleet.fleet_configuration"
+              action="action_fleet_societe_appartenance"
+              sequence="50"/>
+</odoo>

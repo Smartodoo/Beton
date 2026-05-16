@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Definition du rapport -->
+    <record id="action_report_gazoil" model="ir.actions.report">
+        <field name="name">Rapport Consommation Gazoil</field>
+        <field name="model">fleet.gazoil</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fleet_customisation.report_gazoil_template</field>
+        <field name="report_file">fleet_customisation.report_gazoil_template</field>
+        <field name="print_report_name">'Rapport_Gazoil'</field>
+        <field name="binding_model_id" ref="model_fleet_gazoil"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Template QWeb -->
+    <template id="report_gazoil_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+
+                    <!-- Periode (uniquement si imprime via le wizard) -->
+                    <t t-set="date_debut" t-value="(data or {}).get('date_debut', False)"/>
+                    <t t-set="date_fin" t-value="(data or {}).get('date_fin', False)"/>
+                    <div t-if="date_debut and date_fin"
+                         style="text-align: center; margin: 15px 0 20px 0; font-weight: bold; font-size: 14px;">
+                        Periode Du: <span t-esc="date_debut"/> AU <span t-esc="date_fin"/>
+                    </div>
+
+                    <!-- Pre-calculs : tri + regroupement par conducteur -->
+                    <t t-set="sorted_docs"
+                       t-value="docs.sorted(key=lambda r: (r.employee_id.name or '', r.date))"/>
+                    <t t-set="employees" t-value="sorted_docs.mapped('employee_id')"/>
+                    <t t-set="total" t-value="sum(line.montant for line in docs)"/>
+                    <t t-set="total_lines" t-value="len(docs)"/>
+
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                        <thead>
+                            <tr style="background-color: #dddddd;">
+                                <th style="border: 1px solid black; padding: 8px; width: 12%; text-align: center;">
+                                    Periode semaine
+                                </th>
+                                <th style="border: 1px solid black; padding: 8px; width: 23%; text-align: center;">
+                                    Conducteur
+                                </th>
+                                <th style="border: 1px solid black; padding: 8px; width: 15%; text-align: center;">
+                                    Date
+                                </th>
+                                <th style="border: 1px solid black; padding: 8px; width: 20%; text-align: center;">
+                                    Montant
+                                </th>
+                                <th style="border: 1px solid black; padding: 8px; width: 30%; text-align: center;">
+                                    Vehicule
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="employees" t-as="emp">
+                                <t t-set="emp_lines"
+                                   t-value="sorted_docs.filtered(lambda r: r.employee_id.id == emp.id)"/>
+                                <tr t-foreach="emp_lines" t-as="line">
+                                    <td t-if="emp_index == 0 and line_first"
+                                        t-att-rowspan="total_lines"
+                                        style="border: 1px solid black; padding: 8px; text-align: center; vertical-align: middle; font-weight: bold;">
+                                        Periode semaine
+                                    </td>
+                                    <td t-if="line_first"
+                                        t-att-rowspan="len(emp_lines)"
+                                        style="border: 1px solid black; padding: 8px; vertical-align: middle;">
+                                        <span t-esc="emp.name or 'N/A'"/>
+                                    </td>
+                                    <td style="border: 1px solid black; padding: 8px; text-align: center;">
+                                        <span t-esc="line.date and line.date.strftime('%d/%m/%Y') or ''"/>
+                                    </td>
+                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">
+                                        <span t-esc="'{:,.2f}'.format(line.montant or 0.0).replace(',', ' ').replace('.', ',')"/>
+                                    </td>
+                                    <td style="border: 1px solid black; padding: 8px;">
+                                        <span t-esc="line.vehicle_id.name or 'N/A'"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr style="font-weight: bold; background-color: #eeeeee;">
+                                <td colspan="3"
+                                    style="border: 1px solid black; padding: 8px; text-align: center;">
+                                    TOTAL
+                                </td>
+                                <td style="border: 1px solid black; padding: 8px; text-align: right;">
+                                    <span t-esc="'{:,.2f}'.format(total).replace(',', ' ').replace('.', ',')"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 8px;"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div t-if="not docs"
+                         style="text-align: center; margin-top: 20px; color: red;">
+                        <strong>Aucune consommation trouvee pour cette periode.</strong>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

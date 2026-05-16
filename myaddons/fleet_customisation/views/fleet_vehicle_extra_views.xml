@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Héritage vue formulaire fleet.vehicle - Section Conducteur -->
+    <record id="view_fleet_vehicle_form_inherit_custom" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.custom</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="numero_permis"/>
+                <field name="date_delivrance_permis"/>
+                <field name="date_expiration_permis"/>
+                <field name="categorie_permis_id"/>
+            </xpath>
+            <xpath expr="//field[@name='vin_sn']" position="after">
+                <field name="ancien_matricule"/>
+                <field name="societe_appartenance_id"/>
+                <field name="x_type_vehicule_choix"/>
+                <field name="x_annee_circulation" options="{'format': False}" placeholder="Ex: 2024"/>
+                <field name="x_couleur_vehicule"/>
+            </xpath>
+
+            <!-- === BLOCS DU BAS (ADMIN & TECHNIQUE) === -->
+            <xpath expr="//notebook" position="before">
+                <group name="infos_personnalisees">
+                    <group string="Informations administratives">
+                        <field name="service_utilisateur_id"/>
+                        <field name="date_acquisition"/>
+                        <field name="mode_acquisition"/>
+                        <field name="fournisseur_id"/>
+                    </group>
+                    <group string="Données techniques">
+                        <field name="capacite_reservoir"/>
+                        <field name="kilometrage_actuel"/>
+                        <field name="consommation_moyenne"/>
+                        <field name="etat_vehicule"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <!-- === ONGLETS (DOCUMENTS & MAINTENANCE) === -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Documents réglementaires" name="documents_reglementaires">
+                    <field name="document_reglementaire_ids">
+                        <tree string="Liste des Documents">
+                            <field name="carte_grise_numero"/>
+                            <field name="assurance_compagnie"/>
+                            <field name="assurance_cout" sum="Total"/>
+                        </tree>
+                        <form string="Saisie des informations réglementaires">
+                            <sheet>
+                                <group>
+                                    <group string="Carte grise">
+                                        <field name="carte_grise_numero"/>
+                                        <field name="carte_grise_date"/>
+                                    </group>
+                                    <group string="Assurance">
+                                        <field name="assurance_compagnie"/>
+                                        <field name="assurance_numero_police"/>
+                                        <field name="assurance_date_debut"/>
+                                        <field name="assurance_date_expiration"/>
+                                        <field name="assurance_cout"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Contrôle technique">
+                                        <field name="controle_date_validite"/>
+                                        <field name="controle_date_expiration"/>
+                                        <field name="controle_etablissement"/>
+                                        <field name="controle_cout"/>
+                                    </group>
+                                    <group string="Vignette">
+                                        <field name="vignette_date_validite"/>
+                                        <field name="vignette_date_expiration"/>
+                                        <field name="vignette_cout"/>
+                                    </group>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+
+                <page string="Suivi de maintenance" name="suivi_maintenance">
+                    <field name="maintenance_ids">
+                        <tree string="Liste des interventions">
+                            <field name="date_intervention"/>
+                            <field name="type_intervention"/>
+                            <field name="prestataire_id"/>
+                            <field name="cout" sum="Total"/>
+                        </tree>
+                        <form string="Saisie de l'intervention de maintenance">
+                            <sheet>
+                                <group>
+                                    <group string="Informations générales">
+                                        <field name="date_intervention"/>
+                                        <field name="type_intervention"/>
+                                        <field name="prestataire_id"/>
+                                    </group>
+                                    <group string="Coût et Détails">
+                                        <field name="cout"/>
+                                    </group>
+                                </group>
+                                <group string="Description de l'intervention">
+                                    <field name="description" placeholder="Détaillez les travaux effectués..."/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Héritage vue formulaire fleet.vehicle.log.contract -->
+    <record id="view_fleet_vehicle_log_contract_form_inherit_custom" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form.inherit.custom</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vehicle_id']" position="after">
+                <field name="vehicle_license_plate"/>
+            </xpath>
+            <!-- Section Informations du véhicule (avant Cost) -->
+            <xpath expr="//field[@name='amount']/../.." position="before">
+                <group string="Informations du véhicule" col="2" invisible="not vehicle_id">
+                    <group string="Identification">
+                        <field name="vehicle_brand_id"/>
+                        <field name="vehicle_model_id"/>
+                        <field name="vehicle_license_plate"/>
+                        <field name="vehicle_vin_sn"/>
+                        <field name="vehicle_model_year"/>
+                        <field name="vehicle_color"/>
+                    </group>
+                    <group string="Caractéristiques techniques">
+                        <field name="vehicle_fuel_type"/>
+                        <field name="vehicle_transmission"/>
+                        <field name="vehicle_horsepower"/>
+                        <field name="vehicle_power"/>
+                    </group>
+                </group>
+            </xpath>
+            <!-- Pièces jointes en bas du formulaire -->
+            <xpath expr="//sheet" position="inside">
+                <separator string="Pièces jointes"/>
+                <field name="document_ids" widget="many2many_binary" string="Pièces jointes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -40,7 +40,11 @@ class FleetVehicle(models.Model):
         default=lambda self: self.env['uom.uom'].search([('name', '=', 'kg'), ('category_id', '=', 2)], limit=1).id
 
     )
-    technical_file = fields.Many2many('ir.attachment', string="Téléchargez vos fichiers", tracking=True)
+    technical_file = fields.Many2many(
+        'ir.attachment',
+        'fleet_vehicle_technical_file_rel',
+        'vehicle_id', 'attachment_id',
+        string="Téléchargez vos fichiers", tracking=True)
 
     technical_file_name = fields.Char(string='Nom du Fichier', tracking=True)
 
