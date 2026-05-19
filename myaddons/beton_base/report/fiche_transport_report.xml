@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_fiche_transport" model="ir.actions.report">
+        <field name="name">Fiche de Transport</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_fiche_transport</field>
+        <field name="report_file">beton_base.report_fiche_transport</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_fiche_transport">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page beton-fiche-transport">
+                        <style>
+                            .beton-fiche-transport { font-size:14pt !important; line-height:1.5; }
+                            .beton-fiche-transport * { font-size:inherit; }
+                            .beton-fiche-transport .row > div { padding-bottom:4pt; }
+                            .transport-title { color:#1F4E79; text-align:center; letter-spacing:2px;
+                                               border-bottom:3px solid #1F4E79; padding-bottom:10pt;
+                                               margin-bottom:18pt; font-weight:700; font-size:24pt !important; }
+                            .transport-section-title { background:#1F4E79; color:#fff; padding:8pt 12pt;
+                                                       margin-top:14pt; margin-bottom:10pt;
+                                                       border-radius:3px; font-size:16pt !important; font-weight:700;
+                                                       letter-spacing:1pt; text-transform:uppercase; }
+                            .transport-info-card { border:1px solid #d0dde9; border-left:5px solid #1F4E79;
+                                                   padding:10pt 14pt; margin-bottom:8pt;
+                                                   background:#f7fafc; border-radius:3px; }
+                            .transport-info-card .label { color:#5a6c7d; font-size:12pt !important;
+                                                          text-transform:uppercase; letter-spacing:0.3pt;
+                                                          font-weight:700; display:block;
+                                                          margin-bottom:4pt; }
+                            .transport-info-card .value { color:#1a202c; font-size:16pt !important; font-weight:600;
+                                                          word-break:break-word; }
+                            .transport-table { width:100%; border-collapse:collapse; margin-top:8pt;
+                                               font-size:14pt !important; }
+                            .transport-table thead { background:#1F4E79; color:#fff; }
+                            .transport-table th { padding:10pt; font-size:14pt !important; font-weight:700;
+                                                  text-align:left; }
+                            .transport-table td { padding:9pt 10pt; font-size:14pt !important;
+                                                  border-bottom:1px solid #dee2e6; }
+                            .transport-table tbody tr:nth-child(even) { background:#f7fafc; }
+                            .transport-sign-box { border-top:1.5px solid #333; margin-top:50pt;
+                                                  padding-top:8pt; text-align:center; font-weight:700;
+                                                  font-size:14pt !important; }
+                        </style>
+
+                        <h2 class="transport-title">FICHE DE TRANSPORT</h2>
+
+                        <!-- Informations de l'ordre de fabrication -->
+                        <div class="transport-section-title">Ordre de fabrication</div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Référence OF</span>
+                                    <span class="value" t-field="o.name"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Produit</span>
+                                    <span class="value" t-esc="o.product_id.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Date de fabrication</span>
+                                    <span class="value">
+                                        <t t-set="date_fab" t-value="o.date_finished or o.date_start"/>
+                                        <t t-esc="date_fab.strftime('%d/%m/%Y %H:%M') if date_fab else '—'"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Client</span>
+                                    <span class="value" t-esc="o.client_id.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Chantier</span>
+                                    <span class="value" t-esc="o.chantier or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Destination</span>
+                                    <span class="value" t-esc="o.destination or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Distance</span>
+                                    <span class="value">
+                                        <t t-if="o.distance" t-esc="'%.1f km' % o.distance"/>
+                                        <t t-if="not o.distance">—</t>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Centrale</span>
+                                    <span class="value" t-esc="o.centrale_id.name or '—'"/>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-info-card">
+                                    <span class="label">Nb camions</span>
+                                    <span class="value" t-esc="o.nombre_camion"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Détail des lignes de transport -->
+                        <div class="transport-section-title">Détail des transports</div>
+                        <table class="transport-table" t-if="o.transport_ligne_ids">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Camion</th>
+                                    <th>Chauffeur</th>
+                                    <th class="text-end">Quantité (m³)</th>
+                                    <th>Heure départ</th>
+                                    <th>Heure arrivée</th>
+                                    <th class="text-end">Temps attente (min)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.transport_ligne_ids" t-as="line">
+                                    <tr>
+                                        <td><t t-esc="line_index + 1"/></td>
+                                        <td><t t-esc="line.vehicle_id.name or '—'"/></td>
+                                        <td><t t-esc="line.chauffeur_id.name or '—'"/></td>
+                                        <td class="text-end"><t t-esc="'%.2f' % line.quantite"/></td>
+                                        <td>
+                                            <t t-if="line.heure_depart" t-esc="line.heure_depart.strftime('%d/%m/%Y %H:%M')"/>
+                                            <t t-if="not line.heure_depart">—</t>
+                                        </td>
+                                        <td>
+                                            <t t-if="line.heure_arrivee" t-esc="line.heure_arrivee.strftime('%d/%m/%Y %H:%M')"/>
+                                            <t t-if="not line.heure_arrivee">—</t>
+                                        </td>
+                                        <td class="text-end"><t t-esc="'%.0f' % line.temps_attente if line.temps_attente else '—'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr style="font-weight:700; border-top:2px solid #1F4E79;">
+                                    <td colspan="3" class="text-end">Total</td>
+                                    <td class="text-end">
+                                        <t t-esc="'%.2f' % sum(o.transport_ligne_ids.mapped('quantite'))"/>
+                                    </td>
+                                    <td colspan="3"/>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <t t-if="not o.transport_ligne_ids">
+                            <div class="transport-info-card">
+                                <span class="value">Aucune ligne de transport renseignée</span>
+                            </div>
+                        </t>
+
+                        <!-- Signatures -->
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <div class="transport-sign-box">Signature Chauffeur</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-sign-box">Signature Responsable</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="transport-sign-box">Signature Directeur</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

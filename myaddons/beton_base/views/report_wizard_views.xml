@@ -229,4 +229,72 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+
+    <!-- ============================================================ -->
+    <!-- 7. WIZARD RAPPORT VENTES -->
+    <!-- ============================================================ -->
+    <record id="view_sale_report_wizard_form" model="ir.ui.view">
+        <field name="name">sale.report.wizard.form</field>
+        <field name="model">sale.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Ventes">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="client_id"/>
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="state"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sale_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Ventes</field>
+        <field name="res_model">sale.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 8. WIZARD RAPPORT ACHATS -->
+    <!-- ============================================================ -->
+    <record id="view_purchase_report_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.report.wizard.form</field>
+        <field name="model">purchase.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport Achats">
+                <group>
+                    <group string="Période">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filtres">
+                        <field name="fournisseur_id"/>
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="state"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Imprimer" class="btn-primary" icon="fa-print"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport d'analyse Achats</field>
+        <field name="res_model">purchase.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 </odoo>

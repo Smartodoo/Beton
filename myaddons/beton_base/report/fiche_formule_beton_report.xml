@@ -14,90 +14,128 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
-                    <div class="page">
-                        <h2 class="text-center">FICHE FORMULE BÉTON</h2>
-                        <div class="row mt-3">
-                            <div class="col-6">
-                                <strong>Produit :</strong> <span t-field="o.product_tmpl_id.name"/><br/>
-                                <strong>Code formule :</strong> <span t-field="o.code_formule"/><br/>
-                                <strong>Référence :</strong> <span t-field="o.code"/><br/>
+                    <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: #222;">
+
+                        <!-- Titre -->
+                        <h2 style="text-align:center; font-size:18pt; font-weight:700; color:#1F4E79; border-bottom:2px solid #1F4E79; padding-bottom:8px; margin-bottom:16px;">
+                            FICHE FORMULE BÉTON
+                        </h2>
+
+                        <!-- Identification -->
+                        <h4 style="font-size:12pt; font-weight:700; color:#1F4E79; margin-bottom:8px;">
+                            Identification
+                        </h4>
+                        <div style="background:#e8eef4; border-radius:4px; padding:10px 14px; margin-bottom:16px; overflow:hidden;">
+                            <div style="float:left; width:50%; margin-bottom:5px;">
+                                <strong>Produit :</strong>
+                                <t t-if="o.product_tmpl_id"><span t-field="o.product_tmpl_id.name"/></t>
+                                <t t-if="not o.product_tmpl_id">—</t>
                             </div>
-                            <div class="col-6">
+                            <div style="float:left; width:50%; margin-bottom:5px;">
+                                <strong>Code formule :</strong>
+                                <t t-if="o.code_formule" t-esc="o.code_formule"/>
+                                <t t-if="not o.code_formule">—</t>
+                            </div>
+                            <div style="float:left; width:50%; margin-bottom:5px;">
+                                <strong>Référence :</strong>
+                                <t t-if="o.code" t-esc="o.code"/>
+                                <t t-if="not o.code">—</t>
+                            </div>
+                            <div style="float:left; width:50%; margin-bottom:5px;">
+                                <strong>Prix de vente :</strong>
+                                <span t-field="o.product_tmpl_id.list_price"/>
+                            </div>
+                            <div style="float:left; width:50%; margin-bottom:5px;">
                                 <strong>Classe de résistance :</strong>
-                                <span t-if="o.classe_resistance" t-field="o.classe_resistance"/><br/>
+                                <t t-if="o.classe_resistance"><span t-field="o.classe_resistance"/></t>
+                                <t t-if="not o.classe_resistance">—</t>
+                            </div>
+                            <div style="float:left; width:50%; margin-bottom:5px;">
                                 <strong>Type de béton :</strong>
-                                <span t-if="o.type_beton == 'bpe'">BPE</span>
-                                <span t-if="o.type_beton == 'banche'">Béton banché</span>
-                                <span t-if="o.type_beton == 'autoplacant'">Béton autoplaçant</span>
-                                <span t-if="o.type_beton == 'fibre'">Béton fibré</span>
-                                <span t-if="o.type_beton == 'autre'">Autre</span>
-                                <br/>
+                                <t t-if="o.type_beton"><span t-field="o.type_beton"/></t>
+                                <t t-if="not o.type_beton">—</t>
+                            </div>
+                            <div style="float:left; width:50%;">
                                 <strong>Statut :</strong>
-                                <span t-if="o.statut_formule == 'actif'" style="color: green; font-weight: bold;">Actif</span>
-                                <span t-if="o.statut_formule == 'archive'" style="color: #6c757d; font-weight: bold;">Archivé</span>
-                                <br/>
+                                <t t-if="o.statut_formule"><span t-field="o.statut_formule"/></t>
+                                <t t-if="not o.statut_formule">—</t>
                             </div>
                         </div>
 
-                        <div class="row mt-3">
-                            <div class="col-4">
-                                <strong>Rendement théorique :</strong> <span t-field="o.rendement_theorique"/> m³
+                        <!-- Performance -->
+                        <h4 style="font-size:12pt; font-weight:700; color:#1F4E79; margin-bottom:8px;">
+                            Performance
+                        </h4>
+                        <div style="background:#e8eef4; border-radius:4px; padding:10px 14px; margin-bottom:16px; overflow:hidden;">
+                            <div style="float:left; width:33%;">
+                                <strong>Rendement théorique :</strong><br/>
+                                <span t-field="o.rendement_theorique"/> m³
                             </div>
-                            <div class="col-4">
-                                <strong>Tolérance dosage :</strong> <span t-field="o.tolerance_dosage"/> %
+                            <div style="float:left; width:33%;">
+                                <strong>Tolérance dosage :</strong><br/>
+                                <span t-field="o.tolerance_dosage"/> %
                             </div>
-                            <div class="col-4">
-                                <strong>Coût théorique / m³ :</strong> <span t-field="o.cout_theorique_m3"/>
+                            <div style="float:left; width:34%;">
+                                <strong>Coût théorique / m³ :</strong><br/>
+                                <span t-field="o.cout_theorique_m3"/>
                             </div>
                         </div>
 
-                        <h4 class="mt-4">Composants</h4>
-                        <table class="table table-bordered" t-if="o.bom_line_ids">
-                            <thead>
-                                <tr>
-                                    <th>Matière première</th>
-                                    <th class="text-end">Quantité</th>
-                                    <th>Unité</th>
-                                    <th class="text-end">Coût unitaire</th>
-                                    <th class="text-end">Coût total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="o.bom_line_ids" t-as="l">
-                                    <tr>
-                                        <td><span t-field="l.product_id.name"/></td>
-                                        <td class="text-end"><span t-field="l.product_qty"/></td>
-                                        <td><span t-field="l.product_uom_id.name"/></td>
-                                        <td class="text-end"><span t-esc="l.product_id.standard_price"/></td>
-                                        <td class="text-end"><span t-esc="'%.2f' % (l.product_qty * l.product_id.standard_price)"/></td>
+                        <!-- Composants -->
+                        <h4 style="font-size:12pt; font-weight:700; color:#1F4E79; margin-bottom:8px;">
+                            Composants
+                        </h4>
+                        <t t-if="o.bom_line_ids">
+                            <table style="width:100%; border-collapse:collapse; margin-bottom:16px;">
+                                <thead>
+                                    <tr style="background:#eee;">
+                                        <th style="padding:6px 8px; border:1px solid #ccc; text-align:left;">Matière première</th>
+                                        <th style="padding:6px 8px; border:1px solid #ccc; text-align:right;">Quantité</th>
+                                        <th style="padding:6px 8px; border:1px solid #ccc; text-align:left;">Unité</th>
+                                        <th style="padding:6px 8px; border:1px solid #ccc; text-align:right;">Coût unitaire</th>
+                                        <th style="padding:6px 8px; border:1px solid #ccc; text-align:right;">Coût total</th>
                                     </tr>
-                                </t>
-                            </tbody>
-                            <tfoot>
-                                <tr class="fw-bold">
-                                    <td colspan="4" class="text-end">Coût total / m³</td>
-                                    <td class="text-end"><span t-field="o.cout_theorique_m3"/></td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.bom_line_ids" t-as="l">
+                                        <tr>
+                                            <td style="padding:5px 8px; border:1px solid #ccc;"><span t-field="l.product_id.name"/></td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;"><span t-field="l.product_qty"/></td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc;"><span t-field="l.product_uom_id.name"/></td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;"><t t-esc="'%.2f' % l.product_id.standard_price"/></td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;"><t t-esc="'%.2f' % (l.product_qty * l.product_id.standard_price)"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr style="font-weight:700; background:#eee;">
+                                        <td colspan="4" style="padding:6px 8px; border:1px solid #ccc; text-align:right;">Coût total / m³</td>
+                                        <td style="padding:6px 8px; border:1px solid #ccc; text-align:right;"><span t-field="o.cout_theorique_m3"/></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+                        <t t-if="not o.bom_line_ids">
+                            <div style="border:1px solid #ccc; padding:10px; text-align:center; color:#666; margin-bottom:16px;">
+                                Aucun composant renseigné
+                            </div>
+                        </t>
 
-                        <div class="row mt-5">
-                            <div class="col-4 text-center">
-                                <strong>Signature Laborantin</strong>
-                                <br/><br/><br/>
-                                <p>____________________</p>
+                        <!-- Signatures -->
+                        <div style="overflow:hidden; margin-top:4cm;">
+                            <div style="float:left; width:30%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Laborantin
                             </div>
-                            <div class="col-4 text-center">
-                                <strong>Signature Responsable</strong>
-                                <br/><br/><br/>
-                                <p>____________________</p>
+                            <div style="float:left; width:5%;"/>
+                            <div style="float:left; width:30%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Responsable
                             </div>
-                            <div class="col-4 text-center">
-                                <strong>Signature Directeur</strong>
-                                <br/><br/><br/>
-                                <p>____________________</p>
+                            <div style="float:left; width:5%;"/>
+                            <div style="float:left; width:30%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Directeur
                             </div>
                         </div>
+
                     </div>
                 </t>
             </t>
