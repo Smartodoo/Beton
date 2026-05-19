@@ -44,6 +44,12 @@ class ResPartner(models.Model):
         ('bloque', 'Bloqué'),
         ('archive', 'Archivé'),
     ], string="Statut client", default='actif')
+    satisfaction_client = fields.Selection([
+        ('tres_satisfait', 'Très satisfait'),
+        ('satisfait', 'Satisfait'),
+        ('neutre', 'Neutre'),
+        ('insatisfait', 'Insatisfait'),
+    ], string="Satisfaction client")
 
     # === Coordonnées ===
     fax = fields.Char(string="Fax")

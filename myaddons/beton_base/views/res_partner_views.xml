@@ -37,7 +37,12 @@
                                    invisible="type_partenaire_beton != 'client'"/>
                             <field name="classification_fournisseur"
                                    invisible="type_partenaire_beton != 'fournisseur'"/>
-                            <field name="statut_client_beton"/>
+                            <field name="statut_client_beton" string="Statut client"
+                                   invisible="type_partenaire_beton != 'client'"/>
+                            <field name="statut_client_beton" string="Statut fournisseur"
+                                   invisible="type_partenaire_beton != 'fournisseur'"/>
+                            <field name="satisfaction_client"
+                                   invisible="type_partenaire_beton != 'client'"/>
                         </group>
                         <group string="Conditions commerciales">
                             <field name="mode_paiement_beton"/>

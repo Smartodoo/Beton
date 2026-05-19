@@ -507,3 +507,133 @@ class ReportStockMoveAnalysis(models.AbstractModel):
             'docs': docs,
             'data': data or {},
         }
+
+
+# ============================================================
+# 7. VENTES (sale.order)
+# ============================================================
+class SaleReportWizard(models.TransientModel):
+    _name = 'sale.report.wizard'
+    _description = 'Assistant Rapport Ventes'
+
+    date_from = fields.Date(string="Date début")
+    date_to = fields.Date(string="Date fin")
+    client_id = fields.Many2one('res.partner', string="Client",
+                                domain="[('is_client_beton', '=', True)]")
+    product_ids = fields.Many2many('product.product', 'sale_wizard_product_rel',
+                                   string="Produits")
+    state = fields.Selection([
+        ('draft', 'Devis'),
+        ('sent', 'Devis envoyé'),
+        ('sale', 'Bon de commande'),
+        ('done', 'Verrouillé'),
+        ('cancel', 'Annulé'),
+    ], string="Statut")
+
+    def action_print(self):
+        domain = []
+        if self.date_from:
+            domain.append(('date_order', '>=', self.date_from))
+        if self.date_to:
+            domain.append(('date_order', '<=', self.date_to))
+        if self.client_id:
+            domain.append(('partner_id', '=', self.client_id.id))
+        if self.product_ids:
+            domain.append(('order_line.product_id', 'in', self.product_ids.ids))
+        if self.state:
+            domain.append(('state', '=', self.state))
+        records = self.env['sale.order'].search(domain)
+        data = {
+            'doc_ids': records.ids,
+            'filters': {
+                'date_from': self.date_from.strftime('%d/%m/%Y') if self.date_from else 'Tous',
+                'date_to': self.date_to.strftime('%d/%m/%Y') if self.date_to else 'Tous',
+                'client': self.client_id.name or 'Tous',
+                'produit': ', '.join(self.product_ids.mapped('name')) or 'Tous',
+                'statut': dict(self._fields['state'].selection).get(self.state, 'Tous') if self.state else 'Tous',
+            },
+            'total': len(records),
+            'montant_ht': sum(records.mapped('amount_untaxed')),
+            'montant_ttc': sum(records.mapped('amount_total')),
+        }
+        return self.env.ref('beton_base.action_report_sale_analysis').report_action(self, data=data)
+
+
+class ReportSaleAnalysis(models.AbstractModel):
+    _name = 'report.beton_base.report_sale_analysis'
+    _description = 'Rapport Analyse Ventes'
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['sale.order'].browse(data.get('doc_ids', []))
+        return {
+            'doc_ids': docs.ids,
+            'doc_model': 'sale.order',
+            'docs': docs,
+            'data': data or {},
+        }
+
+
+# ============================================================
+# 8. ACHATS (purchase.order)
+# ============================================================
+class PurchaseReportWizard(models.TransientModel):
+    _name = 'purchase.report.wizard'
+    _description = 'Assistant Rapport Achats'
+
+    date_from = fields.Date(string="Date début")
+    date_to = fields.Date(string="Date fin")
+    fournisseur_id = fields.Many2one('res.partner', string="Fournisseur",
+                                     domain="[('type_partenaire_beton', '=', 'fournisseur')]")
+    product_ids = fields.Many2many('product.product', 'purchase_wizard_product_rel',
+                                   string="Produits")
+    state = fields.Selection([
+        ('draft', 'Demande de prix'),
+        ('sent', 'Demande de prix envoyée'),
+        ('purchase', 'Bon de commande'),
+        ('done', 'Verrouillé'),
+        ('cancel', 'Annulé'),
+    ], string="Statut")
+
+    def action_print(self):
+        domain = []
+        if self.date_from:
+            domain.append(('date_order', '>=', self.date_from))
+        if self.date_to:
+            domain.append(('date_order', '<=', self.date_to))
+        if self.fournisseur_id:
+            domain.append(('partner_id', '=', self.fournisseur_id.id))
+        if self.product_ids:
+            domain.append(('order_line.product_id', 'in', self.product_ids.ids))
+        if self.state:
+            domain.append(('state', '=', self.state))
+        records = self.env['purchase.order'].search(domain)
+        data = {
+            'doc_ids': records.ids,
+            'filters': {
+                'date_from': self.date_from.strftime('%d/%m/%Y') if self.date_from else 'Tous',
+                'date_to': self.date_to.strftime('%d/%m/%Y') if self.date_to else 'Tous',
+                'fournisseur': self.fournisseur_id.name or 'Tous',
+                'produit': ', '.join(self.product_ids.mapped('name')) or 'Tous',
+                'statut': dict(self._fields['state'].selection).get(self.state, 'Tous') if self.state else 'Tous',
+            },
+            'total': len(records),
+            'montant_ht': sum(records.mapped('amount_untaxed')),
+            'montant_ttc': sum(records.mapped('amount_total')),
+        }
+        return self.env.ref('beton_base.action_report_purchase_analysis').report_action(self, data=data)
+
+
+class ReportPurchaseAnalysis(models.AbstractModel):
+    _name = 'report.beton_base.report_purchase_analysis'
+    _description = 'Rapport Analyse Achats'
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['purchase.order'].browse(data.get('doc_ids', []))
+        return {
+            'doc_ids': docs.ids,
+            'doc_model': 'purchase.order',
+            'docs': docs,
+            'data': data or {},
+        }

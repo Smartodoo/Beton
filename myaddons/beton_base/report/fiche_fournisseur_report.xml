@@ -14,156 +14,165 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
-                    <div class="page">
-                        <style>
-                            .beton-title { color:#1F4E79; text-align:center; letter-spacing:2px;
-                                           border-bottom:3px solid #1F4E79; padding-bottom:8px;
-                                           margin-bottom:20px; font-weight:700; }
-                            .beton-section-title { background:#1F4E79; color:#fff; padding:6px 10px;
-                                                   margin-top:16px; margin-bottom:8px;
-                                                   border-radius:3px; font-size:13px; font-weight:600;
-                                                   letter-spacing:1px; text-transform:uppercase; }
-                            .beton-info-card { border:1px solid #d0dde9; border-left:4px solid #1F4E79;
-                                               padding:10px 14px; margin-bottom:8px;
-                                               background:#f7fafc; border-radius:3px; }
-                            .beton-info-card .label { color:#5a6c7d; font-size:11px;
-                                                      text-transform:uppercase; letter-spacing:0.5px;
-                                                      font-weight:600; display:block; margin-bottom:2px; }
-                            .beton-info-card .value { color:#1a202c; font-size:13px; font-weight:500;
-                                                      word-break:break-word; }
-                            .beton-badge { display:inline-block; padding:2px 10px; border-radius:12px;
-                                           font-size:11px; font-weight:600; }
-                            .beton-badge-actif { background:#d4edda; color:#155724; }
-                            .beton-badge-bloque { background:#f8d7da; color:#721c24; }
-                            .beton-badge-archive { background:#e2e3e5; color:#383d41; }
-                            .beton-sign-box { border-top:1px solid #333; margin-top:60px;
-                                              padding-top:6px; text-align:center; font-weight:600; }
-                        </style>
+                    <style>
+                        .footer div.text-muted { display: none !important; }
+                    </style>
+                    <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: #222; padding:0;">
+                        <table style="width:100%; min-height:850px; border:none; border-collapse:collapse;">
+                            <!-- Contenu principal -->
+                            <tr>
+                                <td style="vertical-align:top; padding:0; border:none;">
 
-                        <h2 class="beton-title">FICHE FOURNISSEUR</h2>
+                        <!-- Titre -->
+                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1F4E79; padding-bottom:10px;">
+                            <h2 style="color:#1F4E79; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
+                                FICHE FOURNISSEUR
+                            </h2>
+                        </div>
 
-                        <div class="beton-section-title">Identification</div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Code Fournisseur</span>
-                                    <span class="value" t-esc="o.code_fournisseur or '—'"/>
-                                </div>
+                        <!-- Section Identification -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Identification
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Code Fournisseur</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.code_fournisseur" t-esc="o.code_fournisseur"/>
+                                        <t t-if="not o.code_fournisseur">—</t>
+                                    </div>
+                                </td>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Raison sociale</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.name" t-esc="o.name"/>
+                                        <t t-if="not o.name">—</t>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Classification</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.classification_fournisseur"><span t-field="o.classification_fournisseur"/></t>
+                                        <t t-if="not o.classification_fournisseur">—</t>
+                                    </div>
+                                </td>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Statut fournisseur</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.statut_client_beton"><span t-field="o.statut_client_beton"/></t>
+                                        <t t-if="not o.statut_client_beton">—</t>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Section Coordonnées -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Coordonnées
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; vertical-align:top;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Adresse</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.street"><t t-esc="o.street"/><br/></t>
+                                        <t t-if="o.street2"><t t-esc="o.street2"/><br/></t>
+                                        <t t-if="o.zip"><t t-esc="o.zip"/> </t><t t-if="o.city" t-esc="o.city"/>
+                                        <t t-if="o.state_id"><br/><t t-esc="o.state_id.name"/></t>
+                                        <t t-if="o.country_id"><br/><t t-esc="o.country_id.name"/></t>
+                                        <t t-if="not o.street and not o.city">—</t>
+                                    </div>
+                                </td>
+                                <td style="width:50%; padding:0; border:1px solid #ccc; vertical-align:top;">
+                                    <table style="width:100%; border-collapse:collapse;">
+                                        <tr>
+                                            <td style="padding:5px 8px; border-bottom:1px solid #ccc;">
+                                                <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Téléphone</div>
+                                                <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.phone or '—'"/></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:5px 8px; border-bottom:1px solid #ccc;">
+                                                <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Mobile</div>
+                                                <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.mobile or '—'"/></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:5px 8px; border-bottom:1px solid #ccc;">
+                                                <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Fax</div>
+                                                <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.fax or '—'"/></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:5px 8px;">
+                                                <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Email</div>
+                                                <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.email or '—'"/></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Section Coordonnées fiscales -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Coordonnées fiscales
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">NIF</div>
+                                    <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="o.nif or '—'"/></div>
+                                </td>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">NIS</div>
+                                    <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="o.nis or '—'"/></div>
+                                </td>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">RC</div>
+                                    <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="o.rc or '—'"/></div>
+                                </td>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">AI</div>
+                                    <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="o.ai or '—'"/></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Section Coordonnées bancaires -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Coordonnées bancaires
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">RIB</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.rib or '—'"/></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Signatures -->
+                        <div style="overflow:hidden; margin-top:4cm;">
+                            <div style="float:left; width:45%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Fournisseur
                             </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Raison sociale</span>
-                                    <span class="value" t-esc="o.name or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Classification</span>
-                                    <span class="value"
-                                          t-esc="dict(o._fields['classification_fournisseur'].selection).get(o.classification_fournisseur, '—') if o.classification_fournisseur else '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Contact</span>
-                                    <span class="value"
-                                          t-esc="', '.join(o.child_ids.filtered(lambda c: c.type == 'contact').mapped('name')) or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Mode de paiement</span>
-                                    <span class="value"
-                                          t-esc="dict(o._fields['mode_paiement_beton'].selection).get(o.mode_paiement_beton, '—') if o.mode_paiement_beton else '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Statut</span>
-                                    <t t-set="statut_label"
-                                       t-value="dict(o._fields['statut_client_beton'].selection).get(o.statut_client_beton, '—') if o.statut_client_beton else '—'"/>
-                                    <span t-attf-class="beton-badge beton-badge-#{o.statut_client_beton or 'archive'}"
-                                          t-esc="statut_label"/>
-                                </div>
+                            <div style="float:right; width:45%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Responsable
                             </div>
                         </div>
 
-                        <div class="beton-section-title">Coordonnées</div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Adresse</span>
-                                    <span class="value">
-                                        <t t-if="o.street"><span t-field="o.street"/><br/></t>
-                                        <t t-if="o.street2"><span t-field="o.street2"/><br/></t>
-                                        <span t-field="o.zip"/> <span t-field="o.city"/>
-                                        <t t-if="o.state_id"><br/><span t-field="o.state_id.name"/></t>
-                                        <t t-if="o.country_id"><br/><span t-field="o.country_id.name"/></t>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Téléphone</span>
-                                    <span class="value" t-esc="o.phone or '—'"/>
-                                </div>
-                                <div class="beton-info-card">
-                                    <span class="label">Mobile</span>
-                                    <span class="value" t-esc="o.mobile or '—'"/>
-                                </div>
-                                <div class="beton-info-card">
-                                    <span class="label">Fax</span>
-                                    <span class="value" t-esc="o.fax or '—'"/>
-                                </div>
-                                <div class="beton-info-card">
-                                    <span class="label">Email</span>
-                                    <span class="value" t-esc="o.email or '—'"/>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="beton-section-title">Coordonnées fiscales</div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">NIF</span>
-                                    <span class="value" t-esc="o.nif or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">NIS</span>
-                                    <span class="value" t-esc="o.nis or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">RC</span>
-                                    <span class="value" t-esc="o.rc or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">AI</span>
-                                    <span class="value" t-esc="o.ai or '—'"/>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="beton-section-title">Coordonnées bancaires</div>
-                        <div class="beton-info-card">
-                            <span class="label">RIB</span>
-                            <span class="value" t-esc="o.rib or '—'"/>
-                        </div>
-
-                        <div class="row mt-5">
-                            <div class="col-6">
-                                <div class="beton-sign-box">Signature Fournisseur</div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-sign-box">Signature Responsable</div>
-                            </div>
-                        </div>
                     </div>
                 </t>
             </t>

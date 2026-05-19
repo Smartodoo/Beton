@@ -61,6 +61,7 @@
         'report/bon_livraison_report.xml',
         'report/fiche_essai_report.xml',
         'report/fiche_fabrication_report.xml',
+        'report/fiche_transport_report.xml',
         'report/report_product_analysis.xml',
         'report/fiche_non_conformite_report.xml',
         'report/cout_revient_report.xml',

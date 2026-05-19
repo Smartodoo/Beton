@@ -169,6 +169,18 @@
               action="action_production_report_wizard"
               sequence="30"/>
 
+    <menuitem id="beton_menu_rapport_ventes"
+              name="Analyse Vente"
+              parent="beton_menu_rapports"
+              action="action_sale_report_wizard"
+              sequence="35"/>
+
+    <menuitem id="beton_menu_rapport_achats"
+              name="Analyse Achat"
+              parent="beton_menu_rapports"
+              action="action_purchase_report_wizard"
+              sequence="36"/>
+
     <menuitem id="beton_menu_rapport_livraisons"
               name="Analyse Livraisons"
               parent="beton_menu_rapports"
