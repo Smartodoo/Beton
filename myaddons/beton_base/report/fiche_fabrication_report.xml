@@ -14,277 +14,230 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
-                    <div class="page beton-fiche-fab">
-                        <style>
-                            .beton-fiche-fab { font-size:14pt !important; line-height:1.5; }
-                            .beton-fiche-fab * { font-size:inherit; }
-                            .beton-fiche-fab .row > div { padding-bottom:4pt; }
-                            .beton-title { color:#1F4E79; text-align:center; letter-spacing:2px;
-                                           border-bottom:3px solid #1F4E79; padding-bottom:10pt;
-                                           margin-bottom:18pt; font-weight:700; font-size:24pt !important; }
-                            .beton-section-title { background:#1F4E79; color:#fff; padding:8pt 12pt;
-                                                   margin-top:14pt; margin-bottom:10pt;
-                                                   border-radius:3px; font-size:16pt !important; font-weight:700;
-                                                   letter-spacing:1pt; text-transform:uppercase; }
-                            .beton-info-card { border:1px solid #d0dde9; border-left:5px solid #1F4E79;
-                                               padding:10pt 14pt; margin-bottom:8pt;
-                                               background:#f7fafc; border-radius:3px; }
-                            .beton-info-card .label { color:#5a6c7d; font-size:12pt !important;
-                                                      text-transform:uppercase; letter-spacing:0.3pt;
-                                                      font-weight:700; display:block;
-                                                      margin-bottom:4pt; }
-                            .beton-info-card .value { color:#1a202c; font-size:16pt !important; font-weight:600;
-                                                      word-break:break-word; }
-                            .beton-table { width:100%; border-collapse:collapse; margin-top:8pt;
-                                           font-size:14pt !important; }
-                            .beton-table thead { background:#1F4E79; color:#fff; }
-                            .beton-table th { padding:10pt; font-size:14pt !important; font-weight:700;
-                                              text-align:left; }
-                            .beton-table td { padding:9pt 10pt; font-size:14pt !important;
-                                              border-bottom:1px solid #dee2e6; }
-                            .beton-table tbody tr:nth-child(even) { background:#f7fafc; }
-                            .beton-sign-box { border-top:1.5px solid #333; margin-top:50pt;
-                                              padding-top:8pt; text-align:center; font-weight:700;
-                                              font-size:14pt !important; }
-                        </style>
-
-                        <h2 class="beton-title">FICHE DE FABRICATION BÉTON</h2>
+                    <style>
+                        .footer div.text-muted { display: none !important; }
+                    </style>
+                    <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: #222; padding:0;">
+                        <table style="width:100%; min-height:850px; border:none; border-collapse:collapse;">
+                            <tr>
+                                <td style="vertical-align:top; padding:0; border:none;">
 
                         <t t-set="bon_commande"
                            t-value="o.env['sale.order'].search([('production_beton_id', '=', o.id)], order='date_order desc', limit=1)"/>
 
-                        <div class="beton-section-title">Informations générales</div>
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">N° Fabrication</span>
-                                    <span class="value" t-field="o.name"/>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">N° Bon de Commande</span>
-                                    <span class="value" t-esc="bon_commande.name or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Date de la Commande</span>
-                                    <span class="value">
+                        <!-- Titre -->
+                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1F4E79; padding-bottom:10px;">
+                            <h2 style="color:#1F4E79; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
+                                FICHE DE FABRICATION BÉTON
+                            </h2>
+                        </div>
+
+                        <!-- Section Informations générales -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Informations générales
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="width:33%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">N° Fabrication</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;" t-field="o.name"/>
+                                </td>
+                                <td style="width:33%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">N° Bon de Commande</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="bon_commande.name or '—'"/></div>
+                                </td>
+                                <td style="width:34%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Date de la Commande</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
                                         <t t-if="bon_commande" t-esc="bon_commande.date_order.strftime('%d/%m/%Y') if bon_commande.date_order else '—'"/>
                                         <t t-if="not bon_commande">—</t>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Date planifiée</span>
-                                    <span class="value">
-                                        <t t-esc="o.date_deadline.strftime('%d/%m/%Y %H:%M') if o.date_deadline else (o.date_start.strftime('%d/%m/%Y %H:%M') if o.date_start else '—')"/>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Date de fabrication</span>
-                                    <span class="value">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:33%; padding:5px 8px; border:1px solid #ccc;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Date de fabrication</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
                                         <t t-set="date_fab" t-value="o.date_finished or o.date_start"/>
                                         <t t-esc="date_fab.strftime('%d/%m/%Y %H:%M') if date_fab else '—'"/>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Centrale</span>
-                                    <span class="value" t-esc="o.centrale_id.name or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Opérateur</span>
-                                    <span class="value" t-esc="o.operateur_id.name or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Chantier</span>
-                                    <span class="value" t-esc="o.chantier or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Destination</span>
-                                    <span class="value" t-esc="o.destination or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-info-card">
-                                    <span class="label">Distance</span>
-                                    <span class="value">
+                                    </div>
+                                </td>
+                                <td style="width:33%; padding:5px 8px; border:1px solid #ccc;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Centrale</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.centrale_id.name or '—'"/></div>
+                                </td>
+                                <td style="width:34%; padding:5px 8px; border:1px solid #ccc;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Chantier</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.chantier or '—'"/></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:33%; padding:5px 8px; border:1px solid #ccc;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Distance</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
                                         <t t-if="o.distance" t-esc="'%.1f km' % o.distance"/>
                                         <t t-if="not o.distance">—</t>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                                    </div>
+                                </td>
+                                <td colspan="2" style="padding:5px 8px; border:1px solid #ccc;"/>
+                            </tr>
+                        </table>
 
-                        <div class="beton-section-title">Informations Client</div>
+                        <!-- Section Informations Client -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Informations Client
+                        </div>
                         <t t-if="o.client_id">
                             <t t-set="client" t-value="o.client_id"/>
-                            <t t-set="addr_parts" t-value="[p for p in [client.street, client.street2, client.zip, client.city, (client.state_id.name if client.state_id else False), (client.country_id.name if client.country_id else False)] if p]"/>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="beton-info-card">
-                                        <span class="label">Raison sociale</span>
-                                        <span class="value" t-esc="client.name or '—'"/>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="beton-info-card">
-                                        <span class="label">Adresse</span>
-                                        <span class="value">
-                                            <t t-esc="', '.join(addr_parts) if addr_parts else '—'"/>
-                                        </span>
-                                    </div>
-                                </div>
-                                <t t-if="client.rc or client.nis or client.nif or client.ai">
-                                    <div class="col-3">
-                                        <div class="beton-info-card">
-                                            <span class="label">RC</span>
-                                            <span class="value" t-esc="client.rc or '—'"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="beton-info-card">
-                                            <span class="label">NIS</span>
-                                            <span class="value" t-esc="client.nis or '—'"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="beton-info-card">
-                                            <span class="label">NIF</span>
-                                            <span class="value" t-esc="client.nif or '—'"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="beton-info-card">
-                                            <span class="label">AI</span>
-                                            <span class="value" t-esc="client.ai or '—'"/>
-                                        </div>
-                                    </div>
-                                </t>
-                            </div>
+                            <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                                <tr>
+                                    <td style="padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                        <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Raison sociale</div>
+                                        <div style="font-size:12pt; font-weight:500; margin-top:2px;" t-esc="client.name or '—'"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <t t-if="client.rc or client.nis or client.nif or client.ai">
+                                <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                                    <tr>
+                                        <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                            <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">RC</div>
+                                            <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="client.rc or '—'"/></div>
+                                        </td>
+                                        <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                            <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">NIS</div>
+                                            <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="client.nis or '—'"/></div>
+                                        </td>
+                                        <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                            <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">NIF</div>
+                                            <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="client.nif or '—'"/></div>
+                                        </td>
+                                        <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                            <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">AI</div>
+                                            <div style="font-size:11pt; font-weight:500; margin-top:2px;"><t t-esc="client.ai or '—'"/></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </t>
                         </t>
                         <t t-if="not o.client_id">
-                            <div class="beton-info-card">
-                                <span class="value">Aucun client renseigné</span>
-                            </div>
+                            <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                                <tr>
+                                    <td style="padding:5px 8px; border:1px solid #ccc; background:#f0f4f8; font-size:12pt; font-weight:500;">
+                                        Aucun client renseigné
+                                    </td>
+                                </tr>
+                            </table>
                         </t>
 
-                        <div class="beton-section-title">Produit</div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Produit</span>
-                                    <span class="value" t-esc="o.product_id.name or '—'"/>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Nomenclature</span>
-                                    <span class="value" t-esc="o.bom_id.display_name or '—'"/>
-                                </div>
-                            </div>
+                        <!-- Section Produit -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Produit
                         </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Produit</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.product_id.name or '—'"/></div>
+                                </td>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Nomenclature</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.bom_id.display_name or '—'"/></div>
+                                </td>
+                            </tr>
+                        </table>
 
-                        <div class="beton-section-title">Quantités &amp; Horaires</div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">Qté demandée</span>
-                                    <span class="value">
+                        <!-- Section Quantités & Horaires -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Quantités &amp; Horaires
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Qté demandée</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
                                         <t t-esc="'%.2f' % o.product_qty"/> <span t-field="o.product_uom_id"/>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">Qté produite</span>
-                                    <span class="value">
+                                    </div>
+                                </td>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Qté produite</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
                                         <t t-esc="'%.2f' % o.qty_produced"/> <span t-field="o.product_uom_id"/>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">Nb gâchées</span>
-                                    <span class="value" t-esc="o.nombre_gachees"/>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="beton-info-card">
-                                    <span class="label">Nb camions</span>
-                                    <span class="value" t-esc="o.nombre_camion"/>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Heure début</span>
-                                    <span class="value">
-                                        <span t-field="o.heure_debut" t-options='{"widget": "float_time"}'/>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="beton-info-card">
-                                    <span class="label">Heure fin</span>
-                                    <span class="value">
-                                        <span t-field="o.heure_fin" t-options='{"widget": "float_time"}'/>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                                    </div>
+                                </td>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Nb gâchées</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.nombre_gachees"/></div>
+                                </td>
+                                <td style="width:25%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Nb camions</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.nombre_camion"/></div>
+                                </td>
+                            </tr>
+                        </table>
 
-                        <div class="beton-section-title">Consommation matières</div>
-                        <table class="beton-table" t-if="o.move_raw_ids">
+                        <!-- Section Consommation matières -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Consommation matières
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;" t-if="o.move_raw_ids">
                             <thead>
-                                <tr>
-                                    <th>Matière</th>
-                                    <th class="text-end">Qté prévue</th>
-                                    <th class="text-end">Qté consommée</th>
-                                    <th>UdM</th>
+                                <tr style="background:#1F4E79; color:#fff;">
+                                    <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:left;">Matière</th>
+                                    <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:right;">Qté prévue</th>
+                                    <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:right;">Qté consommée</th>
+                                    <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:left;">UdM</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-foreach="o.move_raw_ids" t-as="m">
-                                    <tr>
-                                        <td><span t-field="m.product_id.name"/></td>
-                                        <td class="text-end"><t t-esc="'%.2f' % m.product_uom_qty"/></td>
-                                        <td class="text-end"><t t-esc="'%.2f' % m.quantity"/></td>
-                                        <td><span t-field="m.product_uom"/></td>
+                                    <tr t-attf-style="background:{{ '#f0f4f8' if m_index % 2 == 0 else '#fff' }};">
+                                        <td style="padding:5px 8px; border:1px solid #ccc; font-size:11pt;"><span t-field="m.product_id.name"/></td>
+                                        <td style="padding:5px 8px; border:1px solid #ccc; font-size:11pt; text-align:right;"><t t-esc="'%.2f' % m.product_uom_qty"/></td>
+                                        <td style="padding:5px 8px; border:1px solid #ccc; font-size:11pt; text-align:right;"><t t-esc="'%.2f' % m.quantity"/></td>
+                                        <td style="padding:5px 8px; border:1px solid #ccc; font-size:11pt;"><span t-field="m.product_uom"/></td>
                                     </tr>
                                 </t>
                             </tbody>
                         </table>
 
-                        <div class="beton-section-title">Observation</div>
-                        <div class="beton-observation-box"
-                             style="border:1px solid #d0dde9; border-left:5px solid #1F4E79;
-                                    border-radius:3px; background:#f7fafc; min-height:90pt;
-                                    padding:10pt 14pt; margin-bottom:20pt;">
+                        <!-- Section Observation -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Observation
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="padding:10px; border:1px solid #ccc; background:#f0f4f8; min-height:80px; height:80px;">
+                                    &#160;
+                                </td>
+                            </tr>
+                        </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Signatures -->
+                        <div style="overflow:hidden; margin-top:2cm;">
+                            <div style="float:left; width:30%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Opérateur
+                            </div>
+                            <div style="float:left; width:5%;">&#160;</div>
+                            <div style="float:left; width:30%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Responsable
+                            </div>
+                            <div style="float:left; width:5%;">&#160;</div>
+                            <div style="float:left; width:30%; text-align:center; border-top:1.5px solid #333; padding-top:8px; font-weight:700; font-size:11pt;">
+                                Signature Directeur
+                            </div>
                         </div>
 
-                        <div class="row mt-5">
-                            <div class="col-4">
-                                <div class="beton-sign-box">Signature Opérateur</div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-sign-box">Signature Responsable</div>
-                            </div>
-                            <div class="col-4">
-                                <div class="beton-sign-box">Signature Directeur</div>
-                            </div>
-                        </div>
                     </div>
                 </t>
             </t>

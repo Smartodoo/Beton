@@ -231,6 +231,9 @@
                                 <th>Produit</th>
                                 <th>Centrale</th>
                                 <th>Client</th>
+                                <th>Chantier</th>
+                                <th>Destination</th>
+                                <th class="text-end">Distance</th>
                                 <th class="text-end">Qté demandée</th>
                                 <th class="text-end">Qté produite</th>
                                 <th class="text-end">Coût</th>
@@ -245,6 +248,9 @@
                                     <td t-esc="doc.product_id.name"/>
                                     <td t-esc="doc.centrale_id.name or ''"/>
                                     <td t-esc="doc.client_id.name or ''"/>
+                                    <td t-esc="doc.chantier or ''"/>
+                                    <td t-esc="doc.destination or ''"/>
+                                    <td class="text-end" t-esc="'%.1f' % doc.distance if doc.distance else ''"/>
                                     <td class="text-end" t-esc="'%.2f' % doc.product_qty"/>
                                     <td class="text-end" t-esc="'%.2f' % doc.qty_produced"/>
                                     <td class="text-end" t-esc="'%.2f' % doc.cout_total"/>
@@ -254,7 +260,8 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="5">Total</td>
+                                <td colspan="7">Total</td>
+                                <td class="text-end" t-esc="'%.1f' % sum(docs.mapped('distance'))"/>
                                 <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('product_qty'))"/>
                                 <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('qty_produced'))"/>
                                 <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('cout_total'))"/>
