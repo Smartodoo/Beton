@@ -68,6 +68,15 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Secteur d'activité</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.industry_id" t-esc="o.industry_id.name"/>
+                                        <t t-if="not o.industry_id">—</t>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
 
                         <!-- Section Coordonnées -->

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_fournisseurs_produit" model="ir.actions.report">
+        <field name="name">Liste Fournisseurs du Produit</field>
+        <field name="model">product.template</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_fournisseurs_produit</field>
+        <field name="report_file">beton_base.report_fournisseurs_produit</field>
+    </record>
+
+    <template id="report_fournisseurs_produit">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <style>
+                        .footer div.text-muted { display: none !important; }
+                    </style>
+                    <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: #222; padding:0;">
+
+                        <!-- Titre -->
+                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1F4E79; padding-bottom:10px;">
+                            <h2 style="color:#1F4E79; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
+                                LISTE DES FOURNISSEURS
+                            </h2>
+                            <div style="margin-top:6px; font-size:11pt; color:#555;">
+                                Classement du meilleur au moins bon (prix croissant)
+                            </div>
+                        </div>
+
+                        <!-- Section Produit -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Produit
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                            <tr>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Référence</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-esc="o.default_code or '—'"/>
+                                    </div>
+                                </td>
+                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Désignation</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-esc="o.name or '—'"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Section Fournisseurs -->
+                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
+                            Fournisseurs classés par prix
+                        </div>
+
+                        <t t-set="sellers" t-value="o.get_fournisseurs_tries()"/>
+                        <t t-if="not sellers">
+                            <div style="padding:10px; border:1px solid #ccc; text-align:center; color:#666;">
+                                Aucun fournisseur n'est défini pour ce produit.
+                            </div>
+                        </t>
+                        <t t-if="sellers">
+                            <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
+                                <thead>
+                                    <tr style="background:#e8eef5;">
+                                        <th style="padding:6px 8px; border:1px solid #ccc; font-size:10pt; text-align:center; width:8%;">Rang</th>
+                                        <th style="padding:6px 8px; border:1px solid #ccc; font-size:10pt; text-align:left;">Fournisseur</th>
+                                        <th style="padding:6px 8px; border:1px solid #ccc; font-size:10pt; text-align:right; width:18%;">Prix</th>
+                                        <th style="padding:6px 8px; border:1px solid #ccc; font-size:10pt; text-align:right; width:14%;">Délai (j)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="sellers" t-as="seller">
+                                        <tr t-att-style="'background:#dff5e1; font-weight:700;' if seller_index == 0 else ('background:#fafafa;' if seller_index % 2 else '')">
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:center; font-size:11pt;">
+                                                <t t-if="seller_index == 0">
+                                                    <span style="color:#1e7e34;">★ <t t-esc="seller_index + 1"/></span>
+                                                </t>
+                                                <t t-if="seller_index != 0">
+                                                    <t t-esc="seller_index + 1"/>
+                                                </t>
+                                            </td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; font-size:11pt;">
+                                                <t t-esc="seller.partner_id.name or '—'"/>
+                                            </td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right; font-size:11pt;">
+                                                <t t-esc="'%.2f' % (seller.price or 0.0)"/>
+                                                <t t-if="seller.currency_id">
+                                                    <span t-esc="seller.currency_id.symbol or seller.currency_id.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="padding:5px 8px; border:1px solid #ccc; text-align:right; font-size:11pt;">
+                                                <t t-esc="seller.delay or 0"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <div style="margin-top:10px; padding:8px 12px; background:#dff5e1; border-left:4px solid #1e7e34; font-size:10pt;">
+                                <strong>★ Meilleur fournisseur :</strong>
+                                <t t-esc="sellers[0].partner_id.name"/>
+                                — Prix :
+                                <t t-esc="'%.2f' % (sellers[0].price or 0.0)"/>
+                                <t t-if="sellers[0].currency_id">
+                                    <span t-esc="sellers[0].currency_id.symbol or sellers[0].currency_id.name"/>
+                                </t>
+                            </div>
+                        </t>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
