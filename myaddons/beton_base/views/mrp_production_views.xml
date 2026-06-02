@@ -32,6 +32,13 @@
                         invisible="state != 'cancel'"/>
             </xpath>
 
+            <!-- On garde le bouton d'annulation natif d'Odoo, mais il ouvre
+                 le wizard de saisie du motif au lieu d'annuler directement. -->
+            <xpath expr="//header/button[@name='action_cancel']" position="attributes">
+                <attribute name="name">action_ouvrir_annulation</attribute>
+                <attribute name="confirm"></attribute>
+            </xpath>
+
             <!-- Ajouter les onglets béton dans le notebook -->
             <xpath expr="//notebook" position="inside">
                 <page string="Détails Béton" name="details_beton">
