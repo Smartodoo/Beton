@@ -149,6 +149,18 @@ class MrpProduction(models.Model):
         order = self._creer_vente()
         order.action_confirm()
 
+    def action_ouvrir_annulation(self):
+        """Ouvre le wizard de confirmation/motif avant annulation."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': "Annulation de l'ordre de fabrication",
+            'res_model': 'beton.annulation.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_production_id': self.id},
+        }
+
     def action_reset_to_draft(self):
         """Remettre un ordre de fabrication annulé en brouillon."""
         for rec in self:

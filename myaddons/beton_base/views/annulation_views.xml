@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Wizard de confirmation d'annulation                          -->
+    <!-- ============================================================ -->
+    <record id="view_beton_annulation_wizard_form" model="ir.ui.view">
+        <field name="name">beton.annulation.wizard.form</field>
+        <field name="model">beton.annulation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Annuler l'ordre de fabrication">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Êtes-vous sûr de vouloir annuler cet ordre de fabrication ?</strong>
+                </div>
+                <group>
+                    <field name="production_id" invisible="1"/>
+                    <field name="motif" placeholder="Indiquez la raison de l'annulation..."
+                           nolabel="0"/>
+                </group>
+                <footer>
+                    <button name="action_confirmer_annulation" type="object"
+                            string="Confirmer l'annulation" class="btn-danger"/>
+                    <button string="Retour" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Table : motifs d'annulation (journal)                        -->
+    <!-- ============================================================ -->
+    <record id="view_beton_motif_annulation_tree" model="ir.ui.view">
+        <field name="name">beton.motif.annulation.tree</field>
+        <field name="model">beton.motif.annulation</field>
+        <field name="arch" type="xml">
+            <tree string="Motifs d'annulation" create="false">
+                <field name="name"/>
+                <field name="date_annulation"/>
+                <field name="production_name"/>
+                <field name="client_id" optional="show"/>
+                <field name="chantier" optional="hide"/>
+                <field name="product_id" optional="hide"/>
+                <field name="product_qty" optional="hide"/>
+                <field name="state_avant" optional="show"/>
+                <field name="motif"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_beton_motif_annulation_form" model="ir.ui.view">
+        <field name="name">beton.motif.annulation.form</field>
+        <field name="model">beton.motif.annulation</field>
+        <field name="arch" type="xml">
+            <form string="Motif d'annulation" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="production_id"/>
+                            <field name="production_name"/>
+                            <field name="state_avant"/>
+                        </group>
+                        <group>
+                            <field name="date_annulation"/>
+                            <field name="user_id"/>
+                            <field name="centrale_id"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                    <group string="Informations de l'ordre">
+                        <group>
+                            <field name="client_id"/>
+                            <field name="chantier"/>
+                        </group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="product_qty"/>
+                        </group>
+                    </group>
+                    <group string="Motif">
+                        <field name="motif" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_beton_motif_annulation_search" model="ir.ui.view">
+        <field name="name">beton.motif.annulation.search</field>
+        <field name="model">beton.motif.annulation</field>
+        <field name="arch" type="xml">
+            <search string="Motifs d'annulation">
+                <field name="production_name"/>
+                <field name="client_id"/>
+                <field name="motif"/>
+                <field name="user_id"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="groupby_client" string="Client"
+                            context="{'group_by': 'client_id'}"/>
+                    <filter name="groupby_user" string="Annulé par"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="groupby_date" string="Date d'annulation"
+                            context="{'group_by': 'date_annulation'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_beton_motif_annulation" model="ir.actions.act_window">
+        <field name="name">Motifs d'Annulation</field>
+        <field name="res_model">beton.motif.annulation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune annulation enregistrée pour l'instant
+            </p>
+            <p>
+                Les motifs d'annulation des ordres de fabrication sont
+                enregistrés ici automatiquement.
+            </p>
+        </field>
+    </record>
+
+</odoo>

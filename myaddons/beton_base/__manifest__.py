@@ -49,6 +49,7 @@
         'views/stock_move_views.xml',
         'views/mrp_bom_views.xml',
         'views/mrp_production_views.xml',
+        'views/annulation_views.xml',
         'views/purchase_order_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_scrap_views.xml',
