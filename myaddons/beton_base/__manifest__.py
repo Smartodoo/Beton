@@ -73,6 +73,7 @@
         'report/account_move_report.xml',
         'report/fiche_client_report.xml',
         'report/fiche_fournisseur_report.xml',
+        'report/fournisseurs_produit_report.xml',
     ],
     'assets': {
         'web.assets_backend': [
