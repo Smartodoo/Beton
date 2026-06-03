@@ -94,4 +94,127 @@
             </div>
         </xpath>
     </template>
+
+    <!-- ============================================================ -->
+    <!-- Rapport Liste des Bons d'Achats (impression groupée)         -->
+    <!-- ============================================================ -->
+    <record id="action_report_purchase_order_list" model="ir.actions.report">
+        <field name="name">Imprimer en liste</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_purchase_order_list</field>
+        <field name="report_file">beton_base.report_purchase_order_list</field>
+        <field name="print_report_name">'Liste des Bons d Achats'</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_purchase_order_list">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <!-- Mapping statut français -->
+                    <t t-set="state_fr" t-value="{
+                        'draft': 'Demande de prix',
+                        'sent': 'Demande de prix envoyée',
+                        'to approve': 'À approuver',
+                        'purchase': 'Bon de commande',
+                        'done': 'Verrouillé',
+                        'cancel': 'Annulé',
+                    }"/>
+
+                    <!-- Titre dynamique selon les statuts sélectionnés -->
+                    <t t-set="nb_docs" t-value="len(docs)"/>
+                    <t t-set="titre">LISTE DES BONS D'ACHATS</t>
+                    <t t-if="len(docs.filtered(lambda o: o.state in ('draft', 'sent'))) == nb_docs">
+                        <t t-set="titre">LISTE DES DEMANDES DE PRIX</t>
+                    </t>
+                    <t t-if="len(docs.filtered(lambda o: o.state == 'purchase')) == nb_docs">
+                        <t t-set="titre">LISTE DES BONS DE COMMANDE</t>
+                    </t>
+                    <t t-if="len(docs.filtered(lambda o: o.state == 'done')) == nb_docs">
+                        <t t-set="titre">LISTE DES BONS DE COMMANDE VERROUILLÉS</t>
+                    </t>
+                    <t t-if="len(docs.filtered(lambda o: o.state == 'cancel')) == nb_docs">
+                        <t t-set="titre">LISTE DES BONS D'ACHATS ANNULÉS</t>
+                    </t>
+
+                    <h2 style="color:#1F4E79; border-bottom:2px solid #1F4E79;
+                               padding-bottom:8px; margin-bottom:15px;">
+                        <t t-out="titre"/>
+                    </h2>
+
+                    <div style="margin-bottom:15px; padding:8px 12px;
+                                background:#f7fafc; border:1px solid #d0dde9;
+                                border-left:4px solid #1F4E79; border-radius:3px;
+                                font-size:12px;">
+                        <strong>Nombre de bons :</strong>
+                        <span t-esc="len(docs)"/>
+                        <span style="margin-left:30px;">
+                            <strong>Date d'impression :</strong>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                        </span>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; font-size:11px;
+                                  border:1px solid #d0dde9;">
+                        <thead>
+                            <tr style="background:#1F4E79; color:#fff;">
+                                <th style="padding:7px 8px; text-align:left;">Référence</th>
+                                <th style="padding:7px 8px; text-align:left;">Date</th>
+                                <th style="padding:7px 8px; text-align:left;">Fournisseur</th>
+                                <th style="padding:7px 8px; text-align:left;">Produits</th>
+                                <th style="padding:7px 8px; text-align:right;">Montant HT</th>
+                                <th style="padding:7px 8px; text-align:right;">Montant TTC</th>
+                                <th style="padding:7px 8px; text-align:center;">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <tr t-att-style="'background:#f7fafc;' if o_index % 2 == 0 else ''">
+                                    <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                        <span t-esc="o.name"/>
+                                    </td>
+                                    <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                        <span t-esc="o.date_order" t-options='{"widget": "date"}'/>
+                                    </td>
+                                    <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                        <span t-esc="o.partner_id.name or ''"/>
+                                    </td>
+                                    <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                        <span t-esc="', '.join(o.order_line.filtered(lambda l: not l.display_type).mapped('product_id.name'))"/>
+                                    </td>
+                                    <td class="text-end"
+                                        style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                        <span t-esc="'%.2f' % o.amount_untaxed"/>
+                                    </td>
+                                    <td class="text-end"
+                                        style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                        <span t-esc="'%.2f' % o.amount_total"/>
+                                    </td>
+                                    <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;
+                                               text-align:center;">
+                                        <span t-esc="state_fr.get(o.state, o.state)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background:#1F4E79; color:#fff; font-weight:700;">
+                                <td colspan="4" style="padding:7px 8px;">Total</td>
+                                <td class="text-end" style="padding:7px 8px;">
+                                    <span t-esc="'%.2f' % sum(docs.mapped('amount_untaxed'))"/>
+                                </td>
+                                <td class="text-end" style="padding:7px 8px;">
+                                    <span t-esc="'%.2f' % sum(docs.mapped('amount_total'))"/>
+                                </td>
+                                <td/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
 </odoo>

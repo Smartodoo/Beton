@@ -252,10 +252,14 @@ class BetonDashboard(models.Model):
     def get_taux_production_global(self, date=None):
         """Taux GLOBAL pondéré sur la période :
         Σ qty_produced / Σ objectif_effectif × 100.
-        C'est la formule la plus fidèle à la réalité (1 m³ = 1 m³)."""
+        Calcul à la volée pour éviter les valeurs obsolètes des champs stockés."""
         mos = self._get_period_mo(date)
-        total_obj = sum(mos.mapped('objectif_effectif'))
-        total_prod = sum(mos.mapped('qty_produced'))
+        total_obj = 0.0
+        total_prod = 0.0
+        for mo in mos:
+            obj_eff = mo.objectif if mo.objectif and mo.objectif > 0 else (mo.product_qty or 0.0)
+            total_obj += obj_eff
+            total_prod += mo.qty_produced
         if not total_obj:
             return 0.0
         return round((total_prod / total_obj) * 100, 1)
@@ -264,9 +268,15 @@ class BetonDashboard(models.Model):
     def get_taux_production_moyen(self, date=None):
         """Taux MOYEN sur les ordres de la période :
         moyenne arithmétique des taux par ordre.
-        Indique la performance moyenne par ordre, sans pondération par taille."""
+        Calcul à la volée pour éviter les valeurs obsolètes des champs stockés."""
         mos = self._get_period_mo(date)
-        rates = mos.mapped('taux_production')
+        if not mos:
+            return 0.0
+        rates = []
+        for mo in mos:
+            obj_eff = mo.objectif if mo.objectif and mo.objectif > 0 else (mo.product_qty or 0.0)
+            if obj_eff > 0:
+                rates.append(mo.qty_produced / obj_eff * 100.0)
         if not rates:
             return 0.0
         return round(sum(rates) / len(rates), 1)

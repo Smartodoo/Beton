@@ -6,6 +6,12 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <!-- Ajouter prix unitaire et coût dans l'onglet Opérations -->
+            <xpath expr="//field[@name='move_ids_without_package']//field[@name='product_uom_qty']" position="after">
+                <field name="price_unit" string="Prix unitaire"/>
+                <field name="cout_total" string="Coût" sum="Total"/>
+            </xpath>
+
             <!-- Ajouter les champs béton dans un onglet dédié -->
             <xpath expr="//notebook" position="inside">
                 <page string="Livraison Béton" name="beton_livraison">

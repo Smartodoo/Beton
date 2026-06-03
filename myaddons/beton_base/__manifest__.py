@@ -31,6 +31,7 @@
         'security/groups.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
+        'data/discuss_channel_data.xml',
         'views/centrale_views.xml',
         'views/chantier_views.xml',
         'views/res_partner_views.xml',
@@ -59,6 +60,7 @@
         'views/beton_menu.xml',
         'report/analysis_reports.xml',
         'report/bon_livraison_report.xml',
+        'report/bon_transfert_interne_report.xml',
         'report/fiche_essai_report.xml',
         'report/fiche_fabrication_report.xml',
         'report/fiche_transport_report.xml',
@@ -78,6 +80,7 @@
         'web.assets_backend': [
             'beton_base/static/src/css/dashboard.css',
             'beton_base/static/src/js/beton_dashboard.js',
+            'beton_base/static/src/js/sticky_onchange_warning.js',
             'beton_base/static/src/xml/beton_dashboard.xml',
         ],
     },

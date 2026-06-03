@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- Hériter le rapport standard Delivery Slip (stock.picking)     -->
+    <!-- Ajouter : Prix unitaire, Coût, Total, Signatures             -->
+    <!-- ============================================================ -->
+
+    <!-- 1. Template principale : report_delivery_document -->
+    <template id="report_delivery_document_inherit_beton" inherit_id="stock.report_delivery_document">
+
+        <!-- === Table "Not Done" : Ajout en-têtes Prix unitaire / Coût === -->
+        <xpath expr="//table[@name='stock_move_table']//th[@name='th_sm_quantity']" position="after">
+            <th name="th_sm_price_unit" class="text-right"><strong>Prix unitaire</strong></th>
+            <th name="th_sm_cout_total" class="text-right"><strong>Coût</strong></th>
+        </xpath>
+
+        <!-- === Table "Not Done" : Ajout cellules dans chaque ligne === -->
+        <xpath expr="//table[@name='stock_move_table']//tbody//tr" position="inside">
+            <td class="text-right">
+                <span t-field="move.price_unit" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+            </td>
+            <td class="text-right">
+                <span t-field="move.cout_total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+            </td>
+        </xpath>
+
+        <!-- === Table "Not Done" : Ligne Total === -->
+        <xpath expr="//table[@name='stock_move_table']/tbody" position="after">
+            <tfoot>
+                <tr>
+                    <td colspan="3"/>
+                    <td class="text-right"><strong>Total :</strong></td>
+                    <td class="text-right">
+                        <strong>
+                            <span t-esc="'%.2f' % sum(o.move_ids.filtered(lambda x: x.product_uom_qty).mapped('cout_total'))"/>
+                            <span t-field="o.company_id.currency_id.symbol"/>
+                        </strong>
+                    </td>
+                </tr>
+            </tfoot>
+        </xpath>
+
+        <!-- === Table "Done" : Ajout en-têtes Prix unitaire / Coût === -->
+        <xpath expr="//table[@name='stock_move_line_table']//th[@name='th_sml_quantity']" position="after">
+            <th name="th_sml_price_unit" class="text-right"><strong>Prix unitaire</strong></th>
+            <th name="th_sml_cout_total" class="text-right"><strong>Coût</strong></th>
+        </xpath>
+
+        <!-- === Table "Done" : Ligne Total === -->
+        <xpath expr="//table[@name='stock_move_line_table']/tbody" position="after">
+            <tfoot>
+                <tr>
+                    <td colspan="3"/>
+                    <td class="text-right"><strong>Total :</strong></td>
+                    <td class="text-right">
+                        <strong>
+                            <span t-esc="'%.2f' % sum(o.move_ids.mapped('cout_total'))"/>
+                            <span t-field="o.company_id.currency_id.symbol"/>
+                        </strong>
+                    </td>
+                </tr>
+            </tfoot>
+        </xpath>
+
+        <!-- === Signatures en bas de page === -->
+        <xpath expr="//div[@name='signature']" position="after">
+            <div class="row mt-5" style="page-break-inside: avoid;">
+                <div class="col-4 text-center">
+                    <strong>Signature Expéditeur</strong>
+                    <br/><br/><br/><br/>
+                    <p>____________________</p>
+                </div>
+                <div class="col-4 text-center">
+                    <strong>Signature Réceptionnaire</strong>
+                    <br/><br/><br/><br/>
+                    <p>____________________</p>
+                </div>
+                <div class="col-4 text-center">
+                    <strong>Signature Responsable</strong>
+                    <br/><br/><br/><br/>
+                    <p>____________________</p>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- 2. Lignes avec N° lot/série : ajout prix et coût -->
+    <template id="stock_report_delivery_serial_inherit_beton"
+              inherit_id="stock.stock_report_delivery_has_serial_move_line">
+        <xpath expr="//td[@name='move_line_lot_quantity']" position="after">
+            <td class="text-right" name="move_line_price_unit">
+                <span t-esc="'%.2f' % move_line.move_id.price_unit"/>
+            </td>
+            <td class="text-right" name="move_line_cout_total">
+                <span t-esc="'%.2f' % move_line.move_id.cout_total"/>
+            </td>
+        </xpath>
+    </template>
+
+    <!-- 3. Lignes agrégées (sans lot/série) : ajout prix et coût -->
+    <template id="stock_report_delivery_aggregated_inherit_beton"
+              inherit_id="stock.stock_report_delivery_aggregated_move_lines">
+        <xpath expr="//td[@name='move_line_aggregated_quantity']" position="after">
+            <td class="text-right" name="move_line_aggregated_price_unit">
+                <span t-esc="'%.2f' % aggregated_lines[line]['move'].price_unit"/>
+            </td>
+            <td class="text-right" name="move_line_aggregated_cout_total">
+                <span t-esc="'%.2f' % (aggregated_lines[line]['move'].price_unit * (aggregated_lines[line]['quantity'] or 0))"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

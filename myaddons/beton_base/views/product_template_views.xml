@@ -39,6 +39,15 @@
                 </div>
             </xpath>
 
+            <!-- Champ Quantité minimum après Description for Delivery Orders -->
+            <xpath expr="//page[@name='inventory']//field[@name='description_pickingout']/.." position="after">
+                <group string="Alerte Stock" invisible="classification_produit != 'matiere_premiere'">
+                    <group>
+                        <field name="qty_minimum"/>
+                    </group>
+                </group>
+            </xpath>
+
             <!-- Onglets dans le notebook -->
             <xpath expr="//notebook" position="inside">
                 <!-- Onglet Matière Béton (visible uniquement pour matières premières) -->
