@@ -41,7 +41,50 @@
                         </table>
                     </div>
 
+                    <!-- Criteres saisis dans le wizard -->
+                    <div style="background-color: #f7fafc; border: 1px solid #d0dde9; border-left: 4px solid #1a5ba8; padding: 10px 14px; border-radius: 3px; margin-bottom: 15px; font-size: 12px;">
+                        <div style="font-weight: bold; color: #1a5ba8; margin-bottom: 6px;">Criteres de selection</div>
+                        <table style="width: 100%; border: none;">
+                            <tr>
+                                <td style="border: none; padding: 3px; width: 50%;">
+                                    <strong>Periode du :</strong>
+                                    <span t-esc="data.get('filters', {}).get('date_from', 'Tous')"/>
+                                    <strong> au :</strong>
+                                    <span t-esc="data.get('filters', {}).get('date_to', 'Tous')"/>
+                                </td>
+                                <td style="border: none; padding: 3px; width: 50%;">
+                                    <strong>Classification :</strong>
+                                    <span t-esc="data.get('filters', {}).get('classification', 'Tous')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 3px;">
+                                    <strong>Type matiere :</strong>
+                                    <span t-esc="data.get('filters', {}).get('type_matiere', 'Tous')"/>
+                                </td>
+                                <td style="border: none; padding: 3px;">
+                                    <strong>Fournisseur :</strong>
+                                    <span t-esc="data.get('filters', {}).get('fournisseur', 'Tous')"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; padding: 3px;">
+                                    <strong>Statut :</strong>
+                                    <span t-esc="data.get('filters', {}).get('statut', 'Tous')"/>
+                                </td>
+                                <td style="border: none; padding: 3px;">
+                                    <strong>Emplacement :</strong>
+                                    <span t-esc="data.get('filters', {}).get('emplacement', 'Tous')"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
                     <div style="border-bottom: 2px solid #1a5ba8; margin-bottom: 20px;"></div>
+
+                    <!-- Bornes de période : limitent les transactions affichées -->
+                    <t t-set="dt_from" t-value="data.get('dt_from')"/>
+                    <t t-set="dt_to" t-value="data.get('dt_to')"/>
 
                     <!-- Boucle sur chaque produit -->
                     <t t-foreach="docs" t-as="product">
@@ -88,8 +131,8 @@
                         </table>
 
                         <!-- Resume chiffres -->
-                        <t t-set="po_lines" t-value="env['purchase.order.line'].search([('product_id', 'in', variants.ids), ('order_id.state', 'in', ('purchase', 'done'))])"/>
-                        <t t-set="so_lines" t-value="env['sale.order.line'].search([('product_id', 'in', variants.ids), ('order_id.state', 'in', ('sale', 'done'))])"/>
+                        <t t-set="po_lines" t-value="env['purchase.order.line'].search([('product_id', 'in', variants.ids), ('order_id.state', 'in', ('purchase', 'done'))] + ([('order_id.date_order', '>=', dt_from)] if dt_from else []) + ([('order_id.date_order', '&lt;=', dt_to)] if dt_to else []))"/>
+                        <t t-set="so_lines" t-value="env['sale.order.line'].search([('product_id', 'in', variants.ids), ('order_id.state', 'in', ('sale', 'done'))] + ([('order_id.date_order', '>=', dt_from)] if dt_from else []) + ([('order_id.date_order', '&lt;=', dt_to)] if dt_to else []))"/>
                         <t t-set="total_achete_qty" t-value="sum(po_lines.mapped('qty_received'))"/>
                         <t t-set="total_achete_montant" t-value="sum(po_lines.mapped('price_subtotal'))"/>
                         <t t-set="total_vendu_qty" t-value="sum(so_lines.mapped('qty_delivered'))"/>
@@ -227,7 +270,7 @@
                         </t>
 
                         <!-- Derniers mouvements de stock -->
-                        <t t-set="stock_moves" t-value="env['stock.move'].search([('product_id', 'in', variants.ids), ('state', '=', 'done')], order='date desc', limit=20)"/>
+                        <t t-set="stock_moves" t-value="env['stock.move'].search([('product_id', 'in', variants.ids), ('state', '=', 'done')] + ([('date', '>=', dt_from)] if dt_from else []) + ([('date', '&lt;=', dt_to)] if dt_to else []), order='date desc', limit=20)"/>
                         <t t-if="stock_moves">
                             <h5 style="background-color: #17a2b8; color: white; padding: 6px; margin-bottom: 0;">Derniers mouvements de stock (20 derniers)</h5>
                             <table class="table table-bordered table-sm" style="font-size: 9px;">

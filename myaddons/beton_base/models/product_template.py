@@ -318,4 +318,17 @@ class ProductTemplate(models.Model):
                     message_type='comment',
                     subtype_xmlid='mail.mt_comment',
                 )
+    def action_print_fournisseurs_report(self):
+        self.ensure_one()
+        if not self.seller_ids:
+            raise UserError(_("Aucun fournisseur n'est défini pour ce produit."))
+        return self.env.ref(
+            'beton_base.action_report_fournisseurs_produit'
+        ).report_action(self)
+
+    def get_fournisseurs_tries(self):
+        """Retourne les fournisseurs du produit triés par prix croissant
+        (du meilleur prix au moins bon)."""
+        self.ensure_one()
+        return self.seller_ids.sorted(key=lambda s: (s.price or 0.0, s.id))
 

@@ -99,11 +99,11 @@ class ProductReportWizard(models.TransientModel):
         ]
 
     def action_print(self):
+        # NB : la période (date_from/date_to) ne filtre PAS la sélection des
+        # produits — elle sert à borner les transactions (achats, ventes,
+        # mouvements de stock) affichées dans le rapport. Un produit ancien
+        # reste donc affiché si son activité tombe dans la période.
         domain = []
-        if self.date_from:
-            domain.append(('create_date', '>=', self.date_from))
-        if self.date_to:
-            domain.append(('create_date', '<=', self.date_to))
         if self.classification_produit:
             domain.append(('classification_produit', '=', self.classification_produit))
         selected_types = self._get_selected_types_matiere()
@@ -123,6 +123,10 @@ class ProductReportWizard(models.TransientModel):
         ]
         data = {
             'doc_ids': records.ids,
+            # Bornes de période transmises au rapport pour filtrer les
+            # transactions (chaînes datetime, inclusives sur la journée).
+            'dt_from': self.date_from.strftime('%Y-%m-%d 00:00:00') if self.date_from else False,
+            'dt_to': self.date_to.strftime('%Y-%m-%d 23:59:59') if self.date_to else False,
             'filters': {
                 'date_from': self.date_from.strftime('%d/%m/%Y') if self.date_from else 'Tous',
                 'date_to': self.date_to.strftime('%d/%m/%Y') if self.date_to else 'Tous',
@@ -144,7 +148,25 @@ class ReportProductAnalysis(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        docs = self.env['product.template'].browse(data.get('doc_ids', []))
+        docs = self.env['product.template'].browse((data or {}).get('doc_ids', []))
+        return {
+            'doc_ids': docs.ids,
+            'doc_model': 'product.template',
+            'docs': docs,
+            'data': data or {},
+        }
+
+
+class ReportProductAnalysisTemplate(models.AbstractModel):
+    # Modèle de rendu du template détaillé (report_product_analysis_template).
+    # Sans lui, Odoo retombe sur le rendu par défaut et tente de parcourir
+    # product.template avec l'id du wizard -> aucun produit filtré n'apparaît.
+    _name = 'report.beton_base.report_product_analysis_template'
+    _description = 'Rapport Analytique Produit'
+
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        docs = self.env['product.template'].browse((data or {}).get('doc_ids', []))
         return {
             'doc_ids': docs.ids,
             'doc_model': 'product.template',
