@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Rapport PDF (sans binding direct, appelé via le server action) -->
+    <record id="action_report_fournisseur_reglement" model="ir.actions.report">
+        <field name="name">Fiche règlement fournisseur</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_fournisseur_reglement</field>
+        <field name="report_file">beton_caisse.report_fournisseur_reglement</field>
+        <field name="print_report_name">'Fiches règlement fournisseurs'</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Server action visible uniquement pour les fournisseurs -->
+    <record id="action_server_print_fournisseur_reglement" model="ir.actions.server">
+        <field name="name">Fiche règlement fournisseur</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">
+if records.filtered(lambda r: r.type_partenaire_beton == 'fournisseur'):
+    action = env.ref('beton_caisse.action_report_fournisseur_reglement').report_action(records.filtered(lambda r: r.type_partenaire_beton == 'fournisseur'))
+        </field>
+    </record>
+
+    <!-- Template rapport fiches règlement fournisseurs -->
+    <template id="report_fournisseur_reglement">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-set="fournisseurs" t-value="docs.filtered(lambda o: o.type_partenaire_beton == 'fournisseur')"/>
+
+                    <h2 style="color:#1F4E79; border-bottom:2px solid #1F4E79;
+                               padding-bottom:8px; margin-bottom:15px;">
+                        FICHES RÈGLEMENT FOURNISSEURS
+                    </h2>
+
+                    <div style="margin-bottom:15px; padding:8px 12px;
+                                background:#f7fafc; border:1px solid #d0dde9;
+                                border-left:4px solid #1F4E79; border-radius:3px;
+                                font-size:12px;">
+                        <strong>Nombre de fournisseurs :</strong>
+                        <span t-esc="len(fournisseurs)"/>
+                        <span style="margin-left:30px;">
+                            <strong>Date d'impression :</strong>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                        </span>
+                    </div>
+
+                    <t t-if="not fournisseurs">
+                        <div style="padding:20px; text-align:center; color:#999; font-size:14px;">
+                            Aucun fournisseur dans la sélection.
+                        </div>
+                    </t>
+
+                    <t t-if="fournisseurs">
+                        <!-- Récupérer tous les versements confirmés des fournisseurs sélectionnés -->
+                        <t t-set="Versement" t-value="docs.env['beton.versement']"/>
+                        <t t-set="all_versements" t-value="Versement.search([
+                            ('partner_id', 'in', fournisseurs.ids),
+                            ('partner_type', '=', 'fournisseur'),
+                            ('state', '=', 'confirmed'),
+                        ], order='partner_id, date')"/>
+
+                        <t t-set="state_fr" t-value="{
+                            'draft': 'Brouillon',
+                            'confirmed': 'Confirmé',
+                        }"/>
+
+                        <t t-foreach="fournisseurs" t-as="fournisseur">
+                            <t t-set="versements" t-value="all_versements.filtered(lambda v: v.partner_id.id == fournisseur.id)"/>
+
+                            <!-- En-tête fournisseur -->
+                            <div style="background:#1F4E79; color:#fff; padding:6px 12px;
+                                        font-size:11pt; font-weight:700; letter-spacing:1px;
+                                        text-transform:uppercase; border-radius:2px;"
+                                 t-att-style="'margin-top:25px; background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-radius:2px;' if not fournisseur_first else 'background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-radius:2px;'">
+                                <span t-esc="fournisseur.name"/>
+                                <t t-if="fournisseur.code_fournisseur">
+                                    <span style="font-weight:400; font-size:9pt; margin-left:10px;">
+                                        (<t t-esc="fournisseur.code_fournisseur"/>)
+                                    </span>
+                                </t>
+                                <span style="float:right; font-size:9pt;">
+                                    Crédit : <strong t-esc="'%.2f' % (fournisseur.beton_credit_fournisseur or 0.0)"/>
+                                </span>
+                            </div>
+
+                            <t t-if="versements">
+                                <table style="width:100%; border-collapse:collapse; font-size:11px;
+                                              border:1px solid #d0dde9; margin-bottom:5px;">
+                                    <thead>
+                                        <tr style="background:#e8eef4;">
+                                            <th style="padding:5px 8px; text-align:left; border-bottom:1px solid #d0dde9;">Référence</th>
+                                            <th style="padding:5px 8px; text-align:left; border-bottom:1px solid #d0dde9;">Date</th>
+                                            <th style="padding:5px 8px; text-align:left; border-bottom:1px solid #d0dde9;">Caisse</th>
+                                            <th style="padding:5px 8px; text-align:left; border-bottom:1px solid #d0dde9;">Bon d'achat</th>
+                                            <th style="padding:5px 8px; text-align:left; border-bottom:1px solid #d0dde9;">Objet</th>
+                                            <th style="padding:5px 8px; text-align:right; border-bottom:1px solid #d0dde9;">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="versements" t-as="v">
+                                            <tr t-att-style="'background:#f7fafc;' if v_index % 2 == 0 else ''">
+                                                <td style="padding:4px 8px; border-bottom:1px solid #e6edf3;">
+                                                    <span t-esc="v.name"/>
+                                                </td>
+                                                <td style="padding:4px 8px; border-bottom:1px solid #e6edf3;">
+                                                    <span t-esc="v.date" t-options='{"widget": "date"}'/>
+                                                </td>
+                                                <td style="padding:4px 8px; border-bottom:1px solid #e6edf3;">
+                                                    <span t-esc="v.cashbox_id.name or '—'"/>
+                                                </td>
+                                                <td style="padding:4px 8px; border-bottom:1px solid #e6edf3;">
+                                                    <span t-esc="v.purchase_order_id.name or '—'"/>
+                                                </td>
+                                                <td style="padding:4px 8px; border-bottom:1px solid #e6edf3;">
+                                                    <span t-esc="v.description or '—'"/>
+                                                </td>
+                                                <td style="padding:4px 8px; border-bottom:1px solid #e6edf3;
+                                                           text-align:right; font-weight:600;">
+                                                    <span t-esc="'%.2f' % v.montant"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr style="background:#e8eef4; font-weight:700;">
+                                            <td colspan="5" style="padding:5px 8px; text-align:right;">
+                                                Sous-total <t t-esc="fournisseur.name"/>
+                                            </td>
+                                            <td style="padding:5px 8px; text-align:right;">
+                                                <span t-esc="'%.2f' % sum(versements.mapped('montant'))"/>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </t>
+
+                            <t t-if="not versements">
+                                <div style="padding:8px 12px; color:#999; font-size:11px;
+                                            border:1px solid #e6edf3; margin-bottom:5px;">
+                                    Aucun versement confirmé pour ce fournisseur.
+                                </div>
+                            </t>
+                        </t>
+
+                        <!-- Total général -->
+                        <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+                            <tr style="background:#1F4E79; color:#fff; font-weight:700; font-size:12px;">
+                                <td style="padding:8px 12px;">Total général des versements</td>
+                                <td style="padding:8px 12px; text-align:right;">
+                                    <span t-esc="'%.2f' % sum(all_versements.mapped('montant'))"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

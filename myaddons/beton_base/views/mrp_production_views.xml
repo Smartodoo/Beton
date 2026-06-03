@@ -32,6 +32,12 @@
                         invisible="state != 'cancel'"/>
             </xpath>
 
+            <!-- Alerte quantité minimum sur les composants -->
+            <xpath expr="//field[@name='move_raw_ids']/tree" position="attributes">
+                <attribute name="decoration-danger">alerte_qty_minimum</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']/tree" position="inside">
+                <field name="alerte_qty_minimum" column_invisible="True"/>
             <!-- On garde le bouton d'annulation natif d'Odoo, mais il ouvre
                  le wizard de saisie du motif au lieu d'annuler directement. -->
             <xpath expr="//header/button[@name='action_cancel']" position="attributes">

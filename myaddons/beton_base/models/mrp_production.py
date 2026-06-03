@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -71,6 +71,28 @@ class MrpProduction(models.Model):
         'production_id', 'attachment_id',
         string="Pièces jointes")
     vente_count = fields.Integer(string="Vente", compute='_compute_vente_count')
+
+    @api.onchange('move_raw_ids')
+    def _onchange_move_raw_ids_qty_minimum(self):
+        alerts = []
+        for move in self.move_raw_ids:
+            product = move.product_id
+            tmpl = product.product_tmpl_id if product else False
+            if tmpl and tmpl.qty_minimum > 0 and product.qty_available <= tmpl.qty_minimum:
+                alerts.append(_(
+                    "• %(product)s : stock disponible %(qty)s ≤ seuil minimum %(min)s",
+                    product=product.name,
+                    qty=product.qty_available,
+                    min=tmpl.qty_minimum,
+                ))
+        if alerts:
+            return {
+                'warning': {
+                    'title': _("Alerte quantité minimum"),
+                    'message': '\n'.join(alerts),
+                    'type': 'notification',
+                }
+            }
 
     @api.depends('product_qty', 'qty_produced')
     def _compute_ecart_beton(self):

@@ -1,5 +1,11 @@
+import logging
+import math
+
+from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -193,6 +199,7 @@ class ProductTemplate(models.Model):
         ('cuve', 'Cuve'),
     ], string="Emplacement")
     delai_approvisionnement = fields.Integer(string="Délai d'approvisionnement (jours)")
+    qty_minimum = fields.Float(string="Quantité minimum", default=0.0)
     statut_matiere = fields.Selection([
         ('actif', 'Actif'),
         ('indisponible', 'Indisponible'),
@@ -236,6 +243,81 @@ class ProductTemplate(models.Model):
         for rec in self:
             rec.cost_history_count = len(rec.cost_history_ids)
 
+    def _format_qty(self, value):
+        """Formate un nombre : sans décimales si entier, sinon 2 décimales,
+        avec séparateur de milliers (espace)."""
+        if value == math.floor(value):
+            return '{:,.0f}'.format(value).replace(',', ' ')
+        return '{:,.2f}'.format(value).replace(',', ' ')
+
+    def _build_qty_minimum_alert(self, qty_available):
+        """Construit le corps HTML de l'alerte stock minimum."""
+        self.ensure_one()
+        uom = self.uom_id.name or ''
+        return Markup(
+            '<div style="padding:12px 16px; border-left:4px solid #e74c3c; '
+            'background:#fdf2f2; border-radius:4px; margin:4px 0;">'
+            '<div style="font-size:14px; font-weight:bold; color:#c0392b; '
+            'margin-bottom:8px;">'
+            '&#9888; Alerte Stock Minimum'
+            '</div>'
+            '<table style="width:100%%; border-collapse:collapse; font-size:13px;">'
+            '<tr>'
+            '<td style="padding:4px 8px; color:#555;">Produit</td>'
+            '<td style="padding:4px 8px; font-weight:bold;">%s</td>'
+            '</tr>'
+            '<tr style="background:#fff;">'
+            '<td style="padding:4px 8px; color:#555;">Stock actuel</td>'
+            '<td style="padding:4px 8px; font-weight:bold; color:#e74c3c;">'
+            '%s %s</td>'
+            '</tr>'
+            '<tr>'
+            '<td style="padding:4px 8px; color:#555;">Seuil minimum</td>'
+            '<td style="padding:4px 8px; font-weight:bold;">%s %s</td>'
+            '</tr>'
+            '</table>'
+            '</div>'
+        ) % (
+            self.name,
+            self._format_qty(qty_available), uom,
+            self._format_qty(self.qty_minimum), uom,
+        )
+
+    @api.model
+    def _cron_check_qty_minimum(self):
+        """Cron : vérifie toutes les matières premières dont le stock est
+        inférieur ou égal à la quantité minimum et poste une alerte
+        sur le canal Discuss 'Quantité Minimum'."""
+        channel = self.env.ref('beton_base.channel_qty_minimum', raise_if_not_found=False)
+        if not channel:
+            _logger.warning("Canal 'Quantité Minimum' introuvable (beton_base.channel_qty_minimum).")
+            return
+        # S'assurer que les groupes Responsable et Technique sont abonnés au canal
+        groups = self.env['res.groups']
+        for xid in ('beton_base.group_beton_responsable', 'base.group_system'):
+            grp = self.env.ref(xid, raise_if_not_found=False)
+            if grp:
+                groups |= grp
+        missing = groups - channel.sudo().group_ids
+        if missing:
+            channel.sudo().write({'group_ids': [(4, g.id) for g in missing]})
+        templates = self.search([
+            ('classification_produit', '=', 'matiere_premiere'),
+            ('qty_minimum', '>', 0),
+        ])
+        _logger.info("Vérification qty minimum : %d matière(s) première(s) à vérifier.", len(templates))
+        for tmpl in templates:
+            qty_available = sum(tmpl.product_variant_ids.mapped('qty_available'))
+            _logger.info(
+                "Produit '%s' : stock=%.2f, minimum=%.2f",
+                tmpl.name, qty_available, tmpl.qty_minimum,
+            )
+            if qty_available <= tmpl.qty_minimum:
+                channel.sudo().message_post(
+                    body=tmpl._build_qty_minimum_alert(qty_available),
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment',
+                )
     def action_print_fournisseurs_report(self):
         self.ensure_one()
         if not self.seller_ids:

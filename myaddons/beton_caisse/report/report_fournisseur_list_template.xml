@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Rapport PDF (sans binding direct, appelé via le server action) -->
+    <record id="action_report_fournisseur_list" model="ir.actions.report">
+        <field name="name">Fiche créance fournisseur</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_caisse.report_fournisseur_list</field>
+        <field name="report_file">beton_caisse.report_fournisseur_list</field>
+        <field name="print_report_name">'Fiches créance fournisseurs'</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Server action visible uniquement pour les fournisseurs -->
+    <record id="action_server_print_fournisseur_list" model="ir.actions.server">
+        <field name="name">Fiche créance fournisseur</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">
+if records.filtered(lambda r: r.type_partenaire_beton == 'fournisseur'):
+    action = env.ref('beton_caisse.action_report_fournisseur_list').report_action(records.filtered(lambda r: r.type_partenaire_beton == 'fournisseur'))
+        </field>
+    </record>
+
+    <!-- Template rapport liste fournisseurs avec crédit -->
+    <template id="report_fournisseur_list">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <!-- Filtrer uniquement les fournisseurs -->
+                    <t t-set="fournisseurs" t-value="docs.filtered(lambda o: o.type_partenaire_beton == 'fournisseur')"/>
+
+                    <h2 style="color:#1F4E79; border-bottom:2px solid #1F4E79;
+                               padding-bottom:8px; margin-bottom:15px;">
+                        FICHES CRÉANCE FOURNISSEURS
+                    </h2>
+
+                    <div style="margin-bottom:15px; padding:8px 12px;
+                                background:#f7fafc; border:1px solid #d0dde9;
+                                border-left:4px solid #1F4E79; border-radius:3px;
+                                font-size:12px;">
+                        <strong>Nombre de fournisseurs :</strong>
+                        <span t-esc="len(fournisseurs)"/>
+                        <span style="margin-left:30px;">
+                            <strong>Date d'impression :</strong>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                        </span>
+                    </div>
+
+                    <t t-if="not fournisseurs">
+                        <div style="padding:20px; text-align:center; color:#999; font-size:14px;">
+                            Aucun fournisseur dans la sélection.
+                        </div>
+                    </t>
+
+                    <t t-if="fournisseurs">
+                        <table style="width:100%; border-collapse:collapse; font-size:11px;
+                                      border:1px solid #d0dde9;">
+                            <thead>
+                                <tr style="background:#1F4E79; color:#fff;">
+                                    <th style="padding:7px 8px; text-align:left;">Code</th>
+                                    <th style="padding:7px 8px; text-align:left;">Fournisseur</th>
+                                    <th style="padding:7px 8px; text-align:left;">Téléphone</th>
+                                    <th style="padding:7px 8px; text-align:left;">Email</th>
+                                    <th style="padding:7px 8px; text-align:center;">Classification</th>
+                                    <th style="padding:7px 8px; text-align:center;">Statut</th>
+                                    <th style="padding:7px 8px; text-align:right;">Crédit Fournisseur</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="statut_fr" t-value="{
+                                    'actif': 'Actif',
+                                    'bloque': 'Bloqué',
+                                    'archive': 'Archivé',
+                                }"/>
+                                <t t-set="classif_fr" t-value="{
+                                    'strategique': 'Stratégique',
+                                    'standard': 'Standard',
+                                    'occasionnel': 'Occasionnel',
+                                }"/>
+                                <t t-foreach="fournisseurs" t-as="o">
+                                    <tr t-att-style="'background:#f7fafc;' if o_index % 2 == 0 else ''">
+                                        <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                            <span t-esc="o.code_fournisseur or '—'"/>
+                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                            <span t-esc="o.name"/>
+                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                            <span t-esc="o.phone or '—'"/>
+                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;">
+                                            <span t-esc="o.email or '—'"/>
+                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;
+                                                   text-align:center;">
+                                            <span t-esc="classif_fr.get(o.classification_fournisseur, '—')"/>
+                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;
+                                                   text-align:center;">
+                                            <span t-esc="statut_fr.get(o.statut_client_beton, '—')"/>
+                                        </td>
+                                        <td style="padding:6px 8px; border-bottom:1px solid #e6edf3;
+                                                   text-align:right; font-weight:600;">
+                                            <span t-att-style="'color:#dc3545;' if o.beton_credit_fournisseur > 0 else ''"
+                                                  t-esc="'%.2f' % (o.beton_credit_fournisseur or 0.0)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background:#1F4E79; color:#fff; font-weight:700;">
+                                    <td colspan="6" style="padding:7px 8px;">Total Crédit Fournisseurs</td>
+                                    <td class="text-end" style="padding:7px 8px;">
+                                        <span t-esc="'%.2f' % sum(fournisseurs.mapped('beton_credit_fournisseur'))"/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

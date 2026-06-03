@@ -60,8 +60,17 @@
         'report/report_expense_list_template.xml',
         'report/report_partner_payments_template.xml',
         'report/report_analyse_globale_template.xml',
+        'report/report_fournisseur_list_template.xml',
+        'report/report_client_list_template.xml',
+        'report/report_client_reglement_template.xml',
+        'report/report_fournisseur_reglement_template.xml',
         'views/beton_caisse_menu.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'beton_caisse/static/src/js/partner_print_filter.js',
+        ],
+    },
     'installable': True,
     'application': True,
     'post_init_hook': 'post_init_hook',
