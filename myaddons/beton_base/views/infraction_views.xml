@@ -71,6 +71,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="role_employe" invisible="1"/>
                 <button name="action_view_infractions"
                         type="object"
                         class="oe_stat_button"
