@@ -44,6 +44,8 @@ class BetonDashboard(models.Model):
         last_day = calendar.monthrange(year, month)[1]
         return date_cls(year, month, last_day)
 
+
+
     @api.model
     def _get_period(self, date=None):
         """Retourne le début du mois et la date de fin (date passée ou today)."""
@@ -251,14 +253,15 @@ class BetonDashboard(models.Model):
     @api.model
     def get_taux_production_global(self, date=None):
         """Taux GLOBAL pondéré sur la période :
-        Σ qty_produced / Σ objectif_effectif × 100.
-        Calcul à la volée pour éviter les valeurs obsolètes des champs stockés."""
+        Σ qty_produced / Σ product_qty × 100.
+        Utilise product_qty (quantité planifiée, même UdM que qty_produced)
+        car le champ objectif peut contenir des valeurs incohérentes
+        (capacité journalière centrale au lieu d'objectif par ordre)."""
         mos = self._get_period_mo(date)
         total_obj = 0.0
         total_prod = 0.0
         for mo in mos:
-            obj_eff = mo.objectif if mo.objectif and mo.objectif > 0 else (mo.product_qty or 0.0)
-            total_obj += obj_eff
+            total_obj += mo.product_qty or 0.0
             total_prod += mo.qty_produced
         if not total_obj:
             return 0.0
@@ -268,15 +271,15 @@ class BetonDashboard(models.Model):
     def get_taux_production_moyen(self, date=None):
         """Taux MOYEN sur les ordres de la période :
         moyenne arithmétique des taux par ordre.
-        Calcul à la volée pour éviter les valeurs obsolètes des champs stockés."""
+        Utilise product_qty comme dénominateur pour cohérence avec le taux global."""
         mos = self._get_period_mo(date)
         if not mos:
             return 0.0
         rates = []
         for mo in mos:
-            obj_eff = mo.objectif if mo.objectif and mo.objectif > 0 else (mo.product_qty or 0.0)
-            if obj_eff > 0:
-                rates.append(mo.qty_produced / obj_eff * 100.0)
+            obj = mo.product_qty or 0.0
+            if obj > 0:
+                rates.append(mo.qty_produced / obj * 100.0)
         if not rates:
             return 0.0
         return round(sum(rates) / len(rates), 1)

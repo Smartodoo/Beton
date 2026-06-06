@@ -68,7 +68,7 @@
                             </div>
                         </div>
 
-                        <!-- Taux de production GLOBAL (pondéré : Σ produit / Σ objectif) -->
+                        <!-- Taux de production GLOBAL (pondéré : Σ produit / Σ planifié) -->
                         <div class="col-xl-3 col-md-6 mb-3">
                             <div class="kpi-card">
                                 <div class="card-body d-flex align-items-start gap-3">
@@ -76,13 +76,13 @@
                                         <i class="fa fa-bullseye"/>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <div class="kpi-label">Taux global (vs objectif)</div>
+                                        <div class="kpi-label">Taux global de production</div>
                                         <div class="kpi-value">
                                             <t t-esc="formatNumber(state.data.taux_production_global, 1)"/>
                                             <small>%</small>
                                         </div>
                                         <div class="text-muted small mt-1">
-                                            Σ produit / Σ objectif (pondéré)
+                                            Σ produit / Σ planifié (pondéré)
                                         </div>
                                         <div class="progress mt-2" style="height: 6px;">
                                             <div class="progress-bar"
@@ -108,7 +108,7 @@
                                             <small>%</small>
                                         </div>
                                         <div class="text-muted small mt-1">
-                                            Moyenne arithmétique sur les ordres
+                                            Moyenne produit/planifié par ordre
                                         </div>
                                         <div class="progress mt-2" style="height: 6px;">
                                             <div class="progress-bar"
