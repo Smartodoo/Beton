@@ -16,6 +16,7 @@ from . import cout_revient
 from . import account_move
 from . import mrp_bom
 from . import mrp_production
+from . import motif_annulation
 from . import mrp_scrap
 from . import bon_sortie
 from . import hr_employee

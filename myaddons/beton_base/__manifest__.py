@@ -50,6 +50,7 @@
         'views/stock_move_views.xml',
         'views/mrp_bom_views.xml',
         'views/mrp_production_views.xml',
+        'views/annulation_views.xml',
         'views/purchase_order_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_scrap_views.xml',
@@ -75,6 +76,7 @@
         'report/account_move_report.xml',
         'report/fiche_client_report.xml',
         'report/fiche_fournisseur_report.xml',
+        'report/fournisseurs_produit_report.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -133,6 +133,19 @@
               action="action_beton_matieres"
               sequence="30"/>
 
+    <menuitem id="beton_menu_motif_annulation"
+              name="Motifs d'Annulation"
+              parent="beton_menu_production"
+              action="action_beton_motif_annulation"
+              sequence="40"/>
+
+    <!-- Historique d'annulation dans le menu standard Fabrication > Opérations (en dernier) -->
+    <menuitem id="menu_mrp_historique_annulation"
+              name="Historique d'Annulation"
+              parent="mrp.menu_mrp_manufacturing"
+              action="action_beton_motif_annulation"
+              sequence="90"/>
+
     <!-- Sous-menu Finance -->
     <menuitem id="beton_menu_finance"
               name="Finance"
