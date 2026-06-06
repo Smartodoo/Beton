@@ -45,6 +45,7 @@ class BetonDashboard(models.Model):
         return date_cls(year, month, last_day)
 
 
+
     @api.model
     def _get_period(self, date=None):
         """Retourne le début du mois et la date de fin (date passée ou today)."""
