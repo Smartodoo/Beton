@@ -30,3 +30,10 @@ class StockPicking(models.Model):
                 rec.temps_trajet = diff.total_seconds() / 60
             else:
                 rec.temps_trajet = 0
+
+    def _register_hook(self):
+        super()._register_hook()
+        report = self.env.ref('stock.action_report_delivery', raise_if_not_found=False)
+        if report:
+            report.with_context(lang='fr_FR').write({'name': 'Bon de Réception'})
+            report.with_context(lang='en_US').write({'name': 'Bon de Réception'})
