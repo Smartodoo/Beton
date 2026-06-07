@@ -93,9 +93,30 @@
                             <t t-set="client" t-value="o.client_id"/>
                             <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
                                 <tr>
-                                    <td style="padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <td style="width:28%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8; vertical-align:top;">
                                         <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Raison sociale</div>
                                         <div style="font-size:12pt; font-weight:500; margin-top:2px;" t-esc="client.name or '—'"/>
+                                    </td>
+                                    <td style="width:32%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8; vertical-align:top;">
+                                        <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Adresse</div>
+                                        <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                            <t t-if="client.street"><t t-esc="client.street"/><br/></t>
+                                            <t t-if="client.street2"><t t-esc="client.street2"/><br/></t>
+                                            <t t-if="client.zip"><t t-esc="client.zip"/> </t><t t-if="client.city" t-esc="client.city"/>
+                                            <t t-if="client.country_id"><br/><t t-esc="client.country_id.name"/></t>
+                                            <t t-if="not client.street and not client.city">—</t>
+                                        </div>
+                                    </td>
+                                    <td style="width:22%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8; vertical-align:top;">
+                                        <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Chantier</div>
+                                        <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.chantier or '—'"/></div>
+                                    </td>
+                                    <td style="width:18%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8; vertical-align:top;">
+                                        <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Distance</div>
+                                        <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                            <t t-if="o.distance" t-esc="'%.1f km' % o.distance"/>
+                                            <t t-if="not o.distance">—</t>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
@@ -139,13 +160,20 @@
                         </div>
                         <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
                             <tr>
-                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                <td style="width:33%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
                                     <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Produit</div>
                                     <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.product_id.name or '—'"/></div>
                                 </td>
-                                <td style="width:50%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                <td style="width:33%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
                                     <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Nomenclature</div>
                                     <div style="font-size:12pt; font-weight:500; margin-top:2px;"><t t-esc="o.bom_id.display_name or '—'"/></div>
+                                </td>
+                                <td style="width:34%; padding:5px 8px; border:1px solid #ccc; background:#f0f4f8;">
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600;">Service inclus</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.inclure_service"><t t-esc="o.service_product_id.name or 'Oui'"/></t>
+                                        <t t-if="not o.inclure_service">Non</t>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
