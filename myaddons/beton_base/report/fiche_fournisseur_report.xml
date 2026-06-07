@@ -96,6 +96,16 @@
                                         <t t-if="o.country_id"><br/><t t-esc="o.country_id.name"/></t>
                                         <t t-if="not o.street and not o.city">—</t>
                                     </div>
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600; margin-top:8px; padding-top:8px; border-top:1px solid #ccc;">Statut</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.statut_client_beton"><span t-field="o.statut_client_beton"/></t>
+                                        <t t-if="not o.statut_client_beton">—</t>
+                                    </div>
+                                    <div style="font-size:9pt; color:#666; text-transform:uppercase; font-weight:600; margin-top:8px; padding-top:8px; border-top:1px solid #ccc;">Classification</div>
+                                    <div style="font-size:12pt; font-weight:500; margin-top:2px;">
+                                        <t t-if="o.classification_fournisseur"><span t-field="o.classification_fournisseur"/></t>
+                                        <t t-if="not o.classification_fournisseur">—</t>
+                                    </div>
                                 </td>
                                 <td style="width:50%; padding:0; border:1px solid #ccc; vertical-align:top;">
                                     <table style="width:100%; border-collapse:collapse;">
