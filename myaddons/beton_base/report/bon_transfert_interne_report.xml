@@ -5,8 +5,67 @@
     <!-- Ajouter : Prix unitaire, Coût, Total, Signatures             -->
     <!-- ============================================================ -->
 
+    <!-- Renommer le PDF téléchargé et le menu Imprimer : "Bon de Réception" -->
+    <record id="stock.action_report_delivery" model="ir.actions.report">
+        <field name="name">Bon de Réception</field>
+        <field name="print_report_name">'Bon de Réception - %s - %s' % (object.partner_id.name or '', object.name)</field>
+    </record>
+
     <!-- 1. Template principale : report_delivery_document -->
     <template id="report_delivery_document_inherit_beton" inherit_id="stock.report_delivery_document">
+
+        <!-- === Désactiver le bloc adresse standard (address_layout) === -->
+        <xpath expr="//t[@t-set='address']" position="replace">
+            <t t-set="address" t-value="False"/>
+        </xpath>
+        <xpath expr="//t[@t-set='information_block']" position="replace"/>
+
+        <!-- === Titre "Bon de Réception" + Référence + Adresse fournisseur === -->
+        <xpath expr="//div[@class='page']/h2" position="replace">
+            <h2 class="text-center" style="color: #1F4E79;">
+                <strong>Bon de Réception</strong>
+            </h2>
+            <h4 class="text-center mb-3">
+                <span t-field="o.name"/>
+            </h4>
+            <div class="row mb-3">
+                <div class="col-6" t-if="partner">
+                    <strong>Adresse fournisseur :</strong>
+                    <div t-field="partner.commercial_partner_id"
+                         t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
+                </div>
+                <div class="col-6" t-if="o.picking_type_id.warehouse_id.partner_id">
+                    <strong>Adresse de l'entrepôt :</strong>
+                    <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- === "Shipping Date" → "Date de réception" === -->
+        <xpath expr="//div[@name='div_sched_date']/strong" position="replace">
+            <strong>Date de réception :</strong>
+        </xpath>
+
+        <!-- === Table "Not Done" : "Ordered" → "Qte commandée" === -->
+        <xpath expr="//th[@name='th_sm_ordered']" position="replace">
+            <th name="th_sm_ordered"><strong>Qte commandée</strong></th>
+        </xpath>
+
+        <!-- === Table "Not Done" : "Delivered" → "Qte livrée" === -->
+        <xpath expr="//th[@name='th_sm_quantity']" position="replace">
+            <th name="th_sm_quantity"><strong>Qte livrée</strong></th>
+        </xpath>
+
+        <!-- === Table "Done" : "Ordered" → "Qte commandée" === -->
+        <xpath expr="//th[@name='th_sml_qty_ordered']/strong" position="replace">
+            <strong>Qte commandée</strong>
+        </xpath>
+
+        <!-- === Table "Done" : "Delivered" → "Qte livrée" === -->
+        <xpath expr="//th[@name='th_sml_quantity']/strong" position="replace">
+            <strong>Qte livrée</strong>
+        </xpath>
 
         <!-- === Table "Not Done" : Ajout en-têtes Prix unitaire / Coût === -->
         <xpath expr="//table[@name='stock_move_table']//th[@name='th_sm_quantity']" position="after">
@@ -62,26 +121,73 @@
             </tfoot>
         </xpath>
 
-        <!-- === Signatures en bas de page === -->
+        <!-- === Deux signataires : Responsable centrale / Gérant === -->
         <xpath expr="//div[@name='signature']" position="after">
             <div class="row mt-5" style="page-break-inside: avoid;">
-                <div class="col-4 text-center">
-                    <strong>Signature Expéditeur</strong>
+                <div class="col-6 text-center">
+                    <strong>Responsable centrale</strong>
                     <br/><br/><br/><br/>
                     <p>____________________</p>
                 </div>
-                <div class="col-4 text-center">
-                    <strong>Signature Réceptionnaire</strong>
-                    <br/><br/><br/><br/>
-                    <p>____________________</p>
-                </div>
-                <div class="col-4 text-center">
-                    <strong>Signature Responsable</strong>
+                <div class="col-6 text-center">
+                    <strong>Gérant</strong>
                     <br/><br/><br/><br/>
                     <p>____________________</p>
                 </div>
             </div>
         </xpath>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- Hériter le rapport "Picking Operations" (stock.report_picking) -->
+    <!-- Ajouter : Titre Bon de Transfert, Prix unitaire, Coût, Signatures -->
+    <!-- ============================================================ -->
+    <template id="report_picking_inherit_beton" inherit_id="stock.report_picking">
+
+        <!-- === Titre "Bon de Transfert" === -->
+        <xpath expr="//h1[@t-field='o.name']" position="replace">
+            <h2 class="text-center" style="color: #1F4E79;">
+                <strong>Bon de Transfert</strong>
+            </h2>
+            <h4 class="text-center mb-3">
+                <span t-field="o.name"/>
+            </h4>
+        </xpath>
+
+        <!-- === Ajout en-têtes Prix unitaire / Coût === -->
+        <xpath expr="//th[@name='th_from']" position="before">
+            <th class="text-right"><strong>Prix unitaire</strong></th>
+            <th class="text-right"><strong>Coût</strong></th>
+        </xpath>
+
+        <!-- === Ajout cellules Prix unitaire / Coût dans chaque ligne produit === -->
+        <xpath expr="//span[@t-esc='ml.location_id.display_name']/parent::td" position="before">
+            <td class="text-right">
+                <span t-esc="'%.2f' % ml.price_unit"/>
+                <span t-field="o.company_id.currency_id.symbol"/>
+            </td>
+            <td class="text-right">
+                <span t-esc="'%.2f' % (ml.price_unit * ml.quantity)"/>
+                <span t-field="o.company_id.currency_id.symbol"/>
+            </td>
+        </xpath>
+
+        <!-- === Deux signataires en bas de page === -->
+        <xpath expr="//p[@t-field='o.note']" position="after">
+            <div class="row mt-5" style="page-break-inside: avoid;">
+                <div class="col-6 text-center">
+                    <strong>Signature Expéditeur</strong>
+                    <br/><br/><br/><br/>
+                    <p>____________________</p>
+                </div>
+                <div class="col-6 text-center">
+                    <strong>Signature Réceptionnaire</strong>
+                    <br/><br/><br/><br/>
+                    <p>____________________</p>
+                </div>
+            </div>
+        </xpath>
+
     </template>
 
     <!-- 2. Lignes avec N° lot/série : ajout prix et coût -->
