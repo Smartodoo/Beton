@@ -19,6 +19,7 @@
                 </button>
             </xpath>
 
+
             <!-- Boutons Créer Vente -->
             <xpath expr="//header" position="inside">
                 <button name="action_creer_vente" type="object"
