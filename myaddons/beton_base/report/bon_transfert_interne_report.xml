@@ -144,8 +144,10 @@
     <!-- ============================================================ -->
     <template id="report_picking_inherit_beton" inherit_id="stock.report_picking">
 
-        <!-- === Titre "Bon de Transfert" === -->
-        <xpath expr="//h1[@t-field='o.name']" position="replace">
+        <!-- === Titre "Bon de Transfert" placé AVANT les blocs d'adresses === -->
+        <xpath expr="//h1[@t-field='o.name']" position="replace"/>
+
+        <xpath expr="//div[@name='div_outgoing_address']/.." position="before">
             <h2 class="text-center" style="color: #1F4E79;">
                 <strong>Bon de Transfert</strong>
             </h2>
