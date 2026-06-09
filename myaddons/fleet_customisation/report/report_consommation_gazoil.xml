@@ -8,96 +8,116 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">fleet_customisation.report_gazoil_template</field>
         <field name="report_file">fleet_customisation.report_gazoil_template</field>
-        <field name="print_report_name">'Rapport_Gazoil'</field>
+        <field name="print_report_name">'Fiche_Consommation_Carburant'</field>
         <field name="binding_model_id" ref="model_fleet_gazoil"/>
         <field name="binding_type">report</field>
     </record>
 
-    <!-- Template QWeb -->
+    <!-- Template QWeb : Fiche de consommation de carburant -->
     <template id="report_gazoil_template">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">
 
+                    <!-- En-tete -->
+                    <div style="text-align: center; margin-bottom: 18px;">
+                        <div style="font-size: 16px; font-weight: bold; text-transform: uppercase;">
+                            Gestion du parc automobile
+                        </div>
+                        <div style="font-size: 18px; font-weight: bold; text-transform: uppercase; margin-top: 4px; text-decoration: underline;">
+                            Fiche de consommation de carburant
+                        </div>
+                    </div>
+
                     <!-- Periode (uniquement si imprime via le wizard) -->
                     <t t-set="date_debut" t-value="(data or {}).get('date_debut', False)"/>
                     <t t-set="date_fin" t-value="(data or {}).get('date_fin', False)"/>
-                    <div t-if="date_debut and date_fin"
-                         style="text-align: center; margin: 15px 0 20px 0; font-weight: bold; font-size: 14px;">
-                        Periode Du: <span t-esc="date_debut"/> AU <span t-esc="date_fin"/>
+                    <div style="margin: 0 0 15px 0; font-size: 13px;">
+                        <div style="margin-bottom: 4px;">
+                            <strong>Date :</strong>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                        </div>
+                        <div t-if="date_debut and date_fin">
+                            <strong>Periode :</strong>
+                            Du <span t-esc="date_debut"/> Au <span t-esc="date_fin"/>
+                        </div>
                     </div>
 
-                    <!-- Pre-calculs : tri + regroupement par conducteur -->
+                    <!-- Pre-calculs -->
                     <t t-set="sorted_docs"
-                       t-value="docs.sorted(key=lambda r: (r.employee_id.name or '', r.date))"/>
-                    <t t-set="employees" t-value="sorted_docs.mapped('employee_id')"/>
+                       t-value="docs.sorted(key=lambda r: (r.date, r.employee_id.name or ''))"/>
                     <t t-set="total" t-value="sum(line.montant for line in docs)"/>
-                    <t t-set="total_lines" t-value="len(docs)"/>
 
-                    <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size: 12px;">
                         <thead>
                             <tr style="background-color: #dddddd;">
-                                <th style="border: 1px solid black; padding: 8px; width: 12%; text-align: center;">
-                                    Periode semaine
-                                </th>
-                                <th style="border: 1px solid black; padding: 8px; width: 23%; text-align: center;">
-                                    Conducteur
-                                </th>
-                                <th style="border: 1px solid black; padding: 8px; width: 15%; text-align: center;">
-                                    Date
-                                </th>
-                                <th style="border: 1px solid black; padding: 8px; width: 20%; text-align: center;">
-                                    Montant
-                                </th>
-                                <th style="border: 1px solid black; padding: 8px; width: 30%; text-align: center;">
-                                    Vehicule
-                                </th>
+                                <th style="border: 1px solid black; padding: 6px; width: 5%; text-align: center;">N&#176;</th>
+                                <th style="border: 1px solid black; padding: 6px; width: 11%; text-align: center;">Date</th>
+                                <th style="border: 1px solid black; padding: 6px; width: 16%; text-align: center;">Immatriculation du vehicule</th>
+                                <th style="border: 1px solid black; padding: 6px; width: 17%; text-align: center;">Conducteur</th>
+                                <th style="border: 1px solid black; padding: 6px; width: 14%; text-align: center;">Fournisseur</th>
+                                <th style="border: 1px solid black; padding: 6px; width: 13%; text-align: center;">Type de carburant</th>
+                                <th style="border: 1px solid black; padding: 6px; width: 12%; text-align: center;">Montant (DA)</th>
+                                <th style="border: 1px solid black; padding: 6px; width: 12%; text-align: center;">Observations</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="employees" t-as="emp">
-                                <t t-set="emp_lines"
-                                   t-value="sorted_docs.filtered(lambda r: r.employee_id.id == emp.id)"/>
-                                <tr t-foreach="emp_lines" t-as="line">
-                                    <td t-if="emp_index == 0 and line_first"
-                                        t-att-rowspan="total_lines"
-                                        style="border: 1px solid black; padding: 8px; text-align: center; vertical-align: middle; font-weight: bold;">
-                                        Periode semaine
-                                    </td>
-                                    <td t-if="line_first"
-                                        t-att-rowspan="len(emp_lines)"
-                                        style="border: 1px solid black; padding: 8px; vertical-align: middle;">
-                                        <span t-esc="emp.name or 'N/A'"/>
-                                    </td>
-                                    <td style="border: 1px solid black; padding: 8px; text-align: center;">
-                                        <span t-esc="line.date and line.date.strftime('%d/%m/%Y') or ''"/>
-                                    </td>
-                                    <td style="border: 1px solid black; padding: 8px; text-align: right;">
-                                        <span t-esc="'{:,.2f}'.format(line.montant or 0.0).replace(',', ' ').replace('.', ',')"/>
-                                    </td>
-                                    <td style="border: 1px solid black; padding: 8px;">
-                                        <span t-esc="line.vehicle_id.name or 'N/A'"/>
-                                    </td>
-                                </tr>
-                            </t>
+                            <tr t-foreach="sorted_docs" t-as="line">
+                                <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                    <span t-esc="line_index + 1"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                    <span t-esc="line.date and line.date.strftime('%d/%m/%Y') or ''"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                    <span t-esc="line.vehicle_license_plate or line.vehicle_id.name or ''"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px;">
+                                    <span t-esc="line.employee_id.name or ''"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px;">
+                                    <span t-esc="line.fournisseur or ''"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px; text-align: center;">
+                                    <span t-if="line.vehicle_fuel_type" t-field="line.vehicle_fuel_type"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px; text-align: right;">
+                                    <span t-esc="'{:,.2f}'.format(line.montant or 0.0).replace(',', ' ').replace('.', ',')"/>
+                                </td>
+                                <td style="border: 1px solid black; padding: 6px;">
+                                    <span t-esc="line.observations or ''"/>
+                                </td>
+                            </tr>
+                            <!-- Lignes vides pour completer la fiche -->
+                            <tr t-if="not docs">
+                                <td colspan="8" style="border: 1px solid black; padding: 12px; text-align: center; color: red;">
+                                    Aucune consommation trouvee pour cette periode.
+                                </td>
+                            </tr>
                         </tbody>
                         <tfoot>
                             <tr style="font-weight: bold; background-color: #eeeeee;">
-                                <td colspan="3"
-                                    style="border: 1px solid black; padding: 8px; text-align: center;">
-                                    TOTAL
+                                <td colspan="6" style="border: 1px solid black; padding: 6px; text-align: right;">
+                                    Montant total de la consommation :
                                 </td>
-                                <td style="border: 1px solid black; padding: 8px; text-align: right;">
+                                <td style="border: 1px solid black; padding: 6px; text-align: right;">
                                     <span t-esc="'{:,.2f}'.format(total).replace(',', ' ').replace('.', ',')"/>
                                 </td>
-                                <td style="border: 1px solid black; padding: 8px;"></td>
+                                <td style="border: 1px solid black; padding: 6px; text-align: center;">DA</td>
                             </tr>
                         </tfoot>
                     </table>
 
-                    <div t-if="not docs"
-                         style="text-align: center; margin-top: 20px; color: red;">
-                        <strong>Aucune consommation trouvee pour cette periode.</strong>
+                    <!-- Montant en lettres -->
+                    <div style="margin-top: 18px; font-size: 13px;">
+                        <strong>La presente fiche est arretee a la somme de :</strong>
+                        <span t-esc="docs and docs.env.company.currency_id.amount_to_text(total) or ''"/>
+                    </div>
+
+                    <!-- Signature -->
+                    <div style="margin-top: 50px; text-align: right; font-size: 13px;">
+                        <div style="font-weight: bold;">Responsable du Parc automobile</div>
+                        <div style="margin-top: 60px;">.................................................</div>
                     </div>
 
                 </div>

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <!-- Action Wizard -->
+    <!-- Action du wizard -->
     <record id="action_gazoil_wizard" model="ir.actions.act_window">
-        <field name="name">Rapport consommation gazoil</field>
+        <field name="name">Imprimer par periode</field>
         <field name="res_model">fleet.gazoil.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <!-- Vue Formulaire Wizard -->
+    <!-- Formulaire du wizard -->
     <record id="view_gazoil_wizard_form" model="ir.ui.view">
         <field name="name">fleet.gazoil.wizard.form</field>
         <field name="model">fleet.gazoil.wizard</field>
         <field name="arch" type="xml">
-            <form string="Imprimer le rapport">
+            <form string="Imprimer le rapport par periode">
                 <group>
                     <group>
                         <field name="date_debut"/>
