@@ -52,6 +52,12 @@ class FleetGazoil(models.Model):
         related='vehicle_id.fuel_type',
         readonly=True,
     )
+    fournisseur = fields.Char(
+        string="Fournisseur",
+    )
+    observations = fields.Char(
+        string="Observations",
+    )
     date = fields.Date(
         string="Date",
         required=True,

@@ -15,9 +15,9 @@
         <field name="arch" type="xml">
             <tree string="Consommations Gazoil">
                 <header>
-                    <button name="%(fleet_customisation.action_gazoil_wizard)d"
+                    <button name="%(action_gazoil_wizard)d"
                             type="action"
-                            string="Imprimer rapport per"
+                            string="Imprimer par periode"
                             class="btn-primary"/>
                 </header>
                 <field name="date"/>
@@ -60,11 +60,13 @@
                         </group>
                         <group string="Details de la saisie">
                             <field name="date"/>
+                            <field name="fournisseur"/>
                             <field name="montant"/>
                             <field name="nombre_litres"/>
                             <field name="ancien_kilometrage"/>
                             <field name="kilometrage_actuel"/>
                             <field name="consommation_moyenne"/>
+                            <field name="observations"/>
                         </group>
                     </group>
                 </sheet>
