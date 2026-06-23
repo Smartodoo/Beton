@@ -26,14 +26,14 @@
                            t-value="o.env['sale.order'].search([('production_beton_id', '=', o.id)], order='date_order desc', limit=1)"/>
 
                         <!-- Titre -->
-                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1F4E79; padding-bottom:10px;">
-                            <h2 style="color:#1F4E79; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
+                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1a3c69; padding-bottom:10px;">
+                            <h2 style="color:#1a3c69; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
                                 FICHE DE FABRICATION BÉTON
                             </h2>
                         </div>
 
                         <!-- Section Informations générales -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Informations générales
                         </div>
@@ -85,7 +85,7 @@
                         </table>
 
                         <!-- Section Informations Client -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Informations Client
                         </div>
@@ -154,7 +154,7 @@
                         </t>
 
                         <!-- Section Produit -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Produit
                         </div>
@@ -179,7 +179,7 @@
                         </table>
 
                         <!-- Section Quantités & Horaires -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Quantités &amp; Horaires
                         </div>
@@ -209,13 +209,13 @@
                         </table>
 
                         <!-- Section Consommation matières -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Consommation matières
                         </div>
                         <table style="width:100%; border-collapse:collapse; margin-bottom:14px;" t-if="o.move_raw_ids">
                             <thead>
-                                <tr style="background:#1F4E79; color:#fff;">
+                                <tr style="background:#1a3c69; color:#fff;">
                                     <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:left;">Matière</th>
                                     <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:right;">Qté prévue</th>
                                     <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:right;">Qté consommée</th>
@@ -235,7 +235,7 @@
                         </table>
 
                         <!-- Section Observation -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Observation
                         </div>

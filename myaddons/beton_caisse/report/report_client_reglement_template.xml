@@ -31,14 +31,14 @@ if records.filtered(lambda r: r.type_partenaire_beton == 'client'):
                 <div class="page">
                     <t t-set="clients" t-value="docs.filtered(lambda o: o.type_partenaire_beton == 'client')"/>
 
-                    <h2 style="color:#1F4E79; border-bottom:2px solid #1F4E79;
+                    <h2 style="color:#1a3c69; border-bottom:2px solid #1a3c69;
                                padding-bottom:8px; margin-bottom:15px;">
                         FICHES RÈGLEMENT CLIENTS
                     </h2>
 
                     <div style="margin-bottom:15px; padding:8px 12px;
                                 background:#f7fafc; border:1px solid #d0dde9;
-                                border-left:4px solid #1F4E79; border-radius:3px;
+                                border-left:4px solid #1a3c69; border-radius:3px;
                                 font-size:12px;">
                         <strong>Nombre de clients :</strong>
                         <span t-esc="len(clients)"/>
@@ -72,10 +72,10 @@ if records.filtered(lambda r: r.type_partenaire_beton == 'client'):
                             <t t-set="versements" t-value="all_versements.filtered(lambda v: v.partner_id.id == client.id)"/>
 
                             <!-- En-tête client -->
-                            <div style="background:#1F4E79; color:#fff; padding:6px 12px;
+                            <div style="background:#1a3c69; color:#fff; padding:6px 12px;
                                         font-size:11pt; font-weight:700; letter-spacing:1px;
                                         text-transform:uppercase; border-radius:2px;"
-                                 t-att-style="'margin-top:25px; background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-radius:2px;' if not client_first else 'background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-radius:2px;'">
+                                 t-att-style="'margin-top:25px; background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-radius:2px;' if not client_first else 'background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-radius:2px;'">
                                 <span t-esc="client.name"/>
                                 <t t-if="client.code_client">
                                     <span style="font-weight:400; font-size:9pt; margin-left:10px;">
@@ -148,7 +148,7 @@ if records.filtered(lambda r: r.type_partenaire_beton == 'client'):
 
                         <!-- Total général -->
                         <table style="width:100%; border-collapse:collapse; margin-top:15px;">
-                            <tr style="background:#1F4E79; color:#fff; font-weight:700; font-size:12px;">
+                            <tr style="background:#1a3c69; color:#fff; font-weight:700; font-size:12px;">
                                 <td style="padding:8px 12px;">Total général des versements</td>
                                 <td style="padding:8px 12px; text-align:right;">
                                     <span t-esc="'%.2f' % sum(all_versements.mapped('montant'))"/>

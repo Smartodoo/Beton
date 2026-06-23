@@ -7,7 +7,7 @@
                     <div class="page" style="font-family: Arial, sans-serif;">
                         <div class="text-center" style="margin-bottom: 20px;">
                             <h2>Reçu de Versement</h2>
-                            <h4 style="color: #667eea;"><t t-esc="doc.name"/></h4>
+                            <h4 style="color: #1a3c69;"><t t-esc="doc.name"/></h4>
                         </div>
                         <table class="table table-bordered" style="margin-bottom: 20px;">
                             <tr>

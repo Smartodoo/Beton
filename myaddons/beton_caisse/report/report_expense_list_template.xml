@@ -8,7 +8,7 @@
 
                     <!-- Titre -->
                     <div style="text-align: center; margin: 25px 0;">
-                        <div style="display: inline-block; background-color: #fd7e14; padding: 12px 50px; border-radius: 3px;">
+                        <div style="display: inline-block; background-color: #ee8126; padding: 12px 50px; border-radius: 3px;">
                             <span style="font-size: 20px; font-weight: bold; color: #ffffff;">
                                 RAPPORT DES PAIEMENTS FOURNISSEURS
                             </span>
@@ -52,7 +52,7 @@
                     </t>
 
                     <!-- Resume financier -->
-                    <h4 style="background-color: #fd7e14; color: white; padding: 8px; margin-bottom: 0;">RESUME FINANCIER</h4>
+                    <h4 style="background-color: #ee8126; color: white; padding: 8px; margin-bottom: 0;">RESUME FINANCIER</h4>
                     <table class="table table-bordered" style="margin-bottom: 25px;">
                         <thead style="background-color: #ecf0f1;">
                             <tr>
@@ -80,7 +80,7 @@
                     </table>
 
                     <!-- Tableau detail -->
-                    <h4 style="background-color: #fd7e14; color: white; padding: 8px; margin-bottom: 0;">DETAIL DES PAIEMENTS</h4>
+                    <h4 style="background-color: #ee8126; color: white; padding: 8px; margin-bottom: 0;">DETAIL DES PAIEMENTS</h4>
                     <table class="table table-bordered table-sm" style="font-size: 9px;">
                         <thead style="background-color: #ecf0f1;">
                             <tr>
@@ -126,7 +126,7 @@
                                 </tr>
                             </t>
                         </tbody>
-                        <tfoot style="background-color: #fd7e14; color: white; font-weight: bold;">
+                        <tfoot style="background-color: #ee8126; color: white; font-weight: bold;">
                             <tr>
                                 <td colspan="8" style="text-align: right; padding: 8px;">TOTAL GENERAL :</td>
                                 <td style="text-align: right; padding: 8px;">

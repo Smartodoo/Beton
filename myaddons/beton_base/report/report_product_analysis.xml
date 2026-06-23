@@ -8,7 +8,7 @@
 
                     <!-- Titre -->
                     <div style="text-align: center; margin: 20px 0;">
-                        <div style="display: inline-block; background-color: #1a5ba8; padding: 12px 50px; border-radius: 3px;">
+                        <div style="display: inline-block; background-color: #1a3c69; padding: 12px 50px; border-radius: 3px;">
                             <span style="font-size: 20px; font-weight: bold; color: #ffffff;">
                                 RAPPORT ANALYTIQUE DES PRODUITS
                             </span>
@@ -42,8 +42,8 @@
                     </div>
 
                     <!-- Criteres saisis dans le wizard -->
-                    <div style="background-color: #f7fafc; border: 1px solid #d0dde9; border-left: 4px solid #1a5ba8; padding: 10px 14px; border-radius: 3px; margin-bottom: 15px; font-size: 12px;">
-                        <div style="font-weight: bold; color: #1a5ba8; margin-bottom: 6px;">Criteres de selection</div>
+                    <div style="background-color: #f7fafc; border: 1px solid #d0dde9; border-left: 4px solid #1a3c69; padding: 10px 14px; border-radius: 3px; margin-bottom: 15px; font-size: 12px;">
+                        <div style="font-weight: bold; color: #1a3c69; margin-bottom: 6px;">Criteres de selection</div>
                         <table style="width: 100%; border: none;">
                             <tr>
                                 <td style="border: none; padding: 3px; width: 50%;">
@@ -80,7 +80,7 @@
                         </table>
                     </div>
 
-                    <div style="border-bottom: 2px solid #1a5ba8; margin-bottom: 20px;"></div>
+                    <div style="border-bottom: 2px solid #1a3c69; margin-bottom: 20px;"></div>
 
                     <!-- Bornes de période : limitent les transactions affichées -->
                     <t t-set="dt_from" t-value="data.get('dt_from')"/>
@@ -91,7 +91,7 @@
                         <t t-set="variants" t-value="product.product_variant_ids"/>
 
                         <!-- En-tete produit -->
-                        <div style="background-color: #1a5ba8; color: white; padding: 10px; margin-top: 20px; border-radius: 3px 3px 0 0;">
+                        <div style="background-color: #1a3c69; color: white; padding: 10px; margin-top: 20px; border-radius: 3px 3px 0 0;">
                             <span style="font-size: 16px; font-weight: bold;">
                                 <t t-esc="product.name"/>
                             </span>
@@ -177,7 +177,7 @@
 
                         <!-- Detail achats -->
                         <t t-if="po_lines">
-                            <h5 style="background-color: #fd7e14; color: white; padding: 6px; margin-bottom: 0;">Achats</h5>
+                            <h5 style="background-color: #ee8126; color: white; padding: 6px; margin-bottom: 0;">Achats</h5>
                             <table class="table table-bordered table-sm" style="font-size: 9px;">
                                 <thead style="background-color: #ecf0f1;">
                                     <tr>
@@ -207,7 +207,7 @@
                                         </tr>
                                     </t>
                                 </tbody>
-                                <tfoot style="background-color: #fd7e14; color: white; font-weight: bold;">
+                                <tfoot style="background-color: #ee8126; color: white; font-weight: bold;">
                                     <tr>
                                         <td colspan="3" style="text-align: right;">TOTAL :</td>
                                         <td style="text-align: right;"><t t-esc="'%.2f' % sum(po_lines.mapped('product_qty'))"/></td>

@@ -85,6 +85,10 @@
             'beton_base/static/src/js/sticky_onchange_warning.js',
             'beton_base/static/src/xml/beton_dashboard.xml',
         ],
+        # Charte graphique commune à tous les rapports PDF
+        'web.report_assets_common': [
+            'beton_base/static/src/scss/beton_report.scss',
+        ],
     },
     'installable': True,
     'application': True,

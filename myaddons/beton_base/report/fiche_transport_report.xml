@@ -23,14 +23,14 @@
                                 <td style="vertical-align:top; padding:0; border:none;">
 
                         <!-- Titre -->
-                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1F4E79; padding-bottom:10px;">
-                            <h2 style="color:#1F4E79; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
+                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1a3c69; padding-bottom:10px;">
+                            <h2 style="color:#1a3c69; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
                                 FICHE DE TRANSPORT
                             </h2>
                         </div>
 
                         <!-- Section Ordre de fabrication -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Ordre de fabrication
                         </div>
@@ -86,14 +86,14 @@
                         </table>
 
                         <!-- Section Détail des transports -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Détail des transports
                         </div>
                         <t t-if="o.transport_ligne_ids">
                             <table style="width:100%; border-collapse:collapse; margin-bottom:14px;">
                                 <thead>
-                                    <tr style="background:#1F4E79; color:#fff;">
+                                    <tr style="background:#1a3c69; color:#fff;">
                                         <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:left;">#</th>
                                         <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:left;">Camion</th>
                                         <th style="padding:6px 8px; font-size:10pt; font-weight:600; text-align:left;">Chauffeur</th>
@@ -123,7 +123,7 @@
                                     </t>
                                 </tbody>
                                 <tfoot>
-                                    <tr style="font-weight:700; background:#e8f0f7; border-top:2px solid #1F4E79;">
+                                    <tr style="font-weight:700; background:#e8f0f7; border-top:2px solid #1a3c69;">
                                         <td colspan="3" style="padding:6px 8px; border:1px solid #ccc; font-size:11pt; text-align:right;">Total</td>
                                         <td style="padding:6px 8px; border:1px solid #ccc; font-size:11pt; text-align:right;">
                                             <t t-esc="'%.2f' % sum(o.transport_ligne_ids.mapped('quantite'))"/>

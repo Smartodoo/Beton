@@ -81,7 +81,7 @@
 
                         <!-- Detail Encaissements (clients) -->
                         <t t-if="doc.partner_type == 'client' and doc.entry_ids">
-                            <h4 style="background-color: #667eea; color: white; padding: 8px; margin-bottom: 0;">DETAIL DES ENCAISSEMENTS</h4>
+                            <h4 style="background-color: #1a3c69; color: white; padding: 8px; margin-bottom: 0;">DETAIL DES ENCAISSEMENTS</h4>
                             <table class="table table-bordered table-sm" style="font-size: 9px;">
                                 <thead style="background-color: #ecf0f1;">
                                     <tr>
@@ -125,7 +125,7 @@
                                         </tr>
                                     </t>
                                 </tbody>
-                                <tfoot style="background-color: #667eea; color: white; font-weight: bold;">
+                                <tfoot style="background-color: #1a3c69; color: white; font-weight: bold;">
                                     <tr>
                                         <td colspan="7" style="text-align: right; padding: 8px;">TOTAL :</td>
                                         <td style="text-align: right; padding: 8px;">
@@ -147,7 +147,7 @@
 
                         <!-- Detail Decaissements (fournisseurs) -->
                         <t t-if="doc.partner_type == 'fournisseur' and doc.expense_ids">
-                            <h4 style="background-color: #fd7e14; color: white; padding: 8px; margin-bottom: 0;">DETAIL DES DECAISSEMENTS</h4>
+                            <h4 style="background-color: #ee8126; color: white; padding: 8px; margin-bottom: 0;">DETAIL DES DECAISSEMENTS</h4>
                             <table class="table table-bordered table-sm" style="font-size: 9px;">
                                 <thead style="background-color: #ecf0f1;">
                                     <tr>
@@ -191,7 +191,7 @@
                                         </tr>
                                     </t>
                                 </tbody>
-                                <tfoot style="background-color: #fd7e14; color: white; font-weight: bold;">
+                                <tfoot style="background-color: #ee8126; color: white; font-weight: bold;">
                                     <tr>
                                         <td colspan="7" style="text-align: right; padding: 8px;">TOTAL :</td>
                                         <td style="text-align: right; padding: 8px;">

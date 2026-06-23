@@ -20,6 +20,11 @@
                 <attribute name="readonly">0</attribute>
             </xpath>
 
+            <!-- Unité de mesure : champ vide par défaut et obligatoire -->
+            <xpath expr="//field[@name='uom_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
             <!-- Champ classification produit en dessous du type de produit (onglet Informations générales) -->
             <xpath expr="//field[@name='detailed_type']" position="after">
                 <field name="classification_produit"/>

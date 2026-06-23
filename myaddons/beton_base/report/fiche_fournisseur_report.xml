@@ -24,14 +24,14 @@
                                 <td style="vertical-align:top; padding:0; border:none;">
 
                         <!-- Titre -->
-                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1F4E79; padding-bottom:10px;">
-                            <h2 style="color:#1F4E79; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
+                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1a3c69; padding-bottom:10px;">
+                            <h2 style="color:#1a3c69; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
                                 FICHE FOURNISSEUR
                             </h2>
                         </div>
 
                         <!-- Section Identification -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Identification
                         </div>
@@ -80,7 +80,7 @@
                         </table>
 
                         <!-- Section Coordonnées -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Coordonnées
                         </div>
@@ -139,7 +139,7 @@
                         </table>
 
                         <!-- Section Coordonnées fiscales -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Coordonnées fiscales
                         </div>
@@ -165,7 +165,7 @@
                         </table>
 
                         <!-- Section Coordonnées bancaires -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Coordonnées bancaires
                         </div>

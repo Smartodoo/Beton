@@ -38,4 +38,35 @@ class BetonAnnulationWizard(models.TransientModel):
         # Annulation standard Odoo
         production.action_cancel()
 
-        return {'type': 'ir.actions.act_window_close'}
+        # Récupération de la/les vente(s) liée(s) à cet ordre de fabrication
+        orders = self.env['sale.order'].search([
+            ('production_beton_id', '=', production.id),
+            ('state', '!=', 'cancel'),
+        ])
+        if not orders:
+            return {'type': 'ir.actions.act_window_close'}
+
+        for order in orders:
+            # Remettre la vente en brouillon pour autoriser la suppression
+            # des lignes et la modification par l'utilisateur.
+            if order.state not in ('draft', 'sent'):
+                order.write({'state': 'draft'})
+            # Supprimer toutes les lignes de produits dont le type n'est pas
+            # « service » ; les lignes de service (ex. pompe à béton) sont
+            # conservées. Les lignes de section/note sont laissées intactes.
+            lignes_a_supprimer = order.order_line.filtered(
+                lambda l: not l.display_type
+                and l.product_id.detailed_type != 'service'
+            )
+            if lignes_a_supprimer:
+                lignes_a_supprimer.unlink()
+
+        # Ouvrir la vente liée pour permettre sa modification.
+        return {
+            'type': 'ir.actions.act_window',
+            'name': "Vente",
+            'res_model': 'sale.order',
+            'view_mode': 'form',
+            'res_id': orders[0].id,
+            'target': 'current',
+        }

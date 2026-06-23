@@ -22,7 +22,7 @@
 
         <!-- === Titre "Bon de Réception" + Référence + Adresse fournisseur === -->
         <xpath expr="//div[@class='page']/h2" position="replace">
-            <h2 class="text-center" style="color: #1F4E79;">
+            <h2 class="text-center" style="color: #1a3c69;">
                 <strong>Bon de Réception</strong>
             </h2>
             <h4 class="text-center mb-3">
@@ -148,7 +148,7 @@
         <xpath expr="//h1[@t-field='o.name']" position="replace"/>
 
         <xpath expr="//div[@name='div_outgoing_address']/.." position="before">
-            <h2 class="text-center" style="color: #1F4E79;">
+            <h2 class="text-center" style="color: #1a3c69;">
                 <strong>Bon de Transfert</strong>
             </h2>
             <h4 class="text-center mb-3">

@@ -40,7 +40,7 @@
                             <h4 style="margin-top: 20px;">Détail des Encaissements</h4>
                             <table class="table table-sm table-bordered">
                                 <thead>
-                                    <tr style="background: #667eea; color: white;">
+                                    <tr style="background: #1a3c69; color: white;">
                                         <th>Référence</th>
                                         <th>Date</th>
                                         <th class="text-end">Montant</th>
