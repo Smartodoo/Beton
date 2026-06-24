@@ -1,0 +1,130 @@
+// =====================================================================
+//  Charte graphique commune des rapports PDF (béton)
+//  Source unique de vérité pour les couleurs / styles des impressions.
+//
+//  Couleurs charte :
+//    - Principale (bleu foncé) : #1a3c69  -> en-têtes, titres, totaux
+//    - Accent (orange)         : #ee8126  -> surlignages, points forts
+//
+//  NB : wkhtmltopdf (moteur PDF) ne supporte pas les variables CSS (var()),
+//  d'où l'usage de valeurs littérales. Tout est limité à `.o_beton_report`
+//  pour ne pas impacter les rapports standard d'Odoo.
+//
+//  Utilisation dans un template QWeb :
+//    <div class="page o_beton_report"> ... </div>
+//  puis les classes utilitaires .bt-title, .bt-table, .bt-total, etc.
+// =====================================================================
+
+$bt-primary: #1a3c69;
+$bt-primary-tint: #e8eef4;
+$bt-accent: #ee8126;
+$bt-border: #d0dde9;
+$bt-border-soft: #e6edf3;
+$bt-section-bg: #f0f4f8;
+$bt-muted: #5a6c7d;
+$bt-ok: #27ae60;
+$bt-ko: #dc3545;
+
+.o_beton_report {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #2b2b2b;
+
+    // --- Titres / en-têtes de document -------------------------------
+    h1, h2, .bt-title {
+        color: $bt-primary;
+        border-bottom: 2px solid $bt-primary;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+    }
+    .bt-accent { color: $bt-accent; }
+
+    // --- Bandeau d'information ----------------------------------------
+    .bt-banner {
+        margin-bottom: 15px;
+        padding: 8px 12px;
+        background: $bt-section-bg;
+        border: 1px solid $bt-border;
+        border-left: 4px solid $bt-primary;
+        border-radius: 3px;
+        font-size: 12px;
+    }
+
+    // --- En-tête de section (bandeau plein) ---------------------------
+    .bt-section-head {
+        background: $bt-primary;
+        color: #fff;
+        padding: 6px 12px;
+        font-size: 11pt;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-radius: 2px;
+    }
+
+    // --- Tableaux ------------------------------------------------------
+    table.bt-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+        border: 1px solid $bt-border;
+        margin-bottom: 8px;
+
+        thead th, th.bt-th {
+            background: $bt-primary;
+            color: #fff;
+            padding: 5px 8px;
+            text-align: left;
+            border-bottom: 1px solid $bt-border;
+        }
+        td {
+            padding: 4px 8px;
+            border-bottom: 1px solid $bt-border-soft;
+        }
+        tbody tr:nth-child(even) { background: #f7fafc; }
+
+        // Ligne de sous-total
+        .bt-subtotal {
+            background: $bt-primary-tint;
+            font-weight: 700;
+        }
+    }
+
+    // --- Ligne / bloc Total général -----------------------------------
+    .bt-total {
+        background: $bt-primary;
+        color: #fff;
+        font-weight: 700;
+    }
+
+    // --- Pastilles d'état ---------------------------------------------
+    .bt-badge {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #fff;
+        background: $bt-muted;
+    }
+    .bt-badge--ok { background: $bt-ok; }
+    .bt-badge--ko { background: $bt-ko; }
+    .bt-badge--accent { background: $bt-accent; }
+
+    // --- Cartes KPI ----------------------------------------------------
+    .bt-kpi {
+        border: 1px solid $bt-border;
+        border-top: 3px solid $bt-accent;
+        border-radius: 4px;
+        padding: 10px 12px;
+        background: #fff;
+        .bt-kpi-label { color: $bt-muted; font-size: 10px; text-transform: uppercase; }
+        .bt-kpi-value { color: $bt-primary; font-size: 18px; font-weight: 700; }
+    }
+
+    // Utilitaires
+    .bt-text-primary { color: $bt-primary; }
+    .bt-text-accent { color: $bt-accent; }
+    .bt-bg-primary { background: $bt-primary; color: #fff; }
+    .bt-bg-accent { background: $bt-accent; color: #fff; }
+}
