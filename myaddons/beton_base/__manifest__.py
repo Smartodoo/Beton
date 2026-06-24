@@ -90,6 +90,7 @@
             'beton_base/static/src/scss/beton_report.scss',
         ],
     },
+
     'installable': True,
     'application': True,
     'icon': 'beton_base/static/description/icon.png',

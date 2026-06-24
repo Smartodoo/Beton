@@ -40,7 +40,6 @@
     filter: invert(1);
     cursor: pointer;
 }
-
 /* Header */
 .beton_dashboard .dashboard-header {
     background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
