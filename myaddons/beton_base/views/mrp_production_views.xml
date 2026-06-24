@@ -21,14 +21,15 @@
 
 
             <!-- Boutons Créer Vente -->
-            <xpath expr="//header" position="inside"   
-
+            <xpath expr="//header" position="inside">
                 <button name="action_creer_vente" type="object"
                         string="Créer la vente" class="btn-secondary"
                         icon="fa-file-text-o"/>
+                <!-- Bouton invisible tant que l'ordre de fabrication n'est pas confirmé (brouillon) -->
                 <button name="action_creer_confirmer_vente" type="object"
                         string="Créer et confirmer la vente" class="btn-primary"
-                        icon="fa-check"/>
+                        icon="fa-check"
+                        invisible="state == 'draft'"/>
                 <button name="action_reset_to_draft" type="object"
                         string="Remettre en brouillon" class="btn-secondary"
                         invisible="state != 'cancel'"/>
@@ -40,9 +41,6 @@
             </xpath>
             <xpath expr="//field[@name='move_raw_ids']/tree" position="inside">
                 <field name="alerte_qty_minimum" column_invisible="True"/>
-
-            </xpath>
-
             </xpath>
 
             <!-- On garde le bouton d'annulation natif d'Odoo, mais il ouvre

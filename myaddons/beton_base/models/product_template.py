@@ -16,6 +16,10 @@ class ProductTemplate(models.Model):
         ondelete={'fabrique': 'set consu'},
     )
 
+    # Unité de mesure : aucune valeur par défaut (champ vide à la création)
+    # et saisie obligatoire (required hérité du standard Odoo).
+    uom_id = fields.Many2one(default=False, required=True)
+
     def _detailed_type_mapping(self):
         mapping = super()._detailed_type_mapping()
         mapping['fabrique'] = 'product'

@@ -17,12 +17,12 @@
                     <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: #222;">
 
                         <!-- Titre -->
-                        <h2 style="text-align:center; font-size:18pt; font-weight:700; color:#1F4E79; border-bottom:2px solid #1F4E79; padding-bottom:8px; margin-bottom:16px;">
+                        <h2 style="text-align:center; font-size:18pt; font-weight:700; color:#1a3c69; border-bottom:2px solid #1a3c69; padding-bottom:8px; margin-bottom:16px;">
                             FICHE FORMULE BÉTON
                         </h2>
 
                         <!-- Identification -->
-                        <h4 style="font-size:12pt; font-weight:700; color:#1F4E79; margin-bottom:8px;">
+                        <h4 style="font-size:12pt; font-weight:700; color:#1a3c69; margin-bottom:8px;">
                             Identification
                         </h4>
                         <div style="background:#e8eef4; border-radius:4px; padding:10px 14px; margin-bottom:16px; overflow:hidden;">
@@ -63,7 +63,7 @@
                         </div>
 
                         <!-- Performance -->
-                        <h4 style="font-size:12pt; font-weight:700; color:#1F4E79; margin-bottom:8px;">
+                        <h4 style="font-size:12pt; font-weight:700; color:#1a3c69; margin-bottom:8px;">
                             Performance
                         </h4>
                         <div style="background:#e8eef4; border-radius:4px; padding:10px 14px; margin-bottom:16px; overflow:hidden;">
@@ -82,7 +82,7 @@
                         </div>
 
                         <!-- Composants -->
-                        <h4 style="font-size:12pt; font-weight:700; color:#1F4E79; margin-bottom:8px;">
+                        <h4 style="font-size:12pt; font-weight:700; color:#1a3c69; margin-bottom:8px;">
                             Composants
                         </h4>
                         <t t-if="o.bom_line_ids">

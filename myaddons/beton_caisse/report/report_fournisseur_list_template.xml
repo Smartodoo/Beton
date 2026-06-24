@@ -32,14 +32,14 @@ if records.filtered(lambda r: r.type_partenaire_beton == 'fournisseur'):
                     <!-- Filtrer uniquement les fournisseurs -->
                     <t t-set="fournisseurs" t-value="docs.filtered(lambda o: o.type_partenaire_beton == 'fournisseur')"/>
 
-                    <h2 style="color:#1F4E79; border-bottom:2px solid #1F4E79;
+                    <h2 style="color:#1a3c69; border-bottom:2px solid #1a3c69;
                                padding-bottom:8px; margin-bottom:15px;">
                         FICHES CRÉANCE FOURNISSEURS
                     </h2>
 
                     <div style="margin-bottom:15px; padding:8px 12px;
                                 background:#f7fafc; border:1px solid #d0dde9;
-                                border-left:4px solid #1F4E79; border-radius:3px;
+                                border-left:4px solid #1a3c69; border-radius:3px;
                                 font-size:12px;">
                         <strong>Nombre de fournisseurs :</strong>
                         <span t-esc="len(fournisseurs)"/>
@@ -59,7 +59,7 @@ if records.filtered(lambda r: r.type_partenaire_beton == 'fournisseur'):
                         <table style="width:100%; border-collapse:collapse; font-size:11px;
                                       border:1px solid #d0dde9;">
                             <thead>
-                                <tr style="background:#1F4E79; color:#fff;">
+                                <tr style="background:#1a3c69; color:#fff;">
                                     <th style="padding:7px 8px; text-align:left;">Code</th>
                                     <th style="padding:7px 8px; text-align:left;">Fournisseur</th>
                                     <th style="padding:7px 8px; text-align:left;">Téléphone</th>
@@ -111,7 +111,7 @@ if records.filtered(lambda r: r.type_partenaire_beton == 'fournisseur'):
                                 </t>
                             </tbody>
                             <tfoot>
-                                <tr style="background:#1F4E79; color:#fff; font-weight:700;">
+                                <tr style="background:#1a3c69; color:#fff; font-weight:700;">
                                     <td colspan="6" style="padding:7px 8px;">Total Crédit Fournisseurs</td>
                                     <td class="text-end" style="padding:7px 8px;">
                                         <span t-esc="'%.2f' % sum(fournisseurs.mapped('beton_credit_fournisseur'))"/>

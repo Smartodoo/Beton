@@ -122,6 +122,24 @@
                             </div>
                         </group>
                     </group>
+
+                    <!-- Détail des versements avec la date de chaque versement -->
+                    <separator string="Versements"/>
+                    <field name="beton_versement_ids" readonly="1">
+                        <tree string="Versements" decoration-muted="state == 'draft'">
+                            <field name="date"/>
+                            <field name="name"/>
+                            <field name="cashbox_id"/>
+                            <field name="sale_order_id" optional="show"/>
+                            <field name="purchase_order_id" optional="show"/>
+                            <field name="description" optional="hide"/>
+                            <field name="montant" sum="Total versé"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'confirmed'"
+                                   decoration-warning="state == 'draft'"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </tree>
+                    </field>
                 </page>
             </xpath>
         </field>

@@ -5,24 +5,24 @@
     <!-- ============================================================ -->
     <template id="beton_analysis_styles">
         <style>
-            .beton-title { color:#1F4E79; text-align:center; letter-spacing:2px;
-                           border-bottom:3px solid #1F4E79; padding-bottom:8px;
+            .beton-title { color:#1a3c69; text-align:center; letter-spacing:2px;
+                           border-bottom:3px solid #1a3c69; padding-bottom:8px;
                            margin-bottom:18px; font-weight:700; }
             .beton-filter-panel { background:#f7fafc; border:1px solid #d0dde9;
-                                  border-left:4px solid #1F4E79; padding:10px 14px;
+                                  border-left:4px solid #1a3c69; padding:10px 14px;
                                   border-radius:3px; margin-bottom:14px; font-size:12px; }
-            .beton-filter-panel strong { color:#1F4E79; }
-            .beton-stats-panel { background:#1F4E79; color:#fff; padding:10px 14px;
+            .beton-filter-panel strong { color:#1a3c69; }
+            .beton-stats-panel { background:#1a3c69; color:#fff; padding:10px 14px;
                                  border-radius:3px; margin-bottom:14px; font-size:13px; }
             .beton-stats-panel strong { color:#cfe2f3; font-weight:600; }
             .beton-analysis-table { width:100%; border-collapse:collapse;
                                     border:1px solid #d0dde9; font-size:11px; }
-            .beton-analysis-table thead { background:#1F4E79; color:#fff; }
+            .beton-analysis-table thead { background:#1a3c69; color:#fff; }
             .beton-analysis-table th { padding:8px; font-weight:600; text-align:left; }
             .beton-analysis-table td { padding:6px 8px; border-bottom:1px solid #e6edf3; }
             .beton-analysis-table tbody tr:nth-child(even) { background:#f7fafc; }
             .beton-analysis-table tfoot { background:#e8f0f7; font-weight:700;
-                                          border-top:2px solid #1F4E79; }
+                                          border-top:2px solid #1a3c69; }
             .beton-analysis-table tfoot td { padding:8px; }
         </style>
     </template>

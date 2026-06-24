@@ -18,8 +18,8 @@
                     <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: #222; padding:0;">
 
                         <!-- Titre -->
-                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1F4E79; padding-bottom:10px;">
-                            <h2 style="color:#1F4E79; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
+                        <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1a3c69; padding-bottom:10px;">
+                            <h2 style="color:#1a3c69; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
                                 LISTE DES FOURNISSEURS
                             </h2>
                             <div style="margin-top:6px; font-size:11pt; color:#555;">
@@ -28,7 +28,7 @@
                         </div>
 
                         <!-- Section Produit -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Produit
                         </div>
@@ -50,7 +50,7 @@
                         </table>
 
                         <!-- Section Fournisseurs -->
-                        <div style="background:#1F4E79; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
                                     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; border-radius:2px;">
                             Fournisseurs classés par prix
                         </div>

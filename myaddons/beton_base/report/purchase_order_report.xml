@@ -49,7 +49,7 @@
             <div class="row mt-3" name="beton_recap_cout_purchase">
                 <div class="col-6">
                     <div class="p-2"
-                         style="background:#1F4E79; color:#fff; border-radius:3px;">
+                         style="background:#1a3c69; color:#fff; border-radius:3px;">
                         <span style="color:#cfe2f3; font-size:10px;
                                      text-transform:uppercase; letter-spacing:0.5px;
                                      font-weight:600;">Coût standard (interne)</span><br/>
@@ -72,7 +72,7 @@
             <div class="mt-2" name="beton_detail_cout_purchase" t-if="lines_prod">
                 <table style="width:100%; border-collapse:collapse; font-size:12px;
                               border:1px solid #d0dde9;">
-                    <thead style="background:#1F4E79; color:#fff;">
+                    <thead style="background:#1a3c69; color:#fff;">
                         <tr>
                             <th style="padding:7px 8px; text-align:left;">Produit</th>
                             <th style="padding:7px 8px; text-align:right;">Coût standard</th>
@@ -159,14 +159,14 @@
                         <t t-set="titre">LISTE DES BONS D'ACHATS ANNULÉS</t>
                     </t>
 
-                    <h2 style="color:#1F4E79; border-bottom:2px solid #1F4E79;
+                    <h2 style="color:#1a3c69; border-bottom:2px solid #1a3c69;
                                padding-bottom:8px; margin-bottom:15px;">
                         <t t-out="titre"/>
                     </h2>
 
                     <div style="margin-bottom:15px; padding:8px 12px;
                                 background:#f7fafc; border:1px solid #d0dde9;
-                                border-left:4px solid #1F4E79; border-radius:3px;
+                                border-left:4px solid #1a3c69; border-radius:3px;
                                 font-size:12px;">
                         <strong>Nombre de bons :</strong>
                         <span t-esc="len(docs)"/>
@@ -179,7 +179,7 @@
                     <table style="width:100%; border-collapse:collapse; font-size:11px;
                                   border:1px solid #d0dde9;">
                         <thead>
-                            <tr style="background:#1F4E79; color:#fff;">
+                            <tr style="background:#1a3c69; color:#fff;">
                                 <th style="padding:7px 8px; text-align:left;">Référence</th>
                                 <th style="padding:7px 8px; text-align:left;">Date</th>
                                 <th style="padding:7px 8px; text-align:left;">Fournisseur</th>
@@ -220,7 +220,7 @@
                             </t>
                         </tbody>
                         <tfoot>
-                            <tr style="background:#1F4E79; color:#fff; font-weight:700;">
+                            <tr style="background:#1a3c69; color:#fff; font-weight:700;">
                                 <td colspan="4" style="padding:7px 8px;">Total</td>
                                 <td class="text-end" style="padding:7px 8px;">
                                     <span t-esc="'%.2f' % sum(docs.mapped('amount_untaxed'))"/>
