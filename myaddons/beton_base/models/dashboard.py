@@ -1,6 +1,7 @@
 from odoo import api, fields, models, tools
-from datetime import timedelta, date as date_cls
+from datetime import timedelta, date as date_cls, datetime, time
 import calendar
+import pytz
 
 
 class BetonDashboard(models.Model):
@@ -55,6 +56,43 @@ class BetonDashboard(models.Model):
         return debut_mois, date
 
     @api.model
+    def _tz(self):
+        """Fuseau horaire de l'utilisateur courant (UTC par défaut)."""
+        return pytz.timezone(self.env.user.tz or 'UTC')
+
+    @api.model
+    def _start_utc(self, date):
+        """Début (00:00) de la journée LOCALE `date`, converti en chaîne UTC.
+        Les champs Datetime sont stockés en UTC alors que la journée choisie est
+        locale : sans conversion, un enregistrement proche de minuit est rattaché
+        au mauvais jour."""
+        local = self._tz().localize(datetime.combine(date, time.min))
+        return fields.Datetime.to_string(local.astimezone(pytz.UTC).replace(tzinfo=None))
+
+    @api.model
+    def _end_utc(self, date):
+        """Fin (23:59:59) de la journée LOCALE `date`, convertie en chaîne UTC."""
+        local = self._tz().localize(datetime.combine(date, time.max))
+        return fields.Datetime.to_string(local.astimezone(pytz.UTC).replace(tzinfo=None))
+
+    @api.model
+    def _day_bounds(self, date=None):
+        """Bornes UTC (start, end) de la journée LOCALE `date`."""
+        if not date:
+            date = fields.Date.context_today(self)
+        return self._start_utc(date), self._end_utc(date)
+
+    @api.model
+    def _get_day_mo(self, date=None):
+        """Recordset des MO progress/done sur la JOURNÉE choisie (fuseau local)."""
+        start, end = self._day_bounds(date)
+        return self.env['mrp.production'].search([
+            ('date_start', '>=', start),
+            ('date_start', '<=', end),
+            ('state', 'in', ('progress', 'done')),
+        ])
+
+    @api.model
     def _get_previous_period(self, date=None):
         """Retourne le début et fin du mois précédent (même nb de jours)."""
         if not date:
@@ -76,11 +114,10 @@ class BetonDashboard(models.Model):
     # ===== Production =====
     @api.model
     def get_production_journaliere(self, date=None):
-        if not date:
-            date = fields.Date.today()
+        start, end = self._day_bounds(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(date) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', start),
+            ('date_start', '<=', end),
             ('state', 'in', ('progress', 'done')),
         ])
         return sum(fabrications.mapped('qty_produced'))
@@ -89,8 +126,8 @@ class BetonDashboard(models.Model):
     def get_production_mensuelle(self, date=None):
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', 'in', ('progress', 'done')),
         ])
         return sum(fabrications.mapped('qty_produced'))
@@ -99,8 +136,8 @@ class BetonDashboard(models.Model):
     def get_production_mensuelle_precedente(self, date=None):
         debut, fin = self._get_previous_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut) + ' 00:00:00'),
-            ('date_start', '<=', str(fin) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut)),
+            ('date_start', '<=', self._end_utc(fin)),
             ('state', 'in', ('progress', 'done')),
         ])
         return sum(fabrications.mapped('qty_produced'))
@@ -109,8 +146,8 @@ class BetonDashboard(models.Model):
     def get_taux_pertes(self, date=None):
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', '=', 'done'),
         ])
         total_produit = sum(fabrications.mapped('qty_produced'))
@@ -124,8 +161,8 @@ class BetonDashboard(models.Model):
         """Nombre total d'ordres de fabrication du mois."""
         debut_mois, date = self._get_period(date)
         return self.env['mrp.production'].search_count([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', 'in', ('progress', 'done')),
         ])
 
@@ -135,8 +172,8 @@ class BetonDashboard(models.Model):
         if not date:
             date = fields.Date.today()
         return self.env['stock.picking'].search_count([
-            ('scheduled_date', '>=', str(date) + ' 00:00:00'),
-            ('scheduled_date', '<=', str(date) + ' 23:59:59'),
+            ('scheduled_date', '>=', self._start_utc(date)),
+            ('scheduled_date', '<=', self._end_utc(date)),
             ('picking_type_code', '=', 'outgoing'),
             ('state', '!=', 'cancel'),
         ])
@@ -145,8 +182,8 @@ class BetonDashboard(models.Model):
     def get_volume_livre_mois(self, date=None):
         debut_mois, date = self._get_period(date)
         pickings = self.env['stock.picking'].search([
-            ('scheduled_date', '>=', str(debut_mois) + ' 00:00:00'),
-            ('scheduled_date', '<=', str(date) + ' 23:59:59'),
+            ('scheduled_date', '>=', self._start_utc(debut_mois)),
+            ('scheduled_date', '<=', self._end_utc(date)),
             ('picking_type_code', '=', 'outgoing'),
             ('state', '=', 'done'),
         ])
@@ -159,8 +196,8 @@ class BetonDashboard(models.Model):
     def get_volume_livre_mois_precedent(self, date=None):
         debut, fin = self._get_previous_period(date)
         pickings = self.env['stock.picking'].search([
-            ('scheduled_date', '>=', str(debut) + ' 00:00:00'),
-            ('scheduled_date', '<=', str(fin) + ' 23:59:59'),
+            ('scheduled_date', '>=', self._start_utc(debut)),
+            ('scheduled_date', '<=', self._end_utc(fin)),
             ('picking_type_code', '=', 'outgoing'),
             ('state', '=', 'done'),
         ])
@@ -245,41 +282,41 @@ class BetonDashboard(models.Model):
         """Recordset des MO progress/done sur la période (mois courant -> date)."""
         debut_mois, date = self._get_period(date)
         return self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', 'in', ('progress', 'done')),
         ])
 
     @api.model
     def get_taux_production_global(self, date=None):
-        """Taux GLOBAL pondéré sur la période :
-        Σ qty_produced / Σ product_qty × 100.
-        Utilise product_qty (quantité planifiée, même UdM que qty_produced)
-        car le champ objectif peut contenir des valeurs incohérentes
-        (capacité journalière centrale au lieu d'objectif par ordre)."""
-        mos = self._get_period_mo(date)
+        """Taux GLOBAL pondéré sur la JOURNÉE choisie :
+        Σ qty_produced / Σ objectif × 100.
+        Basé sur le champ objectif (référence métier). Peut dépasser 100% si
+        la production dépasse l'objectif. Les ordres sans objectif (0) sont
+        exclus pour éviter un faux 100%."""
+        mos = self._get_day_mo(date)
         total_obj = 0.0
         total_prod = 0.0
         for mo in mos:
-            total_obj += mo.product_qty or 0.0
-            total_prod += mo.qty_produced
+            if mo.objectif and mo.objectif > 0:
+                total_obj += mo.objectif
+                total_prod += mo.qty_produced
         if not total_obj:
             return 0.0
         return round((total_prod / total_obj) * 100, 1)
 
     @api.model
     def get_taux_production_moyen(self, date=None):
-        """Taux MOYEN sur les ordres de la période :
-        moyenne arithmétique des taux par ordre.
-        Utilise product_qty comme dénominateur pour cohérence avec le taux global."""
-        mos = self._get_period_mo(date)
+        """Taux MOYEN sur les ordres de la JOURNÉE choisie :
+        moyenne arithmétique des taux par ordre (qty_produced / objectif).
+        Les ordres sans objectif (0) sont exclus. Peut dépasser 100%."""
+        mos = self._get_day_mo(date)
         if not mos:
             return 0.0
         rates = []
         for mo in mos:
-            obj = mo.product_qty or 0.0
-            if obj > 0:
-                rates.append(mo.qty_produced / obj * 100.0)
+            if mo.objectif and mo.objectif > 0:
+                rates.append(mo.qty_produced / mo.objectif * 100.0)
         if not rates:
             return 0.0
         return round(sum(rates) / len(rates), 1)
@@ -316,8 +353,8 @@ class BetonDashboard(models.Model):
     def get_consommation_matieres_m3(self, date=None):
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', '=', 'done'),
         ])
         total_produit = sum(fabrications.mapped('qty_produced'))
@@ -378,8 +415,8 @@ class BetonDashboard(models.Model):
         """Top chantiers par volume produit ce mois."""
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', 'in', ('progress', 'done')),
             ('chantier', '!=', False),
         ])
@@ -396,8 +433,8 @@ class BetonDashboard(models.Model):
         """Top clients par volume produit ce mois."""
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', 'in', ('progress', 'done')),
             ('client_id', '!=', False),
         ])
@@ -415,8 +452,8 @@ class BetonDashboard(models.Model):
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
             ('state', 'in', ('progress', 'done', 'to_close')),
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
         ], order='date_start desc', limit=limit)
         result = []
         for fab in fabrications:
@@ -438,8 +475,8 @@ class BetonDashboard(models.Model):
         """Production par jour du mois en cours (pour graphique barres)."""
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', 'in', ('progress', 'done')),
         ])
         # Agréger par jour
@@ -464,8 +501,8 @@ class BetonDashboard(models.Model):
         """Répartition de la production par produit (pour graphique camembert)."""
         debut_mois, date = self._get_period(date)
         fabrications = self.env['mrp.production'].search([
-            ('date_start', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_start', '<=', str(date) + ' 23:59:59'),
+            ('date_start', '>=', self._start_utc(debut_mois)),
+            ('date_start', '<=', self._end_utc(date)),
             ('state', 'in', ('progress', 'done')),
         ])
         produit_volumes = {}
@@ -522,8 +559,8 @@ class BetonDashboard(models.Model):
         for i in range(6, -1, -1):
             jour = today - timedelta(days=i)
             count = self.env['stock.picking'].search_count([
-                ('scheduled_date', '>=', str(jour) + ' 00:00:00'),
-                ('scheduled_date', '<=', str(jour) + ' 23:59:59'),
+                ('scheduled_date', '>=', self._start_utc(jour)),
+                ('scheduled_date', '<=', self._end_utc(jour)),
                 ('picking_type_code', '=', 'outgoing'),
                 ('state', '!=', 'cancel'),
             ])
@@ -537,8 +574,8 @@ class BetonDashboard(models.Model):
         """Retourne le recordset des bons d'achat confirmés sur la période (mois courant -> date)."""
         debut_mois, date = self._get_period(date)
         return self.env['purchase.order'].search([
-            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut_mois)),
+            ('date_order', '<=', self._end_utc(date)),
             ('state', 'in', list(states)),
         ])
 
@@ -552,8 +589,8 @@ class BetonDashboard(models.Model):
     def get_achats_mois_precedent(self, date=None):
         debut, fin = self._get_previous_period(date)
         orders = self.env['purchase.order'].search([
-            ('date_order', '>=', str(debut) + ' 00:00:00'),
-            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut)),
+            ('date_order', '<=', self._end_utc(fin)),
             ('state', 'in', ('purchase', 'done')),
         ])
         return sum(orders.mapped('amount_total'))
@@ -567,8 +604,8 @@ class BetonDashboard(models.Model):
     def get_achats_count_precedent(self, date=None):
         debut, fin = self._get_previous_period(date)
         return self.env['purchase.order'].search_count([
-            ('date_order', '>=', str(debut) + ' 00:00:00'),
-            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut)),
+            ('date_order', '<=', self._end_utc(fin)),
             ('state', 'in', ('purchase', 'done')),
         ])
 
@@ -656,8 +693,8 @@ class BetonDashboard(models.Model):
         values = []
         for st in states:
             cnt = self.env['purchase.order'].search_count([
-                ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-                ('date_order', '<=', str(date) + ' 23:59:59'),
+                ('date_order', '>=', self._start_utc(debut_mois)),
+                ('date_order', '<=', self._end_utc(date)),
                 ('state', '=', st),
             ])
             if cnt:
@@ -687,8 +724,8 @@ class BetonDashboard(models.Model):
             if i == 0:
                 fin = today
             orders = self.env['purchase.order'].search([
-                ('date_order', '>=', str(debut) + ' 00:00:00'),
-                ('date_order', '<=', str(fin) + ' 23:59:59'),
+                ('date_order', '>=', self._start_utc(debut)),
+                ('date_order', '<=', self._end_utc(fin)),
                 ('state', 'in', ('purchase', 'done')),
             ])
             labels.append(mois_names[mois - 1])
@@ -700,8 +737,8 @@ class BetonDashboard(models.Model):
         """Derniers bons d'achat du mois sélectionné."""
         debut_mois, date = self._get_period(date)
         orders = self.env['purchase.order'].search([
-            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut_mois)),
+            ('date_order', '<=', self._end_utc(date)),
             ('state', 'in', ('purchase', 'done', 'sent', 'to approve')),
         ], order='date_order desc', limit=limit)
         result = []
@@ -723,8 +760,8 @@ class BetonDashboard(models.Model):
         """Retourne le recordset des ventes confirmées sur la période (mois courant -> date)."""
         debut_mois, date = self._get_period(date)
         return self.env['sale.order'].search([
-            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut_mois)),
+            ('date_order', '<=', self._end_utc(date)),
             ('state', 'in', list(states)),
         ])
 
@@ -737,8 +774,8 @@ class BetonDashboard(models.Model):
     def get_ventes_mois_precedent(self, date=None):
         debut, fin = self._get_previous_period(date)
         orders = self.env['sale.order'].search([
-            ('date_order', '>=', str(debut) + ' 00:00:00'),
-            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut)),
+            ('date_order', '<=', self._end_utc(fin)),
             ('state', 'in', ('sale', 'done')),
         ])
         return sum(orders.mapped('amount_total'))
@@ -751,8 +788,8 @@ class BetonDashboard(models.Model):
     def get_ventes_count_precedent(self, date=None):
         debut, fin = self._get_previous_period(date)
         return self.env['sale.order'].search_count([
-            ('date_order', '>=', str(debut) + ' 00:00:00'),
-            ('date_order', '<=', str(fin) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut)),
+            ('date_order', '<=', self._end_utc(fin)),
             ('state', 'in', ('sale', 'done')),
         ])
 
@@ -796,13 +833,13 @@ class BetonDashboard(models.Model):
         """Taux de conversion = ventes confirmées / total devis créés ce mois."""
         debut_mois, date = self._get_period(date)
         total = self.env['sale.order'].search_count([
-            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut_mois)),
+            ('date_order', '<=', self._end_utc(date)),
             ('state', '!=', 'cancel'),
         ])
         confirmes = self.env['sale.order'].search_count([
-            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut_mois)),
+            ('date_order', '<=', self._end_utc(date)),
             ('state', 'in', ('sale', 'done')),
         ])
         if not total:
@@ -856,8 +893,8 @@ class BetonDashboard(models.Model):
         values = []
         for st in states:
             cnt = self.env['sale.order'].search_count([
-                ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-                ('date_order', '<=', str(date) + ' 23:59:59'),
+                ('date_order', '>=', self._start_utc(debut_mois)),
+                ('date_order', '<=', self._end_utc(date)),
                 ('state', '=', st),
             ])
             if cnt:
@@ -887,8 +924,8 @@ class BetonDashboard(models.Model):
             if i == 0:
                 fin = today
             orders = self.env['sale.order'].search([
-                ('date_order', '>=', str(debut) + ' 00:00:00'),
-                ('date_order', '<=', str(fin) + ' 23:59:59'),
+                ('date_order', '>=', self._start_utc(debut)),
+                ('date_order', '<=', self._end_utc(fin)),
                 ('state', 'in', ('sale', 'done')),
             ])
             labels.append(mois_names[mois - 1])
@@ -899,8 +936,8 @@ class BetonDashboard(models.Model):
     def get_ventes_recentes(self, date=None, limit=7):
         debut_mois, date = self._get_period(date)
         orders = self.env['sale.order'].search([
-            ('date_order', '>=', str(debut_mois) + ' 00:00:00'),
-            ('date_order', '<=', str(date) + ' 23:59:59'),
+            ('date_order', '>=', self._start_utc(debut_mois)),
+            ('date_order', '<=', self._end_utc(date)),
             ('state', 'in', ('sale', 'done', 'sent', 'draft')),
         ], order='date_order desc', limit=limit)
         result = []

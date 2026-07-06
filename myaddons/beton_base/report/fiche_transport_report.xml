@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="action_report_fiche_transport" model="ir.actions.report">
-        <field name="name">Fiche de Transport</field>
+        <field name="name">Fiche de Livraison</field>
         <field name="model">mrp.production</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">beton_base.report_fiche_transport</field>
@@ -25,7 +25,7 @@
                         <!-- Titre -->
                         <div style="text-align:center; margin-bottom:20px; border-bottom:3px solid #1a3c69; padding-bottom:10px;">
                             <h2 style="color:#1a3c69; font-size:22pt; font-weight:700; letter-spacing:3px; margin:0;">
-                                FICHE DE TRANSPORT
+                                FICHE DE LIVRAISON
                             </h2>
                         </div>
 

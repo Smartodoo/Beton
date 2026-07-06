@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wizard de réapprovisionnement du produit :
+         affichage de la quantité disponible et du seuil minimum béton. -->
+    <record id="view_product_replenish_beton" model="ir.ui.view">
+        <field name="name">product.replenish.form.beton</field>
+        <field name="model">product.replenish</field>
+        <field name="inherit_id" ref="stock.view_product_replenish"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='quantity']" position="before">
+                <field name="qty_disponible" readonly="1"/>
+                <field name="seuil_minimum" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

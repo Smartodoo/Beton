@@ -43,5 +43,8 @@ access_sale_report_wizard,sale.report.wizard,model_sale_report_wizard,base.group
 access_purchase_report_wizard,purchase.report.wizard,model_purchase_report_wizard,base.group_user,1,1,1,1
 access_fleet_infraction,fleet.infraction,model_fleet_infraction,base.group_user,1,1,1,1
 access_beton_annulation_wizard,beton.annulation.wizard,model_beton_annulation_wizard,base.group_user,1,1,1,1
+access_beton_objectif_wizard,beton.objectif.wizard,model_beton_objectif_wizard,base.group_user,1,1,1,1
+access_beton_objectif_history_user,beton.objectif.history.user,model_beton_objectif_history,base.group_user,1,0,0,0
+access_beton_objectif_history_manager,beton.objectif.history.manager,model_beton_objectif_history,beton_base.group_beton_responsable,1,1,1,1
 access_beton_motif_annulation_user,beton.motif.annulation.user,model_beton_motif_annulation,base.group_user,1,1,1,0
 access_beton_motif_annulation_responsable,beton.motif.annulation.responsable,model_beton_motif_annulation,beton_base.group_beton_responsable,1,1,1,1

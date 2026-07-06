@@ -4,6 +4,7 @@ from . import res_partner
 from . import chantier
 from . import formule
 from . import product_template
+from . import product_product
 from . import product_cost_history
 from . import fabrication
 from . import consommation_ligne
@@ -16,6 +17,7 @@ from . import cout_revient
 from . import account_move
 from . import mrp_bom
 from . import mrp_production
+from . import objectif_history
 from . import motif_annulation
 from . import mrp_scrap
 from . import bon_sortie
@@ -24,5 +26,7 @@ from . import infraction
 from . import stock_move
 from . import sale_order
 from . import purchase_order
+from . import product_supplierinfo
 from . import stock_picking
+from . import stock_orderpoint
 from . import dashboard

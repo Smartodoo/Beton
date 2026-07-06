@@ -386,6 +386,7 @@ class PickingReportWizard(models.TransientModel):
             },
             'total': len(records),
             'distance_totale': sum(records.mapped('distance')),
+            'qte_transportee_totale': sum(records.mapped('qte_transportee')),
         }
         return self.env.ref('beton_base.action_report_picking_analysis').report_action(self, data=data)
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Liste des prix fournisseurs : ajout du type de fournisseur
+         et de la synthèse d'évaluation (issus de la fiche fournisseur). -->
+    <!-- Vue formulaire d'une ligne de prix fournisseur : mêmes informations. -->
+    <record id="product_supplierinfo_form_view_beton" model="ir.ui.view">
+        <field name="name">product.supplierinfo.form.beton</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="type_fournisseur"/>
+                <field name="synthese_evaluation"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_tree_view_beton" model="ir.ui.view">
+        <field name="name">product.supplierinfo.tree.beton</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="type_fournisseur" optional="show"/>
+                <field name="synthese_evaluation" optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

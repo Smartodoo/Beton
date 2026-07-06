@@ -64,7 +64,7 @@
                         <group string="Production">
                             <field name="nombre_camion"/>
                             <field name="nombre_gachees"/>
-                            <field name="objectif"/>
+                            <field name="objectif" required="state not in ('draft', 'cancel')"/>
                             <field name="taux_production"/>
                             <field name="ecart_production"/>
                             <field name="operateur_id"/>
@@ -95,6 +95,17 @@
                         </tree>
                     </field>
                 </page>
+                <page string="Historique Objectifs" name="objectif_history_beton">
+                    <field name="objectif_history_ids" readonly="1">
+                        <tree string="Historique des objectifs" create="false" edit="false">
+                            <field name="date"/>
+                            <field name="ancien_objectif"/>
+                            <field name="nouvel_objectif"/>
+                            <field name="source"/>
+                            <field name="user_id"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
@@ -109,6 +120,11 @@
                 <field name="centrale_id" optional="show"/>
                 <field name="client_id" optional="show"/>
                 <field name="chantier" optional="hide"/>
+                <field name="vente_id" optional="show"/>
+                <field name="vente_state" optional="show" widget="badge"
+                       decoration-success="vente_state in ('sale', 'done')"
+                       decoration-info="vente_state == 'sent'"
+                       decoration-muted="vente_state == 'cancel'"/>
             </xpath>
         </field>
     </record>
@@ -125,9 +141,20 @@
                         string="Produits fabriqués"
                         domain="[('product_id.product_tmpl_id.detailed_type', '=', 'fabrique')]"/>
                 <separator/>
+                <!-- Filtres sur le statut de la vente associée -->
+                <filter name="filter_sans_vente" string="Sans vente"
+                        domain="[('vente_id', '=', False)]"/>
+                <filter name="filter_vente_devis" string="Vente en devis"
+                        domain="[('vente_state', 'in', ('draft', 'sent'))]"/>
+                <filter name="filter_vente_confirmee" string="Vente confirmée"
+                        domain="[('vente_state', 'in', ('sale', 'done'))]"/>
+                <filter name="filter_vente_annulee" string="Vente annulée"
+                        domain="[('vente_state', '=', 'cancel')]"/>
+                <separator/>
                 <field name="centrale_id"/>
                 <field name="client_id"/>
                 <field name="chantier"/>
+                <field name="vente_id"/>
                 <separator/>
                 <group expand="0" string="Grouper par">
                     <filter name="groupby_centrale" string="Centrale"
@@ -136,6 +163,8 @@
                             context="{'group_by': 'client_id'}"/>
                     <filter name="groupby_operateur" string="Opérateur"
                             context="{'group_by': 'operateur_id'}"/>
+                    <filter name="groupby_vente_state" string="Statut de la vente"
+                            context="{'group_by': 'vente_state'}"/>
                 </group>
             </xpath>
         </field>

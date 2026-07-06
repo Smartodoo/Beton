@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Afficher uniquement la quantité du stock principal (WH/Stock) au lieu
+         du total tous emplacements, sur les vues kanban et les boutons On Hand. -->
+
+    <!-- 1. Kanban des produits (product.template) -->
+    <record id="product_template_kanban_stock_beton" model="ir.ui.view">
+        <field name="name">product.template.kanban.stock.beton</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.product_template_kanban_stock_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[field[@name='qty_available']]" position="replace">
+                <t groups="stock.group_stock_user">
+                    <div t-if="record.show_on_hand_qty_status_button.raw_value">En Stock:
+                        <span t-att-class="(record.qty_minimum.raw_value &gt; 0 and record.qty_en_stock.raw_value &lt;= record.qty_minimum.raw_value) ? 'text-danger fw-bold' : ''">
+                            <field name="qty_en_stock"/> <field name="uom_id"/>
+                        </span>
+                    </div>
+                    <div t-if="record.qty_minimum.raw_value &gt; 0">Seuil min.: <field name="qty_minimum"/> <field name="uom_id"/></div>
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 2. Bouton "On Hand" de la fiche modèle (product.template) -->
+    <record id="product_template_form_onhand_beton" model="ir.ui.view">
+        <field name="name">product.template.form.onhand.beton</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_update_quantity_on_hand']//field[@name='qty_available']" position="replace">
+                <field name="qty_en_stock" nolabel="1" class="oe_inline"/>
+            </xpath>
+            <xpath expr="//button[@name='action_update_quantity_on_hand']//span[@class='o_stat_text']" position="replace">
+                <span class="o_stat_text">En Stock</span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 3. Bouton "On Hand" de la fiche variante (product.product) -->
+    <record id="product_form_onhand_beton" model="ir.ui.view">
+        <field name="name">product.product.form.onhand.beton</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_update_quantity_on_hand']//field[@name='qty_available']" position="replace">
+                <field name="qty_en_stock" nolabel="1" class="oe_inline"/>
+            </xpath>
+            <xpath expr="//button[@name='action_update_quantity_on_hand']//span[@class='o_stat_text']" position="replace">
+                <span class="o_stat_text">En Stock</span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 4. Kanban catalogue (product.product) -->
+    <record id="product_kanban_catalog_stock_beton" model="ir.ui.view">
+        <field name="name">product.product.kanban.catalog.stock.beton</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.product_view_kanban_catalog"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='o_kanban_qty_available']" position="replace">
+                <div t-if="record.detailed_type.raw_value == 'product'" name="o_kanban_qty_available">
+                    <span>En Stock: </span>
+                    <field name="qty_en_stock"/>
+                    <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -204,6 +204,36 @@ class ProductTemplate(models.Model):
     ], string="Emplacement")
     delai_approvisionnement = fields.Integer(string="Délai d'approvisionnement (jours)")
     qty_minimum = fields.Float(string="Quantité minimum", default=0.0)
+    qty_en_stock = fields.Float(
+        string="En stock",
+        compute='_compute_qty_en_stock',
+        digits='Product Unit of Measure',
+        help="Quantité disponible uniquement dans le stock principal de "
+             "l'entreprise (WH/Stock), et non le total tous emplacements.",
+    )
+
+    @api.model
+    def _beton_wh_stock_location(self):
+        """Emplacement de stock principal (WH/Stock) de la société courante."""
+        warehouse = self.env['stock.warehouse'].search(
+            [('company_id', '=', self.env.company.id)], limit=1)
+        return warehouse.lot_stock_id
+
+    def _compute_qty_en_stock(self):
+        # Quantité strictement dans WH/Stock (emplacement exact, sans les
+        # sous-emplacements : un transfert vers WH/Stock/Bureau/... la diminue).
+        location = self._beton_wh_stock_location()
+        Quant = self.env['stock.quant'].sudo()
+        for tmpl in self:
+            variants = tmpl.product_variant_ids
+            if location and variants:
+                quants = Quant.search([
+                    ('product_id', 'in', variants.ids),
+                    ('location_id', '=', location.id),
+                ])
+                tmpl.qty_en_stock = sum(quants.mapped('quantity'))
+            else:
+                tmpl.qty_en_stock = 0.0
     statut_matiere = fields.Selection([
         ('actif', 'Actif'),
         ('indisponible', 'Indisponible'),
