@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_supplierinfo_pricelist" model="ir.actions.report">
+        <field name="name">Liste des prix fournisseurs</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_supplierinfo_pricelist</field>
+        <field name="report_file">beton_base.report_supplierinfo_pricelist</field>
+        <field name="binding_model_id" ref="product.model_product_supplierinfo"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_supplierinfo_pricelist">
+        <t t-call="web.html_container">
+            <!-- Une fiche complète (= vue formulaire) par prix fournisseur.
+                 external_layout par document => chaque prix sur sa propre page. -->
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <style>
+                        .footer div.text-muted { display: none !important; }
+                        .bt-info-table { width:100%; border-collapse:collapse; margin-bottom:16px; }
+                        .bt-info-table td { padding:6px 8px; border:1px solid #d0dde9; font-size:11pt; vertical-align:top; }
+                        .bt-info-table td.bt-label {
+                            width:28%; background:#f0f4f8; color:#1a3c69;
+                            font-weight:600; font-size:9.5pt; text-transform:uppercase;
+                            letter-spacing:.4px;
+                        }
+                    </style>
+                    <div class="page"
+                         t-att-style="'font-family: Arial, Helvetica, sans-serif; color:#222;' + ('' if o_first else ' page-break-before: always;')">
+
+                        <!-- Titre -->
+                        <div style="text-align:center; margin-bottom:18px; border-bottom:3px solid #1a3c69; padding-bottom:10px;">
+                            <h2 style="color:#1a3c69; font-size:20pt; font-weight:700; letter-spacing:2px; margin:0;">
+                                PRIX FOURNISSEUR
+                            </h2>
+                            <div style="margin-top:4px; font-size:11pt; color:#555;">
+                                <t t-esc="o.partner_id.name or '—'"/>
+                                <t t-if="o.product_tmpl_id"> — <t t-esc="o.product_tmpl_id.display_name"/></t>
+                            </div>
+                        </div>
+
+                        <!-- Section Fournisseur -->
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; border-radius:2px;">
+                            Fournisseur
+                        </div>
+                        <table class="bt-info-table">
+                            <tr>
+                                <td class="bt-label">Fournisseur</td>
+                                <td><span t-field="o.partner_id"/></td>
+                                <td class="bt-label">Type de fournisseur</td>
+                                <td><t t-esc="o.type_fournisseur or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td class="bt-label">Nom du produit</td>
+                                <td><t t-esc="o.product_name or '—'"/></td>
+                                <td class="bt-label">Code produit</td>
+                                <td><t t-esc="o.product_code or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td class="bt-label">Délai de livraison</td>
+                                <td><t t-esc="o.delay or 0"/> jour(s)</td>
+                                <td class="bt-label">Société</td>
+                                <td><t t-esc="o.company_id.name or '—'"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Section Tarif -->
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; border-radius:2px;">
+                            Tarif
+                        </div>
+                        <table class="bt-info-table">
+                            <tr>
+                                <td class="bt-label">Produit</td>
+                                <td><t t-esc="o.product_tmpl_id.display_name or o.product_id.display_name or '—'"/></td>
+                                <td class="bt-label">Variante</td>
+                                <td><t t-esc="o.product_id.display_name or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td class="bt-label">Quantité minimum</td>
+                                <td>
+                                    <span t-field="o.min_qty"/>
+                                    <t t-if="o.product_uom"> <span t-field="o.product_uom"/></t>
+                                </td>
+                                <td class="bt-label">Prix unitaire</td>
+                                <td>
+                                    <t t-esc="'%.2f' % (o.price or 0.0)"/>
+                                    <span t-if="o.currency_id" t-esc="o.currency_id.symbol or o.currency_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bt-label">Remise (%)</td>
+                                <td><t t-esc="o.discount or 0.0"/></td>
+                                <td class="bt-label">Validité</td>
+                                <td>
+                                    <t t-if="o.date_start"><span t-field="o.date_start"/></t>
+                                    <t t-else="">—</t>
+                                    →
+                                    <t t-if="o.date_end"><span t-field="o.date_end"/></t>
+                                    <t t-else="">—</t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Synthèse d'évaluation -->
+                        <div style="background:#1a3c69; color:#fff; padding:6px 12px; font-size:11pt; font-weight:700;
+                                    letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; border-radius:2px;">
+                            Synthèse d'évaluation
+                        </div>
+                        <div style="border:1px solid #d0dde9; padding:10px 12px; min-height:50px; font-size:11pt;">
+                            <t t-esc="o.synthese_evaluation or '—'"/>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

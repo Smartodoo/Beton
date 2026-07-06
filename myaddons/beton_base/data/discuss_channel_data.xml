@@ -7,6 +7,13 @@
             <field name="group_ids" eval="[(4, ref('beton_base.group_beton_responsable')),
                                              (4, ref('base.group_system'))]"/>
         </record>
+
+        <record id="channel_of_sans_vente" model="discuss.channel">
+            <field name="name">OF sans vente confirmée</field>
+            <field name="channel_type">channel</field>
+            <field name="group_ids" eval="[(4, ref('beton_base.group_beton_responsable')),
+                                             (4, ref('base.group_system'))]"/>
+        </record>
     </data>
 
     <data noupdate="1">
@@ -15,6 +22,17 @@
             <field name="model_id" ref="product.model_product_template"/>
             <field name="state">code</field>
             <field name="code">model._cron_check_qty_minimum()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="ir_cron_check_of_sans_vente" model="ir.cron">
+            <field name="name">Alerte OF sans vente confirmée (après 1 semaine)</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_of_sans_vente()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>

@@ -310,6 +310,7 @@
 
                     <div class="row beton-stats-panel">
                         <div class="col-4"><strong>Total livraisons :</strong> <span t-esc="data.get('total', 0)"/></div>
+                        <div class="col-4"><strong>Quantité transportée :</strong> <span t-esc="'%.2f' % data.get('qte_transportee_totale', 0)"/> m³</div>
                         <div class="col-4"><strong>Distance totale :</strong> <span t-esc="'%.2f' % data.get('distance_totale', 0)"/> km</div>
                     </div>
 
@@ -324,6 +325,7 @@
                                 <th>Chauffeur</th>
                                 <th>Départ</th>
                                 <th>Arrivée</th>
+                                <th class="text-end">Qté transportée (m³)</th>
                                 <th class="text-end">Distance</th>
                                 <th>Statut</th>
                             </tr>
@@ -339,6 +341,7 @@
                                     <td t-esc="doc.chauffeur_id.name or ''"/>
                                     <td t-esc="doc.heure_depart" t-options='{"widget": "datetime"}'/>
                                     <td t-esc="doc.heure_arrivee" t-options='{"widget": "datetime"}'/>
+                                    <td class="text-end" t-esc="'%.2f' % doc.qte_transportee"/>
                                     <td class="text-end" t-esc="'%.1f' % doc.distance"/>
                                     <td t-esc="doc.state"/>
                                 </tr>
@@ -347,6 +350,7 @@
                         <tfoot>
                             <tr>
                                 <td colspan="8">Total</td>
+                                <td class="text-end" t-esc="'%.2f' % sum(docs.mapped('qte_transportee'))"/>
                                 <td class="text-end" t-esc="'%.1f' % sum(docs.mapped('distance'))"/>
                                 <td/>
                             </tr>

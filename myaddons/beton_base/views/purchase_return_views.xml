@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Vue recherche dédiée aux bons de retour d'achat -->
+    <record id="view_beton_purchase_return_search" model="ir.ui.view">
+        <field name="name">stock.picking.search.beton.purchase.return</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <search string="Bons de retour d'achat">
+                <field name="name" string="Référence"
+                       filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
+                <field name="partner_id" string="Fournisseur"/>
+                <field name="return_id" string="Réception d'origine"/>
+                <field name="product_id"/>
+                <field name="origin" string="Document d'origine"/>
+
+                <!-- Filtres par état -->
+                <filter name="filter_draft" string="Brouillon"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_waiting" string="En attente"
+                        domain="[('state', 'in', ('waiting', 'confirmed'))]"/>
+                <filter name="filter_ready" string="Prêt"
+                        domain="[('state', '=', 'assigned')]"/>
+                <filter name="filter_done" string="Terminé"
+                        domain="[('state', '=', 'done')]"/>
+                <filter name="filter_cancel" string="Annulé"
+                        domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <!-- Filtres par date -->
+                <filter name="filter_scheduled" string="Date prévue"
+                        date="scheduled_date"/>
+                <filter name="filter_done_date" string="Date de transfert"
+                        date="date_done"/>
+
+                <!-- Regroupements -->
+                <group expand="0" string="Regrouper par">
+                    <filter name="groupby_partner" string="Fournisseur"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_state" string="État"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="groupby_picking_type" string="Type d'opération"
+                            context="{'group_by': 'picking_type_id'}"/>
+                    <filter name="groupby_origin_receipt" string="Réception d'origine"
+                            context="{'group_by': 'return_id'}"/>
+                    <filter name="groupby_scheduled" string="Date prévue"
+                            context="{'group_by': 'scheduled_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action : Bons de retour d'achat -->
+    <record id="action_beton_purchase_returns" model="ir.actions.act_window">
+        <field name="name">Bons de Retour d'Achat</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_beton_purchase_return_search"/>
+        <field name="domain">[('return_id', '!=', False), ('return_id.picking_type_code', '=', 'incoming')]</field>
+        <field name="context">{'search_default_groupby_partner': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun bon de retour d'achat pour le moment
+            </p>
+            <p>
+                Les bons de retour d'achat sont générés depuis une réception
+                fournisseur via le bouton « Retour ».
+            </p>
+        </field>
+    </record>
+</odoo>

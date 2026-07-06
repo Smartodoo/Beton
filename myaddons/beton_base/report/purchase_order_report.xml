@@ -115,6 +115,20 @@
     </template>
 
     <!-- ============================================================ -->
+    <!-- Demande de prix : utiliser le document complet du bon de     -->
+    <!-- commande (mêmes infos : prix, taxes, totaux, récap coût,     -->
+    <!-- signataires, montant en lettres). Le titre reste « Request   -->
+    <!-- for Quotation » car le document s'adapte selon l'état.        -->
+    <!-- ============================================================ -->
+    <template id="report_purchasequotation_inherit_beton"
+              inherit_id="purchase.report_purchasequotation">
+        <xpath expr="//t[@t-call='purchase.report_purchasequotation_document']"
+               position="attributes">
+            <attribute name="t-call">purchase.report_purchaseorder_document</attribute>
+        </xpath>
+    </template>
+
+    <!-- ============================================================ -->
     <!-- Rapport Liste des Bons d'Achats (impression groupée)         -->
     <!-- ============================================================ -->
     <record id="action_report_purchase_order_list" model="ir.actions.report">

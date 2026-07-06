@@ -61,6 +61,12 @@
               action="action_beton_bon_sortie"
               sequence="20"/>
 
+    <menuitem id="beton_menu_purchase_returns"
+              name="Bons de Retour d'Achat"
+              parent="beton_menu_logistique"
+              action="action_beton_purchase_returns"
+              sequence="30"/>
+
     <!-- Sous-menu Commercial -->
     <menuitem id="beton_menu_commercial"
               name="Commercial"
@@ -138,6 +144,12 @@
               parent="beton_menu_production"
               action="action_beton_motif_annulation"
               sequence="40"/>
+
+    <menuitem id="beton_menu_objectif_production"
+              name="Objectif de Production"
+              parent="beton_menu_production"
+              action="action_beton_objectif_wizard"
+              sequence="50"/>
 
     <!-- Historique d'annulation dans le menu standard Fabrication > Opérations (en dernier) -->
     <menuitem id="menu_mrp_historique_annulation"

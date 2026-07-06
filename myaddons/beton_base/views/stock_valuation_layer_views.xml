@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Vieillissement de l'inventaire (Inventaire > Analyse) :
+         inclure aussi les consommables, pas seulement les produits stockables.
+         Domaine standard Odoo : [('product_id.type', '=', 'product')]. -->
+    <record id="stock_account.inventory_aging_action" model="ir.actions.act_window">
+        <field name="domain">[('product_id.type', 'in', ('product', 'consu'))]</field>
+    </record>
+</odoo>

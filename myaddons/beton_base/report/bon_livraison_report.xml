@@ -79,6 +79,11 @@
                                 <strong>Distance :</strong> <span t-field="o.distance"/> km
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <strong>Adjuvant chantier :</strong> <span t-field="o.adjuvant_chantier"/> L
+                            </div>
+                        </div>
 
                         <div class="row mt-5">
                             <div class="col-4 text-center">

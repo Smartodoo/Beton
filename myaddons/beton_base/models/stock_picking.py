@@ -17,10 +17,22 @@ class StockPicking(models.Model):
         store=True,
     )
     distance = fields.Float(string="Distance (km)")
+    adjuvant_chantier = fields.Float(string="Adjuvant chantier (L)")
+    motif_retour = fields.Text(string="Motif du retour")
+    qte_transportee = fields.Float(
+        string="Quantité transportée (m³)",
+        compute='_compute_qte_transportee',
+        help="Quantité totale livrée sur ce bon (somme des mouvements de stock).",
+    )
     document_ids = fields.Many2many(
         'ir.attachment', 'stock_picking_ir_attachment_rel',
         'picking_id', 'attachment_id',
         string="Pièces jointes")
+
+    @api.depends('move_ids.quantity')
+    def _compute_qte_transportee(self):
+        for rec in self:
+            rec.qte_transportee = sum(rec.move_ids.mapped('quantity'))
 
     @api.depends('heure_depart', 'heure_arrivee')
     def _compute_temps_trajet(self):
