@@ -179,4 +179,20 @@
             </p>
         </field>
     </record>
+
+    <!-- Bouton liste produits : fiche globale des meilleurs fournisseurs -->
+    <record id="view_product_template_tree_meilleurs_fournisseurs_beton" model="ir.ui.view">
+        <field name="name">product.template.tree.meilleurs.fournisseurs.beton</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_print_meilleurs_fournisseurs"
+                        type="object"
+                        string="Meilleurs fournisseurs"
+                        display="always"
+                        class="btn-secondary"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

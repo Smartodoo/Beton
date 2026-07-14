@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Action rapport : fiche globale des meilleurs fournisseurs.
+         Bindée sur la liste produits (menu Imprimer quand des produits sont cochés).
+         Aussi appelée par le bouton d'en-tête "Meilleurs fournisseurs". -->
+    <record id="action_report_meilleurs_fournisseurs" model="ir.actions.report">
+        <field name="name">Meilleurs Fournisseurs (fiche globale)</field>
+        <field name="model">product.template</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">beton_base.report_meilleurs_fournisseurs</field>
+        <field name="report_file">beton_base.report_meilleurs_fournisseurs</field>
+        <field name="print_report_name">'Meilleurs_Fournisseurs_%s' % (time.strftime('%Y%m%d_%H%M%S'))</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_type">report</field>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <template id="report_meilleurs_fournisseurs">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <style>.footer div.text-muted { display: none !important; }</style>
+                <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 11pt; color:#222;">
+
+                    <!-- Titre -->
+                    <div style="text-align:center; margin-bottom:16px; border-bottom:3px solid #1a3c69; padding-bottom:10px;">
+                        <h2 style="color:#1a3c69; font-size:20pt; font-weight:700; letter-spacing:2px; margin:0;">
+                            MEILLEURS FOURNISSEURS PAR PRODUIT
+                        </h2>
+                        <div style="margin-top:6px; font-size:10pt; color:#555;">
+                            Fournisseur au prix le plus bas retenu pour chaque produit
+                        </div>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#1a3c69; color:#fff;">
+                                <th style="padding:6px 8px; border:1px solid #1a3c69; font-size:9pt; width:5%; text-align:center;">N°</th>
+                                <th style="padding:6px 8px; border:1px solid #1a3c69; font-size:9pt; text-align:left;">Produit</th>
+                                <th style="padding:6px 8px; border:1px solid #1a3c69; font-size:9pt; text-align:left; width:26%;">Meilleur fournisseur</th>
+                                <th style="padding:6px 8px; border:1px solid #1a3c69; font-size:9pt; text-align:right; width:14%;">Prix</th>
+                                <th style="padding:6px 8px; border:1px solid #1a3c69; font-size:9pt; text-align:right; width:10%;">Délai (j)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="rows" t-value="docs.sorted(key=lambda p: (p.default_code or '', p.name or ''))"/>
+                            <t t-foreach="rows" t-as="p">
+                                <t t-set="best" t-value="p.get_fournisseurs_tries()[:1]"/>
+                                <tr t-att-style="'background:#fafafa;' if p_index % 2 else ''">
+                                    <td style="padding:5px 8px; border:1px solid #ccc; text-align:center;">
+                                        <t t-esc="p_index + 1"/>
+                                    </td>
+                                    <td style="padding:5px 8px; border:1px solid #ccc;">
+                                        <t t-esc="p.name or '—'"/>
+                                    </td>
+                                    <td style="padding:5px 8px; border:1px solid #ccc;">
+                                        <t t-if="best">
+                                            <span style="color:#1e7e34; font-weight:700;">★ </span>
+                                            <t t-esc="best.partner_id.name or '—'"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span style="color:#b00000;">Aucun fournisseur défini</span>
+                                        </t>
+                                    </td>
+                                    <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;">
+                                        <t t-if="best">
+                                            <t t-esc="'%.2f' % (best.price or 0.0)"/>
+                                            <t t-if="best.currency_id">
+                                                <span t-esc="best.currency_id.symbol or best.currency_id.name"/>
+                                            </t>
+                                        </t>
+                                    </td>
+                                    <td style="padding:5px 8px; border:1px solid #ccc; text-align:right;">
+                                        <t t-if="best"><t t-esc="best.delay or 0"/></t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top:10px; font-size:9pt; color:#666;">
+                        Nombre de produits : <t t-esc="len(docs)"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

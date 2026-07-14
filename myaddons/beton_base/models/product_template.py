@@ -366,3 +366,25 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.seller_ids.sorted(key=lambda s: (s.price or 0.0, s.id))
 
+    def action_print_meilleurs_fournisseurs(self):
+        """Imprime la fiche globale des meilleurs fournisseurs.
+
+        - Si des produits sont sélectionnes (cochés) : uniquement ceux-là.
+        - Si aucune sélection : tous les produits achetables.
+        """
+        products = self
+        if not products:
+            active_ids = self.env.context.get('active_ids')
+            if active_ids:
+                products = self.browse(active_ids)
+            else:
+                products = self.search(
+                    [('purchase_ok', '=', True)],
+                    order='default_code, name',
+                )
+        if not products:
+            raise UserError(_("Aucun produit à imprimer."))
+        return self.env.ref(
+            'beton_base.action_report_meilleurs_fournisseurs'
+        ).report_action(products)
+

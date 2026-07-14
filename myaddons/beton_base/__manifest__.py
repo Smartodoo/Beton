@@ -85,6 +85,7 @@
         'report/fiche_client_report.xml',
         'report/fiche_fournisseur_report.xml',
         'report/fournisseurs_produit_report.xml',
+        'report/meilleurs_fournisseurs_report.xml',
         'report/supplierinfo_pricelist_report.xml',
     ],
     'assets': {
