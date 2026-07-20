@@ -72,8 +72,10 @@
             <xpath expr="//div[hasclass('oe_title')]/label[@for='name']" position="attributes">
                 <attribute name="string">N° Intervention</attribute>
             </xpath>
+            <!-- N° attribué automatiquement par la séquence beton.intervention -->
             <xpath expr="//field[@name='name']" position="attributes">
                 <attribute name="placeholder">N° Intervention</attribute>
+                <attribute name="readonly">1</attribute>
             </xpath>
 
             <!-- Renommer request_date → "Date" -->

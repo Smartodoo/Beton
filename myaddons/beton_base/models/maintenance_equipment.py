@@ -54,6 +54,10 @@ class MaintenanceRequest(models.Model):
     #   user_id         → "Technicien"
     #   duration        → "Durée" (heures)
 
+    # name = N° d'intervention : attribué par la séquence beton.intervention
+    # à la création (le "Nouveau" saisi par défaut est remplacé)
+    name = fields.Char(default="Nouveau")
+
     # Champs supplémentaires (non couverts par le standard) :
     action_realisee = fields.Text(string="Action réalisée")
     piece_ids = fields.One2many(
@@ -64,6 +68,14 @@ class MaintenanceRequest(models.Model):
     cout_intervention = fields.Float(string="Coût intervention")
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     prochaine_echeance = fields.Date(string="Prochaine échéance")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('name') or vals['name'] == 'Nouveau':
+                vals['name'] = self.env['ir.sequence'].next_by_code(
+                    'beton.intervention') or vals.get('name') or '/'
+        return super().create(vals_list)
 
 
 class BetonInterventionPiece(models.Model):

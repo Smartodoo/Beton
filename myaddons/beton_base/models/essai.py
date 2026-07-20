@@ -55,6 +55,14 @@ class BetonEssai(models.Model):
     nc_id = fields.Many2one('beton.non.conformite', string="Non-Conformité associée", readonly=True)
     nc_created = fields.Boolean(string="NC créée", default=False)
 
+    @api.onchange('fabrication_id')
+    def _onchange_fabrication_id(self):
+        """Reprend le client et le chantier déjà saisis sur l'ordre de fabrication."""
+        for rec in self:
+            if rec.fabrication_id:
+                rec.client_id = rec.fabrication_id.client_id
+                rec.chantier = rec.fabrication_id.chantier
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
